@@ -30,11 +30,13 @@ public class MapScene extends Scene {
     private double degree;
     public int dx;
     public int dy;
+     private int moveStep;
     public MapScene() {
     }
 
     @Override
     public void sceneBegin() {
+        moveStep=7;
         map = new Map();
         gameObjectArr = new ArrayList();
         gameObjectArr1 = new ArrayList();
@@ -163,7 +165,7 @@ public class MapScene extends Scene {
                 if(commandCode==2){
                     Move(x,y);
                     System.out.println("Mx: "+x);
-                    System.out.println("My: "+y);
+//                    System.out.println("My: "+y);
                 }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
 //                    ArrayList<String> strs = new ArrayList<String>();
@@ -182,38 +184,59 @@ public class MapScene extends Scene {
         };
     }
     private void Move(int x1,int y1){
+        if(spaceShip.painter().centerX()-cam.painter().left()==x1&&spaceShip.painter().centerY()-cam.painter().top()==0){
+            return;
+        }
 
-        int moveStep=10;
-        float a=Math.abs(spaceShip.painter().centerX()-x1);
-        float b=Math.abs(spaceShip.painter().centerY()-y1);
+
+        float a=Math.abs(spaceShip.painter().centerX()-cam.painter().left()-x1);
+        float a1=spaceShip.painter().centerX()-x1;
+        float b=Math.abs(spaceShip.painter().centerY()-cam.painter().top()-y1);
+        float b1=spaceShip.painter().centerY()-y1;
+//        System.out.println(x1+"/"+y1);
+//        System.out.println(spaceShip.painter().centerX()+"/"+spaceShip.painter().centerY());
+
+        if(spaceShip.painter().centerX() - cam.painter().left()==0&&spaceShip.painter().centerY() - cam.painter().top()==0){
+            return;
+        }
+
+        if(spaceShip.painter().centerX() - cam.painter().left()<5&&spaceShip.painter().centerY() - cam.painter().top()<5){
+            return;
+        }
         if(a==0&&b==0){
             return;
         }
-
-//        if(a==0){
-//            a=1;
-//        }
-//        if(b==0){
-//            b=1;
-//        }
         double d=Math.sqrt(a*a+b*b);
-        if(a<5&&b<5){
-            return;
-        }
         double xM=Math.cos(Math.acos(a/d))*moveStep;
         double yM=Math.cos(Math.acos(b/d))*moveStep;
 
-        if(spaceShip.painter().centerX()>x1){
+        if(spaceShip.painter().centerX() - cam.painter().left()>x1){
            xM=-xM;
         }
-        if(spaceShip.painter().centerY()>y1){
+        if(spaceShip.painter().centerY() - cam.painter().top()>y1){
             yM=-yM;
         }
-        System.out.println("ym:"+yM);
-        System.out.println("xm:"+xM);
-
+        if(a==0&&b!=0){
+            if(yM<0){
+                spaceShip.painter().offset(0,-moveStep*0.2);
+                spaceShip.collider().offset(0,-moveStep*0.2);
+            }else {
+            spaceShip.painter().offset(0,moveStep*0.2);
+            spaceShip.collider().offset(0,moveStep*0.2);}
+        }
+        if(a!=0&&b==0){
+            if(xM<0){
+                spaceShip.painter().offset(-moveStep*0.2,0);
+                spaceShip.collider().offset(-moveStep*0.2,0);
+            }else {
+            spaceShip.painter().offset(moveStep*0.2,0);
+            spaceShip.collider().offset(moveStep*0.2,0);}
+        }
+//        System.out.println("ym:"+yM);
+//        System.out.println("xm:"+xM);
+        spaceShip.painter().offset(xM,yM);
         spaceShip.collider().offset(xM,yM);
-
+        System.out.println("x:"+spaceShip.painter().centerX()+"y:"+spaceShip.painter().centerY());
     }
     @Override
     public CommandSolver.MouseListener mouseListener() {

@@ -123,9 +123,8 @@ public abstract class GameObject implements GameKernel.UpdateInterface,GameKerne
                 g.setColor(Color.RED);
                 g.drawOval(this.painter.left(), this.painter.top(), this.painter.width(), this.painter.height());
                 g.setColor(Color.BLUE);
-                g.drawOval(this.collider.left()+5, this.collider.top()+5, this.collider.width()+5, this.collider.height()+5);
+                g.drawOval(this.collider.left(), this.collider.top(), this.collider.width(), this.collider.height());
                 g.setColor(Color.BLACK);
-
             }
         else {
             g.setColor(Color.RED);
