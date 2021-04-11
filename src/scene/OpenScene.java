@@ -67,22 +67,17 @@ public class OpenScene extends Scene {
                             e.printStackTrace();
                         }
                     }
-                ArrayList<String> str=new ArrayList<>();
-                    str.add("100");
-                    str.add("100");
+               ArrayList<String> str=new ArrayList<>();
                 //______________
-                System.out.print("輸入0~7決定角色: ");
-                String num = sc.next();
-                str.add(num);
+
                 //______________
-                SceneController.getInstance().changeScene(new MapScene(Integer.valueOf(num)));
-                ClientClass.getInstance().sent(Global.InternetCommand.CONNECT,str);
+                SceneController.getInstance().changeScene(new MapScene());
+
                 }
             @Override
             public void keyReleased(int commandCode, long trigTime) {
 
             }
-
             @Override
             public void keyTyped(char c, long trigTime) {
 

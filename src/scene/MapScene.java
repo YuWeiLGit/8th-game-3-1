@@ -11,6 +11,7 @@ import utils.CommandSolver;
 import utils.Global;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,29 +20,44 @@ import java.util.logging.Logger;
 
 public class MapScene extends Scene {
     private Camera cam;
-    private ArrayList<Actor> actor;
+    private SpaceShip spaceShip;
     private Map map;
     private int num;
-
-    private ArrayList<GameObject> gameObjectArr ;
-    public MapScene(int num){
-        this.num=num;
+    private int x;
+    private int y;
+    private ArrayList<GameObject> gameObjectArr1;
+    private ArrayList<GameObject> gameObjectArr;
+    private double degree;
+    public int dx;
+    public int dy;
+    public MapScene() {
     }
 
     @Override
     public void sceneBegin() {
-        map=new Map();
+        map = new Map();
         gameObjectArr = new ArrayList();
-        actor=new ArrayList<>();
+        gameObjectArr1 = new ArrayList();
         Scanner sc = new Scanner(System.in);
+        spaceShip = new SpaceShip(100, 100);
+        degree = 0;
+        dx=0;
+        dy=0;
         //______________
         //System.out.print("輸入0~7決定角色: ");
         //this.num = sc.nextInt();
         //______________
-        actor.add(new Actor(100,100,num));
-        actor.get(0).setId(ClientClass.getInstance().getID());
-        cam= new Camera.Builder(1000,1000).setChaseObj(actor.get(0),1,1)
-                .setCameraStartLocation(actor.get(0).painter().left(),actor.get(0).painter().top()).gen();
+//        ArrayList<String> str=new ArrayList<>();
+//        str.add("200");
+//        str.add("200");
+//        System.out.print("輸入0~7決定角色: ");
+//        int num = sc.nextInt();
+//        str.add(num+"");
+//        spaceShip.add(new spaceShip(Integer.valueOf(str.get(0)),Integer.valueOf(str.get(1)),num));
+//        ClientClass.getInstance().sent(Global.InternetCommand.CONNECT,str);
+//        spaceShip.get(0).setId(ClientClass.getInstance().getID());
+        cam = new Camera.Builder(1000, 1000).setChaseObj(spaceShip, 1, 1)
+                .setCameraStartLocation(spaceShip.painter().left(), spaceShip.painter().top()).gen();
         try {
             MapLoader mapLoader = new MapLoader("/genMap.bmp", "/genMap.txt");
             ArrayList<MapInfo> test = mapLoader.combineInfo();
@@ -102,6 +118,18 @@ public class MapScene extends Scene {
 //                System.out.println(test.get(i).getSizeX());
 //                System.out.println(test.get(i).getSizeY());
 //            }
+            this.gameObjectArr1 = mapLoader.creatObjectArray("grass", 128, test, new MapLoader.CompareClass() {
+                        @Override
+                        public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
+                            GameObject tmp = null;
+                            if (gameObject.equals(name)) {
+                                tmp = new TestObject1(mapInfo.getX() * size, mapInfo.getY() * size);
+                                return tmp;
+                            }
+                            return null;
+                        }
+                    }
+            );
         } catch (IOException ex) {
             Logger.getLogger(MapScene.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -116,13 +144,15 @@ public class MapScene extends Scene {
 //        }
 
     }
+
     @Override
     public void sceneEnd() {
 
     }
+
     @Override
     public CommandSolver.KeyListener keyListener() {
-        return new CommandSolver.KeyListener(){
+        return new CommandSolver.KeyListener() {
             @Override
             public void keyTyped(char c, long trigTime) {
 
@@ -130,115 +160,175 @@ public class MapScene extends Scene {
 
             @Override
             public void keyPressed(int commandCode, long trigTime) {
-                Global.Direction dir=Global.Direction.getDirection(commandCode);
-                    actor.get(0).walk(dir);
-                    if(commandCode==6){  //角色斷線時發送斷線訊息
-                        ArrayList<String> strs = new ArrayList<String>();
-                        strs.add(String.valueOf(ClientClass.getInstance().getID()));
-                        ClientClass.getInstance().sent(Global.InternetCommand.DISCONNECT,strs);
-                        ClientClass.getInstance().disConnect();
-                        System.exit(0);
-                    }
-                switch (dir){
-                    case DOWN:
-                        actor.get(0).translateY(1);
-                        break;
-                    case UP:
-                        actor.get(0).translateY(-1);
-                        break;
-                    case LEFT:
-                        actor.get(0).translateX(-1);
-                        break;
-                    case RIGHT:
-                        actor.get(0).translateX(1);
-                        break;
+                if(commandCode==2){
+                    Move(x,y);
+                    System.out.println("Mx: "+x);
+                    System.out.println("My: "+y);
                 }
+//                if(commandCode==6){  //角色斷線時發送斷線訊息
+//                    ArrayList<String> strs = new ArrayList<String>();
+//                    strs.add(String.valueOf(ClientClass.getInstance().getID()));
+//                    ClientClass.getInstance().sent(Global.InternetCommand.DISCONNECT,strs);
+//                    ClientClass.getInstance().disConnect();
+//                    System.exit(0);
+//                }
+
             }
+
             @Override
             public void keyReleased(int commandCode, long trigTime) {
+
+            }
+        };
+    }
+    private void Move(int x1,int y1){
+
+        int moveStep=10;
+        float a=Math.abs(spaceShip.painter().centerX()-x1);
+        float b=Math.abs(spaceShip.painter().centerY()-y1);
+        if(a==0&&b==0){
+            return;
+        }
+
+//        if(a==0){
+//            a=1;
+//        }
+//        if(b==0){
+//            b=1;
+//        }
+        double d=Math.sqrt(a*a+b*b);
+        if(a<5&&b<5){
+            return;
+        }
+        double xM=Math.cos(Math.acos(a/d))*moveStep;
+        double yM=Math.cos(Math.acos(b/d))*moveStep;
+
+        if(spaceShip.painter().centerX()>x1){
+           xM=-xM;
+        }
+        if(spaceShip.painter().centerY()>y1){
+            yM=-yM;
+        }
+        System.out.println("ym:"+yM);
+        System.out.println("xm:"+xM);
+
+        spaceShip.collider().offset(xM,yM);
+
+    }
+    @Override
+    public CommandSolver.MouseListener mouseListener() {
+        return (e, state, trigTime) -> {
+            if (state != null) {
+                 x = e.getX();
+                 y = e.getY();
+//                System.out.println("x" + x);
+//                System.out.println("y" + y);
+                setDegree(x, y);
             }
         };
     }
 
-    @Override
-    public CommandSolver.MouseListener mouseListener() {
-        return null;
+    private void setDegree(int x, int y) {
+
+        double a = 0.5 * spaceShip.painter().height();//check
+        double b = Global.getHypotenuse(x, y
+                , spaceShip.painter().centerX() - cam.painter().left(), spaceShip.painter().top() - cam.painter().top());
+        double c = Global.getHypotenuse(x, y
+                , spaceShip.painter().centerX() - cam.painter().left(), spaceShip.painter().centerY() - cam.painter().top());
+        double t1 = 2 * a * c;
+        double t2 = (c * c + a * a - b * b);
+        double t3 = t2 / t1;
+        double t4 = Math.acos(t3);
+        double t5 = Math.toDegrees(t4);
+        if(x<spaceShip.painter().centerX() - cam.painter().left()&&y>spaceShip.painter().top()-cam.painter().top()){
+            t5=-t5;
+        }
+        if(x<spaceShip.painter().centerX() - cam.painter().left()&&y<spaceShip.painter().top()-cam.painter().top()){
+            t5=-t5;
+        }
+//        System.out.println("t5:" + t5);
+        degree=t5;
     }
 
     @Override
     public void paint(Graphics g) {
         cam.start(g);
-        for (int i=0;i<gameObjectArr.size();i++){
+        for (int i = 0; i < gameObjectArr.size(); i++) {
             gameObjectArr.get(i).paint(g);
         }
-        for(int i=0;i<actor.size();i++){
-            actor.get(i).paint(g);
-        }
-//        this.actor.get(0).paint(g); //自己決角色
+        spaceShip.paintComponent(g, degree);
+        spaceShip.paint(g);
+//        spaceShip.paint(g);
+//      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
     }
 
     @Override
     public void update() {
-        actor.get(0).update();
         cam.update();
-        for (int i=0;i<gameObjectArr.size();i++){
-            if (cam.isCollision(gameObjectArr.get(i))){
+
+        int x = 0;
+
+        for (int i = 0; i < gameObjectArr.size(); i++) {
+            if (cam.isCollision(gameObjectArr.get(i))) {
                 gameObjectArr.get(i).update();
             }
         }
-        ArrayList<String> strr=new ArrayList<>();
-        strr.add(ClientClass.getInstance().getID()+"");
-        strr.add(actor.get(0).painter().centerX()+"");
-        strr.add(actor.get(0).painter().centerY()+"");
-        strr.add(actor.get(0).getDir()+"");
-        ClientClass.getInstance().sent(Global.InternetCommand.MOVE,strr);
+//        ArrayList<String> strr=new ArrayList<>();
+//        strr.add(ClientClass.getInstance().getID()+"");
+//        strr.add(spaceShip.get(0).painter().centerX()+"");
+//        strr.add(spaceShip.get(0).painter().centerY()+"");
+//        strr.add(spaceShip.get(0).getDir()+"");
+//        ClientClass.getInstance().sent(Global.InternetCommand.MOVE,strr);
 
         /*ArrayList<String> strrr=new ArrayList<>();
-        strrr.add(actor.get(0).getNum()+"");
+        strrr.add(spaceShip.get(0).getNum()+"");
         ClientClass.getInstance().sent(Global.InternetCommand.CONNECT,strrr);*/
-
-        ClientClass.getInstance().consume(new CommandReceiver() {
-            @Override
-            public void receive(int serialNum, int internetcommand, ArrayList<String> strs) {
-                switch(internetcommand){
-                    case Global.InternetCommand.CONNECT:
-                        System.out.println("Connect " + serialNum);
-                        boolean isburn = false;
-                        for (int i = 0; i < actor.size(); i++) {
-                            if (actor.get(i).getId() == serialNum) {
-                                isburn = true;
-                                break;
-                            }
-                        }
-                        if(!isburn) {
-                            actor.add(new Actor(100, 100, Integer.valueOf(strs.get(2))));
-                            actor.get(actor.size() - 1).setId(serialNum);
-                            ArrayList<String> str=new ArrayList<>();
-                            str.add(actor.get(0).painter().centerX()+"");
-                            str.add(actor.get(0).painter().centerY()+"");
-                            str.add(actor.get(0).getNum()+"");
-                            ClientClass.getInstance().sent(Global.InternetCommand.CONNECT,str);
-                        }
-                        break;
-                    case Global.InternetCommand.MOVE:
-                        for(int i=1;i<actor.size();i++) {
-                            if(actor.get(i).getId()==Integer.valueOf(strs.get(0))) {
-                               actor.get(i).painter().setCenter(Integer.valueOf(strs.get(1)),Integer.valueOf(strs.get(2)));
-                               actor.get(i).walk(Global.Direction.getDirection(Integer.valueOf(strs.get(3))));
-                               break;
-                            }
-                        }
-                        break;
-                        case Global.InternetCommand.DISCONNECT:
-                            for(int i=0;i<actor.size();i++){
-                                if(actor.get(i).getId()==Integer.valueOf(strs.get(0))){
-                                    actor.remove(i);
-                                }
-                            }
-                            break;
-                }
-            }
-        });
+//
+//        ClientClass.getInstance().consume(new CommandReceiver() {
+//            @Override
+//            public void receive(int serialNum, int internetcommand, ArrayList<String> strs) {
+////                switch(internetcommand){
+//                    case Global.InternetCommand.CONNECT:
+//                        System.out.println("Connect " + serialNum);
+//                        boolean isburn = false;
+//                        for (int i = 0; i < spaceShip.size(); i++) {
+//                            if (spaceShip.get(i).getId() == serialNum) {
+//                                isburn = true;
+//                                break;
+//                            }
+//                        }
+//                        if(!isburn) {
+//                            spaceShip.add(new spaceShip(Integer.valueOf(strs.get(0)),Integer.valueOf(strs.get(1)), Integer.valueOf(strs.get(2))));
+//                            System.out.println("!!!!!!!!!!!!!!!!!!!!");
+//                            spaceShip.get(spaceShip.size() - 1).setId(serialNum);
+//                            ArrayList<String> str=new ArrayList<>();
+//                            str.add(spaceShip.get(0).painter().centerX()+"");
+//                            str.add(spaceShip.get(0).painter().centerY()+"");
+//                            str.add(spaceShip.get(0).getNum()+"");
+//                            ClientClass.getInstance().sent(Global.InternetCommand.CONNECT,str);
+//                        }
+//                        break;
+//                    case Global.InternetCommand.MOVE:
+//                        for(int i=1;i<spaceShip.size();i++) {
+//                            if(spaceShip.get(i).getId()==Integer.valueOf(strs.get(0))) {
+//                               spaceShip.get(i).painter().setCenter(Integer.valueOf(strs.get(1)),Integer.valueOf(strs.get(2)));
+//                               spaceShip.get(i).walk(Global.Direction.getDirection(Integer.valueOf(strs.get(3))));
+//                               break;
+//                            }
+//                        }
+//                        break;
+//                        case Global.InternetCommand.DISCONNECT:
+//                            for(int i=0;i<spaceShip.size();i++){
+//                                if(spaceShip.get(i).getId()==Integer.valueOf(strs.get(0))){
+//                                    spaceShip.remove(i);
+//                                }
+//                            }
+//                            break;
+//                }
+//            }
+//        });
     }
+
+
 }

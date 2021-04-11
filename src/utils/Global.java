@@ -6,7 +6,11 @@ public class Global {
         public static final int MOVE=1;
         public static final int DISCONNECT=2;
     }
-
+//    public class calculator{
+//        public double dx(double x1,double x2){
+//            return
+//        }
+//    }
     public enum Direction {
         UP(3),
         DOWN(0),
@@ -32,7 +36,42 @@ public class Global {
         }
     }
 
-    public static final boolean IS_DEBUG = false;
+    public static final boolean IS_DEBUG =true;
+    public static double getDegree(int x1,int y1,int x2,int y2){
+        double a=getHypotenuse( x1, y1, x2, y2);
+        double b=getHypotenuse(x1,y1,x2,y1);
+        double c=getHypotenuse(x2,y1,x2,y2);
+        double t1 = 2 * a * c;
+        double t2 = (c * c + a * a - b * b);
+        double t3 = t2 / t1;
+        double t4 = Math.acos(t3);
+        return  Math.toDegrees(t4);
+    }
+    public static double anotherDegree(double degree){
+        return 90-degree;
+    }
+
+    public static double getHypotenuse(int x1,int y1,int x2,int y2){
+        double tmp;
+        int dx=x1-x2;
+        int dy=y1-y2;
+        tmp=Math.sqrt(dx*dx+dy*dy);
+        return tmp;
+    }
+    public static double anglesFinder(double a, double b, double c) {
+
+        double alpha;
+        double beta;
+        double gamma;
+        alpha = (double) Math.acos((Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2)) / (2 * c * b));
+        beta = (double) Math.acos((Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2 * a * c));
+        gamma = (double) Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
+        System.out.println("angle between a & b is: " + (beta * (180 / Math.PI)));
+        System.out.println("angle between a & c is: " + (alpha * (180 / Math.PI)));
+        System.out.println("angle between b & c is: " + (gamma * (180 / Math.PI)));
+        return (alpha * (180 / Math.PI));
+    }
+
 
     public static void log(String str) {
         if (IS_DEBUG) {

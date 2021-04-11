@@ -61,12 +61,15 @@ public class Rect {
         return (top + bottom) / 2f;
     }
 
-    public final Rect translate(int dx, int dy){
+    public final Rect translate(double dx, double dy){
         this.left += dx;
         this.right += dx;
         this.top += dy;
         this.bottom += dy;
         return this;
+    }
+    public final void offset(double x,double y ){
+        setCenter(centerX()+x,centerY()+y);
     }
     public final Rect translateX(int dx){
         this.left += dx;
@@ -119,7 +122,7 @@ public class Rect {
         return this.bottom - this.top;
     }
 
-    public final void setCenter(int x, int y){
+    public final void setCenter(double x, double y){
         translate(x - centerX(), y - centerY());
     }
 }

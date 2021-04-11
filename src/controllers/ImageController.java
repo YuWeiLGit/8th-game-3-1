@@ -2,6 +2,8 @@ package controllers;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -34,6 +36,17 @@ public class ImageController {
         }
         return img;
     }
+    public BufferedImage addBuff(String path){
+        BufferedImage img=null;
+        try {
+            img=ImageIO.read(getClass().getResource(path));
+            this.keyPairs.add(new KeyPair(path,img));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
+    }
+
     //取得陣列中圖片的方法-->根據路徑找該圖片
     public Image tryGet(String path){
         for(int i=0;i<keyPairs.size();i++){
