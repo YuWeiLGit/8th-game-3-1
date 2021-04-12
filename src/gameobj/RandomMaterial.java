@@ -13,7 +13,7 @@ public class RandomMaterial extends GameObject {
     private Delay delay;
 
     public RandomMaterial(int x, int y) {
-        super(x, y, Global.UNIT_X * 2, Global.UNIT_Y * 2,State.BURN);
+        super(x+Global.UNIT_X, y+Global.UNIT_Y, Global.UNIT_X * 2, Global.UNIT_Y * 2,State.BURN);
         img = ImageController.getInstance().tryGet("/randomMaterial.png");
         this.delay = new Delay(300);
         delay.isPause();

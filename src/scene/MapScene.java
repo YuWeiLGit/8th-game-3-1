@@ -33,7 +33,7 @@ public class MapScene extends Scene {
     public int dx;
     public int dy;
     private int count;//按壓時間
-    private int moveStep;//移動基礎步數
+//    private int moveStep;//移動基礎步數
     private ItemPic itemPic;
     private boolean willMove;
 
@@ -42,7 +42,6 @@ public class MapScene extends Scene {
 
     @Override
     public void sceneBegin() {
-
         count = 0;
         map = new Map();
         gameObjectArr = new ArrayList();
@@ -211,10 +210,10 @@ public class MapScene extends Scene {
             public void keyReleased(int commandCode, long trigTime) {
                 if (commandCode == 2) {
                     willMove = true;
-//                    Move(x, y,spaceShip);
+//                    Move(XX, YY,spaceShip);
 //                    count = 0;
-//                    System.out.println("Mx: "+x);
-//                    System.out.println("My: "+y);
+//                    System.out.println("Mx: "+XX);
+//                    System.out.println("My: "+YY);
                 }
             }
         };
@@ -243,8 +242,8 @@ public class MapScene extends Scene {
             return;
         }
         double d = Math.sqrt(a * a + b * b);
-        double xM = Math.cos(Math.acos(a / d)) * (moveStep);
-        double yM = Math.cos(Math.acos(b / d)) * (moveStep);
+        double xM = Math.cos(Math.acos(a / d)) * (spaceShip.getMoveStep());
+        double yM = Math.cos(Math.acos(b / d)) * (spaceShip.getMoveStep());
 
         if (gameObject.painter().centerX() - cam.painter().left() > x1) {
             xM = -xM;
@@ -254,20 +253,20 @@ public class MapScene extends Scene {
         }
         if (a == 0 && b != 0) {
             if (yM < 0) {
-                gameObject.painter().offset(0, -moveStep * 0.2);
-                gameObject.collider().offset(0, -moveStep * 0.2);
+                gameObject.painter().offset(0, -spaceShip.getMoveStep() * 0.2);
+                gameObject.collider().offset(0, -spaceShip.getMoveStep() * 0.2);
             } else {
-                gameObject.painter().offset(0, moveStep * 0.2);
-                gameObject.collider().offset(0, moveStep * 0.2);
+                gameObject.painter().offset(0, spaceShip.getMoveStep() * 0.2);
+                gameObject.collider().offset(0, spaceShip.getMoveStep() * 0.2);
             }
         }
         if (a != 0 && b == 0) {
             if (xM < 0) {
-                gameObject.painter().offset(-moveStep * 0.2, 0);
-                gameObject.collider().offset(-moveStep * 0.2, 0);
+                gameObject.painter().offset(-spaceShip.getMoveStep() * 0.2, 0);
+                gameObject.collider().offset(-spaceShip.getMoveStep() * 0.2, 0);
             } else {
-                gameObject.painter().offset(moveStep * 0.2, 0);
-                gameObject.collider().offset(moveStep * 0.2, 0);
+                gameObject.painter().offset(spaceShip.getMoveStep() * 0.2, 0);
+                gameObject.collider().offset(spaceShip.getMoveStep() * 0.2, 0);
             }
         }
 //        System.out.println("ym:"+yM);
@@ -339,7 +338,6 @@ public class MapScene extends Scene {
 //      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
     }
-
     @Override
     public void update() {
         cam.update();
@@ -386,7 +384,6 @@ public class MapScene extends Scene {
         else  {
             willMove = false;
         }
-
         System.out.println("!"+count);
         System.out.println(willMove);
 //        for (int i = 0; i < gameObjectArr1.size(); i++) {
@@ -451,6 +448,5 @@ public class MapScene extends Scene {
 //        });
 //        }
 
-
-    }
+  }
 }

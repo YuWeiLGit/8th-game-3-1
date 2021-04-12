@@ -15,7 +15,7 @@ public class SlowDownRoad extends GameObject {
 
 
     public SlowDownRoad(int x, int y) {
-        super(x, y, Global.UNIT_X - 2, Global.UNIT_Y, State.BURN);
+        super(x+Global.UNIT_X/2, y+Global.UNIT_Y/2, Global.UNIT_X , Global.UNIT_Y, State.BURN);
         img = ImageController.getInstance().tryGet("/slowdown.png");
         delay = new Delay(5);
     }

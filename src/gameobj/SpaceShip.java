@@ -15,11 +15,12 @@ public class SpaceShip extends GameObject{
     private ArrayList<GameObject> materials; //道具
 
     public SpaceShip(int x, int y,int moveStep) {
-        super(x, y, 32, 32,null);
+        super(x+32/2, y+32/2, 32, 32,null);
        this.img = ImageController.getInstance().tryGet("/spaceship.png");
        isCircle();
         materials = new ArrayList<>();
         isGetMaterials = false;
+        setMoveStep(moveStep);
 //        image=ImageController.getInstance().addBuff("/airplane1.png");
 //        img=  Rotate.BufferedImageToImage(Rotate.rotateImage(image,33));
     }
