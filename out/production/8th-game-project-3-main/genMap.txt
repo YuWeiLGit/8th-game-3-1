@@ -1,2 +1,5 @@
-grass,-10027162,C:\Users\a0920\OneDrive\桌面\戰鬥營\素材\platformer-pack-redux-360-assets-20210329T115850Z-001\platformer-pack-redux-360-assets\PNG\Ground\Grass\grass.png,1,1
-sand,-256,C:\Users\a0920\OneDrive\桌面\戰鬥營\素材\platformer-pack-redux-360-assets-20210329T115850Z-001\platformer-pack-redux-360-assets\PNG\Ground\Sand\sand.png,1,1
+wall,-10027213,C:\Users\kukuman\Desktop\dayOfCmoney\midernPorject\midernGameCode\resource\wall.png,2,2
+randomMaterial,-39322,C:\Users\kukuman\Desktop\dayOfCmoney\midernPorject\midernGameCode\resource\randomMaterial.png,2,2
+acceleration,-10040065,C:\Users\kukuman\Desktop\dayOfCmoney\midernPorject\midernGameCode\resource\acceleration.png,1,1
+backStone,-6710785,C:\Users\kukuman\Desktop\dayOfCmoney\midernPorject\midernGameCode\resource\backStone.png,1,1
+slowDown,-13421569,C:\Users\kukuman\Desktop\dayOfCmoney\midernPorject\midernGameCode\resource\slowdown.png,1,1

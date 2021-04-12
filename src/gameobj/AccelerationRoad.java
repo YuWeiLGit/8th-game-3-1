@@ -1,0 +1,49 @@
+package gameobj;
+
+import controllers.ImageController;
+
+import gameobj.GameObject;
+import gameobj.SpaceShip;
+import utils.Delay;
+import utils.Global;
+
+import java.awt.*;
+
+public class AccelerationRoad extends GameObject {
+    private static final int ACCELERATION_VALUE = 10;
+    private Image img;
+    private Delay delay;
+
+    public AccelerationRoad(int x, int y) {
+        super(x, y, Global.UNIT_X,Global.UNIT_Y,State.BURN);
+        img = ImageController.getInstance().tryGet("/acceleration.png");
+        delay = new Delay(30);
+        delay.isPause();
+    }
+
+    @Override
+    public void active(GameObject gameObject) {
+        if(gameObject instanceof SpaceShip){
+            SpaceShip spaceShip = (SpaceShip)gameObject;
+            spaceShip.offSetMoveStep(ACCELERATION_VALUE);
+        }
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        g.drawImage(img, painter().left(), painter().top(), null);
+    }
+
+    @Override
+    public void update() {
+        if(getState() == GameObject.State.DISAPPEAR){
+            delay.play();
+        }
+        if(delay.count()){
+            setState(GameObject.State.BURN);
+        }
+
+
+
+    }
+}

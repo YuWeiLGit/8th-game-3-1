@@ -26,8 +26,9 @@ public class MapScene extends Scene {
     private int num;
     private int XX;
     private int YY;
-    private ArrayList<GameObject> gameObjectArr1;
-    private ArrayList<GameObject> gameObjectArr;
+    private ArrayList<GameObject> gameObjectArr2; //無法被撞到,但撞到會轉狀態
+    private ArrayList<GameObject> gameObjectArr1; //無法被撞到
+    private ArrayList<GameObject> gameObjectArr; //牆
     private double degree;
     public int dx;
     public int dy;
@@ -41,13 +42,14 @@ public class MapScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        moveStep = 7;
+
         count = 0;
         map = new Map();
         gameObjectArr = new ArrayList();
         gameObjectArr1 = new ArrayList();
+        gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 200);
+        spaceShip = new SpaceShip(100, 200,7);
         itemPic = new ItemPic(300, 0);
         willMove = false;
         degree = 0;
@@ -71,30 +73,44 @@ public class MapScene extends Scene {
         try {
             MapLoader mapLoader = new MapLoader("/genMap.bmp", "/genMap.txt");
             ArrayList<MapInfo> test = mapLoader.combineInfo();
-            this.gameObjectArr = mapLoader.creatObjectArray("grass", 128, test, new MapLoader.CompareClass() {
+            this.gameObjectArr = mapLoader.creatObjectArray("wall", 32, test, new MapLoader.CompareClass() {
                         @Override
                         public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
                             GameObject tmp = null;
                             if (gameObject.equals(name)) {
-                                tmp = new TestObject1(mapInfo.getX() * size, mapInfo.getY() * size);
+                                tmp = new Wall(mapInfo.getX() * size, mapInfo.getY() * size);
                                 return tmp;
                             }
                             return null;
                         }
                     }
             );
-            this.gameObjectArr.addAll(mapLoader.creatObjectArray("sand", 128, test, new MapLoader.CompareClass() {
+
+            this.gameObjectArr1 = mapLoader.creatObjectArray("slowDown", 32, test, new MapLoader.CompareClass() {
                         @Override
                         public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
                             GameObject tmp = null;
                             if (gameObject.equals(name)) {
-                                tmp = new TestObject2(mapInfo.getX() * size, mapInfo.getY() * size);
+                                tmp = new SlowDownRoad(mapInfo.getX() * size, mapInfo.getY() * size);
                                 return tmp;
                             }
                             return null;
                         }
                     }
-            ));
+            );
+            this.gameObjectArr1.addAll(mapLoader.creatObjectArray("acceleration", 32, test, new MapLoader.CompareClass() {
+                        @Override
+                        public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
+                            GameObject tmp = null;
+                            if (gameObject.equals(name)) {
+                                tmp = new AccelerationRoad(mapInfo.getX() * size, mapInfo.getY() * size);
+                                return tmp;
+                            }
+                            return null;
+                        }
+                    }
+                    )
+            );
             /*this.gameObjectArr.addAll(mapLoader.creatObjectArray("P3", 32, test, new MapLoader.CompareClass() {
                         @Override
                         public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
@@ -128,12 +144,12 @@ public class MapScene extends Scene {
 //                System.out.println(test.get(i).getSizeX());
 //                System.out.println(test.get(i).getSizeY());
 //            }
-            this.gameObjectArr1 = mapLoader.creatObjectArray("grass", 128, test, new MapLoader.CompareClass() {
+            this.gameObjectArr2 = mapLoader.creatObjectArray("randomMaterial", 32, test, new MapLoader.CompareClass() {
                         @Override
                         public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
                             GameObject tmp = null;
                             if (gameObject.equals(name)) {
-                                tmp = new TestObject1(mapInfo.getX() * size, mapInfo.getY() * size);
+                                tmp = new RandomMaterial(mapInfo.getX() * size, mapInfo.getY() * size);
                                 return tmp;
                             }
                             return null;
@@ -310,6 +326,12 @@ public class MapScene extends Scene {
         for (int i = 0; i < gameObjectArr.size(); i++) {
             gameObjectArr.get(i).paint(g);
         }
+        for (int i = 0; i < gameObjectArr1.size(); i++) {
+            gameObjectArr1.get(i).paint(g);
+        }
+        for (int i = 0; i < gameObjectArr2.size(); i++) {
+            gameObjectArr2.get(i).paint(g);
+        }
         spaceShip.paintComponent(g, degree);
         spaceShip.paint(g);
         itemPic.paintComponent(g);
@@ -321,11 +343,33 @@ public class MapScene extends Scene {
     @Override
     public void update() {
         cam.update();
-//        for (int i = 0; i < gameObjectArr.size(); i++) {
-//            if (cam.isCollision(gameObjectArr.get(i))) {
-////                gameObjectArr.get(i).update();
-////            }
-////        }
+
+        for (int i = 0; i < gameObjectArr.size(); i++) {
+            if (cam.isCollision(gameObjectArr.get(i))) {
+                gameObjectArr.get(i).update();
+            }
+        }
+        for(int i=0;i<gameObjectArr1.size();i++) {
+            if (spaceShip.isCollision(gameObjectArr1.get(i))) {
+                gameObjectArr1.get(i).active(spaceShip);
+            }
+        }
+        for(int i=0;i<gameObjectArr1.size();i++) {
+            gameObjectArr1.get(i).update();
+        }
+        for(int i =0;i<gameObjectArr2.size();i++){
+            gameObjectArr2.get(i).update();
+        }
+        for(int i=0;i<gameObjectArr2.size();i++){
+            if(spaceShip.isCollision(gameObjectArr2.get(i))){
+                gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
+            }
+        }
+        for(int i =0;i<gameObjectArr2.size();i++){
+            gameObjectArr2.get(i).update();
+        }
+        spaceShip.update();
+
         if (XX - spaceShip.painter().centerX() < 3 && YY - spaceShip.painter().centerY() < 3) {
             willMove = false;
             return;
@@ -342,6 +386,7 @@ public class MapScene extends Scene {
         else  {
             willMove = false;
         }
+
         System.out.println("!"+count);
         System.out.println(willMove);
 //        for (int i = 0; i < gameObjectArr1.size(); i++) {

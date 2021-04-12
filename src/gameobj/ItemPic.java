@@ -15,6 +15,12 @@ private  Image img;
     public void changePos(int x,int y){
 
     }
+
+    @Override
+    public void active(GameObject obj) {
+
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         g.drawImage(img, painter().centerX(), painter().centerY(), null);

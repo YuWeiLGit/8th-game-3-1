@@ -7,16 +7,26 @@ import utils.Global;
 import java.awt.*;
 
 //管理遊戲物件的抽象父類
-public abstract class GameObject implements GameKernel.UpdateInterface,GameKernel.PaintInterface{
+public abstract class GameObject implements GameKernel.UpdateInterface, GameKernel.PaintInterface {
     private final Rect collider;
     private final Rect painter;
     private boolean isCircle;
+    private State state;
+
+    public GameObject(int x, int y, int width, int height, State state) {
+        this(x, y, width, height, x, y, width, height);
+        isCircle = false;
+        this.state = state;
+    }
+
     public GameObject(int x, int y, int width, int height) {
         this(x, y, width, height, x, y, width, height);
-        isCircle=false;
+        isCircle = false;
+        this.state = null;
     }
 
     public GameObject(Rect rect) {
+        state = State.NULL;
         collider = new Rect(rect);
         painter = new Rect(rect);
     }
@@ -25,11 +35,13 @@ public abstract class GameObject implements GameKernel.UpdateInterface,GameKerne
                       int x2, int y2, int width2, int height2) {
         collider = Rect.genWithCenter(x, y, width, height);
         painter = Rect.genWithCenter(x2, y2, width2, height2);
+        state = State.NULL;
     }
 
     public GameObject(Rect rect, Rect rect2) {
         collider = new Rect(rect);
         painter = new Rect(rect2);
+        state = State.NULL;
     }
 
     public boolean outOfScreen() {
@@ -66,35 +78,50 @@ public abstract class GameObject implements GameKernel.UpdateInterface,GameKerne
 //        if(isCircle){
 //
 //        }else {
-        return collider.overlap(obj.collider);}
-//    }
+        return collider.overlap(obj.collider);
+    }
+
+    //    }
     public boolean topIsCollision(GameObject obj) {
-        return collider.left()<obj.collider.right() &&
-                obj.collider.bottom()<=collider.top()&&
-                obj.collider.top()<collider.bottom()&&
-                obj.collider.left()<collider.right();
+        return collider.left() < obj.collider.right() &&
+                obj.collider.bottom() <= collider.top() &&
+                obj.collider.top() < collider.bottom() &&
+                obj.collider.left() < collider.right();
     }
+
     public boolean leftIsCollision(GameObject obj) {
-        return collider.left()<=obj.collider.right() &&
-                obj.collider.bottom()>collider.top()&&
-                obj.collider.top()<collider.bottom()&&
-                obj.collider.left()<collider.left();
+        return collider.left() <= obj.collider.right() &&
+                obj.collider.bottom() > collider.top() &&
+                obj.collider.top() < collider.bottom() &&
+                obj.collider.left() < collider.left();
     }
+
     public boolean rightIsCollision(GameObject obj) {
-        return collider.right()>=obj.collider.left()&&
-                obj.collider.bottom()>collider.top()&&
-                obj.collider.top()<collider.bottom()&&
-                obj.collider.right()>collider.right();
+        return collider.right() >= obj.collider.left() &&
+                obj.collider.bottom() > collider.top() &&
+                obj.collider.top() < collider.bottom() &&
+                obj.collider.right() > collider.right();
     }
+
     public boolean bottomIsCollision(GameObject obj) {
-        return collider.left()<obj.collider.right() &&
-                obj.collider.bottom()>collider.top()&&
-                obj.collider.top()>=collider.bottom()&&
-                obj.collider.left()<collider.right();
+        return collider.left() < obj.collider.right() &&
+                obj.collider.bottom() > collider.top() &&//
+                obj.collider.top() >= collider.bottom() &&
+                obj.collider.left() < collider.right();
     }
-    public void isCircle(){
-        isCircle=true;
+
+    public void isCircle() {
+        isCircle = true;
     }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
+    }
+
     public final void translate(int x, int y) {
         collider.translate(x, y);
         painter.translate(x, y);
@@ -122,21 +149,30 @@ public abstract class GameObject implements GameKernel.UpdateInterface,GameKerne
     public final void paint(Graphics g) {
         paintComponent(g);
         if (Global.IS_DEBUG) {
-            if(isCircle){
+            if (isCircle) {
                 g.setColor(Color.RED);
                 g.drawOval(this.painter.left(), this.painter.top(), this.painter.width(), this.painter.height());
                 g.setColor(Color.BLUE);
                 g.drawOval(this.collider.left(), this.collider.top(), this.collider.width(), this.collider.height());
                 g.setColor(Color.BLACK);
+            } else {
+                g.setColor(Color.RED);
+                g.drawRect(this.painter.left(), this.painter.top(), this.painter.width(), this.painter.height());
+                g.setColor(Color.BLUE);
+                g.drawRect(this.collider.left(), this.collider.top(), this.collider.width(), this.collider.height());
+                g.setColor(Color.BLACK);
             }
-        else {
-            g.setColor(Color.RED);
-            g.drawRect(this.painter.left(), this.painter.top(), this.painter.width(), this.painter.height());
-            g.setColor(Color.BLUE);
-            g.drawRect(this.collider.left(), this.collider.top(), this.collider.width(), this.collider.height());
-            g.setColor(Color.BLACK);}
         }
     }
-    public void active(GameObject obj){ }
+
+    public void active(GameObject obj) {
+    }
+
     public abstract void paintComponent(Graphics g);
+
+    public enum State {
+        BURN,
+        DISAPPEAR,
+        NULL;
+    }
 }

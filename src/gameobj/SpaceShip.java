@@ -6,19 +6,37 @@ import controllers.Rotate;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class SpaceShip extends GameObject{
     private Image img;
+    private boolean isGetMaterials;
+    private int moveStep;
+    private ArrayList<GameObject> materials; //道具
 
-
-    public SpaceShip(int x, int y) {
-        super(x, y, 32, 32);
+    public SpaceShip(int x, int y,int moveStep) {
+        super(x, y, 32, 32,null);
        this.img = ImageController.getInstance().tryGet("/spaceship.png");
        isCircle();
+        materials = new ArrayList<>();
+        isGetMaterials = false;
 //        image=ImageController.getInstance().addBuff("/airplane1.png");
 //        img=  Rotate.BufferedImageToImage(Rotate.rotateImage(image,33));
     }
-
+    public void setMoveStep(int moveStep) {
+        this.moveStep = moveStep;
+    }
+    public int getMoveStep(){
+        return  this.moveStep;
+    }
+    public  void offSetMoveStep(int x){
+        setMoveStep(getMoveStep()+x);
+    }
+    //得到道具的方法
+    public void getMaterials(gameobj.RandomMaterial randomMaterial){
+        materials.add(randomMaterial);
+        this.isGetMaterials = true;
+    }
     @Override
     public void paintComponent(Graphics g) {
 
