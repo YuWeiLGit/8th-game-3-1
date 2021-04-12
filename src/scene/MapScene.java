@@ -8,6 +8,7 @@ import internet.server.Server;
 import maploader.MapInfo;
 import maploader.MapLoader;
 import utils.CommandSolver;
+import utils.GameKernel;
 import utils.Global;
 
 import java.awt.*;
@@ -23,28 +24,35 @@ public class MapScene extends Scene {
     private SpaceShip spaceShip;
     private Map map;
     private int num;
-    private int x;
-    private int y;
+    private int XX;
+    private int YY;
     private ArrayList<GameObject> gameObjectArr1;
     private ArrayList<GameObject> gameObjectArr;
     private double degree;
     public int dx;
     public int dy;
-     private int moveStep;
+    private int count;//按壓時間
+    private int moveStep;//移動基礎步數
+    private ItemPic itemPic;
+    private boolean willMove;
+
     public MapScene() {
     }
 
     @Override
     public void sceneBegin() {
-        moveStep=7;
+        moveStep = 7;
+        count = 0;
         map = new Map();
         gameObjectArr = new ArrayList();
         gameObjectArr1 = new ArrayList();
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 100);
+        spaceShip = new SpaceShip(100, 200);
+        itemPic = new ItemPic(300, 0);
+        willMove = false;
         degree = 0;
-        dx=0;
-        dy=0;
+        dx = 0;
+        dy = 0;
         //______________
         //System.out.print("輸入0~7決定角色: ");
         //this.num = sc.nextInt();
@@ -59,7 +67,7 @@ public class MapScene extends Scene {
 //        ClientClass.getInstance().sent(Global.InternetCommand.CONNECT,str);
 //        spaceShip.get(0).setId(ClientClass.getInstance().getID());
         cam = new Camera.Builder(1000, 1000).setChaseObj(spaceShip, 1, 1)
-                .setCameraStartLocation(spaceShip.painter().left(), spaceShip.painter().top()).gen();
+                .setCameraStartLocation(0, 0).gen();
         try {
             MapLoader mapLoader = new MapLoader("/genMap.bmp", "/genMap.txt");
             ArrayList<MapInfo> test = mapLoader.combineInfo();
@@ -162,11 +170,17 @@ public class MapScene extends Scene {
 
             @Override
             public void keyPressed(int commandCode, long trigTime) {
-                if(commandCode==2){
-                    Move(x,y);
-                    System.out.println("Mx: "+x);
+                if (commandCode == 2) {
+                    count = count + 3;
+//                    System.out.println("Mx: "+x);
 //                    System.out.println("My: "+y);
                 }
+//                count = count + 3;
+//                if(commandCode==2){
+//                    Move(x,y);
+////                    System.out.println("Mx: "+x);
+////                    System.out.println("My: "+y);
+//                }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
 //                    ArrayList<String> strs = new ArrayList<String>();
 //                    strs.add(String.valueOf(ClientClass.getInstance().getID()));
@@ -179,74 +193,91 @@ public class MapScene extends Scene {
 
             @Override
             public void keyReleased(int commandCode, long trigTime) {
-
+                if (commandCode == 2) {
+                    willMove = true;
+//                    Move(x, y,spaceShip);
+//                    count = 0;
+//                    System.out.println("Mx: "+x);
+//                    System.out.println("My: "+y);
+                }
             }
         };
     }
-    private void Move(int x1,int y1){
-        if(spaceShip.painter().centerX()-cam.painter().left()==x1&&spaceShip.painter().centerY()-cam.painter().top()==0){
+
+    private void Move(int x1, int y1, GameObject gameObject) {
+        if (gameObject.painter().centerX() - cam.painter().left() == x1 && gameObject.painter().centerY() - cam.painter().top() == 0) {
             return;
         }
 
-
-        float a=Math.abs(spaceShip.painter().centerX()-cam.painter().left()-x1);
-        float a1=spaceShip.painter().centerX()-x1;
-        float b=Math.abs(spaceShip.painter().centerY()-cam.painter().top()-y1);
-        float b1=spaceShip.painter().centerY()-y1;
+        float a = Math.abs(gameObject.painter().centerX() - cam.painter().left() - x1);
+        float a1 = gameObject.painter().centerX() - x1;
+        float b = Math.abs(gameObject.painter().centerY() - cam.painter().top() - y1);
+        float b1 = gameObject.painter().centerY() - y1;
 //        System.out.println(x1+"/"+y1);
 //        System.out.println(spaceShip.painter().centerX()+"/"+spaceShip.painter().centerY());
 
-        if(spaceShip.painter().centerX() - cam.painter().left()==0&&spaceShip.painter().centerY() - cam.painter().top()==0){
+        if (gameObject.painter().centerX() - cam.painter().left() == 0 && gameObject.painter().centerY() - cam.painter().top() == 0) {
             return;
         }
 
-        if(spaceShip.painter().centerX() - cam.painter().left()<5&&spaceShip.painter().centerY() - cam.painter().top()<5){
+        if (gameObject.painter().centerX() - cam.painter().left() < 5 && gameObject.painter().centerY() - cam.painter().top() < 5) {
             return;
         }
-        if(a==0&&b==0){
+        if (a == 0 && b == 0) {
             return;
         }
-        double d=Math.sqrt(a*a+b*b);
-        double xM=Math.cos(Math.acos(a/d))*moveStep;
-        double yM=Math.cos(Math.acos(b/d))*moveStep;
+        double d = Math.sqrt(a * a + b * b);
+        double xM = Math.cos(Math.acos(a / d)) * (moveStep);
+        double yM = Math.cos(Math.acos(b / d)) * (moveStep);
 
-        if(spaceShip.painter().centerX() - cam.painter().left()>x1){
-           xM=-xM;
+        if (gameObject.painter().centerX() - cam.painter().left() > x1) {
+            xM = -xM;
         }
-        if(spaceShip.painter().centerY() - cam.painter().top()>y1){
-            yM=-yM;
+        if (gameObject.painter().centerY() - cam.painter().top() > y1) {
+            yM = -yM;
         }
-        if(a==0&&b!=0){
-            if(yM<0){
-                spaceShip.painter().offset(0,-moveStep*0.2);
-                spaceShip.collider().offset(0,-moveStep*0.2);
-            }else {
-            spaceShip.painter().offset(0,moveStep*0.2);
-            spaceShip.collider().offset(0,moveStep*0.2);}
+        if (a == 0 && b != 0) {
+            if (yM < 0) {
+                gameObject.painter().offset(0, -moveStep * 0.2);
+                gameObject.collider().offset(0, -moveStep * 0.2);
+            } else {
+                gameObject.painter().offset(0, moveStep * 0.2);
+                gameObject.collider().offset(0, moveStep * 0.2);
+            }
         }
-        if(a!=0&&b==0){
-            if(xM<0){
-                spaceShip.painter().offset(-moveStep*0.2,0);
-                spaceShip.collider().offset(-moveStep*0.2,0);
-            }else {
-            spaceShip.painter().offset(moveStep*0.2,0);
-            spaceShip.collider().offset(moveStep*0.2,0);}
+        if (a != 0 && b == 0) {
+            if (xM < 0) {
+                gameObject.painter().offset(-moveStep * 0.2, 0);
+                gameObject.collider().offset(-moveStep * 0.2, 0);
+            } else {
+                gameObject.painter().offset(moveStep * 0.2, 0);
+                gameObject.collider().offset(moveStep * 0.2, 0);
+            }
         }
 //        System.out.println("ym:"+yM);
 //        System.out.println("xm:"+xM);
-        spaceShip.painter().offset(xM,yM);
-        spaceShip.collider().offset(xM,yM);
-        System.out.println("x:"+spaceShip.painter().centerX()+"y:"+spaceShip.painter().centerY());
+        gameObject.painter().offset(xM, yM);
+        gameObject.collider().offset(xM, yM);
+
+        int XM = (int) xM;
+        int YM = (int) yM;
+
+
+        System.out.println("x:" + spaceShip.painter().centerX() + "y:" + spaceShip.painter().centerY());
     }
+
     @Override
     public CommandSolver.MouseListener mouseListener() {
         return (e, state, trigTime) -> {
+            if (willMove) {
+                return;
+            }
             if (state != null) {
-                 x = e.getX();
-                 y = e.getY();
+                XX = e.getX();
+                YY = e.getY();
 //                System.out.println("x" + x);
 //                System.out.println("y" + y);
-                setDegree(x, y);
+                setDegree(XX, YY);
             }
         };
     }
@@ -263,14 +294,14 @@ public class MapScene extends Scene {
         double t3 = t2 / t1;
         double t4 = Math.acos(t3);
         double t5 = Math.toDegrees(t4);
-        if(x<spaceShip.painter().centerX() - cam.painter().left()&&y>spaceShip.painter().top()-cam.painter().top()){
-            t5=-t5;
+        if (x < spaceShip.painter().centerX() - cam.painter().left() && y > spaceShip.painter().top() - cam.painter().top()) {
+            t5 = -t5;
         }
-        if(x<spaceShip.painter().centerX() - cam.painter().left()&&y<spaceShip.painter().top()-cam.painter().top()){
-            t5=-t5;
+        if (x < spaceShip.painter().centerX() - cam.painter().left() && y < spaceShip.painter().top() - cam.painter().top()) {
+            t5 = -t5;
         }
 //        System.out.println("t5:" + t5);
-        degree=t5;
+        degree = t5;
     }
 
     @Override
@@ -281,6 +312,7 @@ public class MapScene extends Scene {
         }
         spaceShip.paintComponent(g, degree);
         spaceShip.paint(g);
+        itemPic.paintComponent(g);
 //        spaceShip.paint(g);
 //      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
@@ -289,14 +321,35 @@ public class MapScene extends Scene {
     @Override
     public void update() {
         cam.update();
-
-        int x = 0;
-
-        for (int i = 0; i < gameObjectArr.size(); i++) {
-            if (cam.isCollision(gameObjectArr.get(i))) {
-                gameObjectArr.get(i).update();
-            }
+//        for (int i = 0; i < gameObjectArr.size(); i++) {
+//            if (cam.isCollision(gameObjectArr.get(i))) {
+////                gameObjectArr.get(i).update();
+////            }
+////        }
+        if (XX - spaceShip.painter().centerX() < 3 && YY - spaceShip.painter().centerY() < 3) {
+            willMove = false;
+            return;
         }
+        if (count > 0) {
+           if  (willMove) {
+                Move(XX, YY, spaceShip);
+                count = count - 10;
+                }
+//            if(!willMove){
+//                count=0;
+//            }
+            }
+        else  {
+            willMove = false;
+        }
+        System.out.println("!"+count);
+        System.out.println(willMove);
+//        for (int i = 0; i < gameObjectArr1.size(); i++) {
+//            if (spaceShip.isCollision(gameObjectArr.get(i))) {
+//                gameObjectArr.get(i).active(spaceShip);
+//                break;
+//            }
+
 //        ArrayList<String> strr=new ArrayList<>();
 //        strr.add(ClientClass.getInstance().getID()+"");
 //        strr.add(spaceShip.get(0).painter().centerX()+"");
@@ -351,7 +404,8 @@ public class MapScene extends Scene {
 //                }
 //            }
 //        });
+//        }
+
+
     }
-
-
 }

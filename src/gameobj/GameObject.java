@@ -63,8 +63,11 @@ public abstract class GameObject implements GameKernel.UpdateInterface,GameKerne
     }
 
     public boolean isCollision(GameObject obj) {
-        return collider.overlap(obj.collider);
-    }
+//        if(isCircle){
+//
+//        }else {
+        return collider.overlap(obj.collider);}
+//    }
     public boolean topIsCollision(GameObject obj) {
         return collider.left()<obj.collider.right() &&
                 obj.collider.bottom()<=collider.top()&&
@@ -134,6 +137,6 @@ public abstract class GameObject implements GameKernel.UpdateInterface,GameKerne
             g.setColor(Color.BLACK);}
         }
     }
-
+    public void active(GameObject obj){ }
     public abstract void paintComponent(Graphics g);
 }

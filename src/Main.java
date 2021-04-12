@@ -24,6 +24,8 @@ public class Main {
     //問題:1.延時器好像沒有起到作用?!!!
     public static void main(String[] args) {
         JFrame jframe=new JFrame();
+
+
         SceneController sceneController=SceneController.getInstance(); //取得單例模式的控場實體
         sceneController.changeScene(new MapScene()); //一開始使用開場畫面
         GameKernel gameKernel = new GameKernel.Builder().input(  //創建遊戲核心
@@ -32,6 +34,9 @@ public class Main {
                         .add(KeyEvent.VK_S,3)
                         .next().keyCleanMode().subscribe(sceneController)
         ).paint(sceneController).update(sceneController).gen();
+        JButton btn1 = new JButton("按鈕元件1");//建立按紐物件bt1 與其標題 位置 寬高
+        btn1.setBounds(10, 10, 100, 23);
+        jframe.add(btn1);
         jframe.setSize(1000,1000);
         jframe.setTitle("打飛機遊戲");
         jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //設置關閉時結束程式
