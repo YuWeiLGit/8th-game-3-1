@@ -83,10 +83,23 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
 
     //    }
     public boolean topIsCollision(GameObject obj) {
-        return collider.left() < obj.collider.right() &&
-                obj.collider.bottom() <= collider.top() &&
-                obj.collider.top() < collider.bottom() &&
-                obj.collider.left() < collider.right();
+        if (isCircle) {
+            if (obj.collider.top() - collider.centerY() <= 0 &&
+                    obj.collider.left() <= collider.centerX())
+             {
+                return true;
+            } else {
+                return obj.collider.right() > collider.left() &&  //ok
+                        obj.collider.bottom() <= collider.top() &&
+                        obj.collider.top() < collider.bottom() &&
+                        obj.collider.left() < collider.right();// ok
+            }
+        } else {
+            return collider.left() < obj.collider.right() &&
+                    obj.collider.bottom() <= collider.top() &&
+                    obj.collider.top() < collider.bottom() &&
+                    obj.collider.left() < collider.right();
+        }
     }
 
     public boolean leftIsCollision(GameObject obj) {

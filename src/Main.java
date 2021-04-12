@@ -2,6 +2,7 @@ import camera.MapInformation;
 import controllers.SceneController;
 import scene.MapScene;
 import scene.OpenScene;
+import scene.StartScene;
 import utils.CommandSolver;
 import utils.GameKernel;
 import utils.Global;
@@ -27,16 +28,14 @@ public class Main {
 
 
         SceneController sceneController=SceneController.getInstance(); //取得單例模式的控場實體
-        sceneController.changeScene(new MapScene()); //一開始使用開場畫面
+        sceneController.changeScene(new StartScene()); //一開始使用開場畫面
         GameKernel gameKernel = new GameKernel.Builder().input(  //創建遊戲核心
                 new CommandSolver.BuildStream().mouseTrack().subscribe(sceneController).keyboardTrack()
                         .add(KeyEvent.VK_W,2)
                         .add(KeyEvent.VK_S,3)
                         .next().keyCleanMode().subscribe(sceneController)
         ).paint(sceneController).update(sceneController).gen();
-        JButton btn1 = new JButton("按鈕元件1");//建立按紐物件bt1 與其標題 位置 寬高
-        btn1.setBounds(10, 10, 100, 23);
-        jframe.add(btn1);
+
         jframe.setSize(1000,1000);
         jframe.setTitle("打飛機遊戲");
         jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //設置關閉時結束程式

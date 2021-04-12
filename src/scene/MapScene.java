@@ -34,7 +34,6 @@ public class MapScene extends Scene {
     public int dy;
     private int count;//按壓時間
 //    private int moveStep;//移動基礎步數
-    private ItemPic itemPic;
     private boolean willMove;
 
     public MapScene() {
@@ -49,7 +48,7 @@ public class MapScene extends Scene {
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
         spaceShip = new SpaceShip(100, 200,7);
-        itemPic = new ItemPic(300, 0);
+
         willMove = false;
         degree = 0;
         dx = 0;
@@ -333,7 +332,7 @@ public class MapScene extends Scene {
         }
         spaceShip.paintComponent(g, degree);
         spaceShip.paint(g);
-        itemPic.paintComponent(g);
+
 //        spaceShip.paint(g);
 //      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
