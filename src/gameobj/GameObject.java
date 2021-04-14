@@ -75,31 +75,35 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
     }
 
     public boolean isCollision(GameObject obj) {
-//        if(isCircle){
-//
-//        }else {
-        return collider.overlap(obj.collider);
+        if (isCircle) {
+            int vx = Math.abs(painter.centerX() - obj.painter.centerX());
+            int vy = Math.abs(painter.centerY() - obj.painter.centerY());
+            double hx = Math.abs(obj.painter.width() * 0.5);
+            double hy = Math.abs(obj.painter.height() * 0.5);
+            double ux = vx - hx;
+            double uy = vy - hy;
+            if (ux < 0) {
+                ux = 0;
+            }
+            if (uy < 0) {
+                uy = 0;
+            }
+            if (Global.getHypotenuse(ux, uy) < this.painter.width()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return collider.overlap(obj.collider);
+        }
     }
 
     //    }
     public boolean topIsCollision(GameObject obj) {
-        if (isCircle) {
-            if (obj.collider.top() - collider.centerY() <= 0 &&
-                    obj.collider.left() <= collider.centerX())
-             {
-                return true;
-            } else {
-                return obj.collider.right() > collider.left() &&  //ok
-                        obj.collider.bottom() <= collider.top() &&
-                        obj.collider.top() < collider.bottom() &&
-                        obj.collider.left() < collider.right();// ok
-            }
-        } else {
-            return collider.left() < obj.collider.right() &&
-                    obj.collider.bottom() <= collider.top() &&
-                    obj.collider.top() < collider.bottom() &&
-                    obj.collider.left() < collider.right();
-        }
+        return collider.left() < obj.collider.right() &&
+                obj.collider.bottom() <= collider.top() &&//
+                obj.collider.top() > collider.bottom() &&
+                obj.collider.left() < collider.right();
     }
 
     public boolean leftIsCollision(GameObject obj) {

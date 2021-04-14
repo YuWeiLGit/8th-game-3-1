@@ -58,6 +58,11 @@ public class Global {
         tmp=Math.sqrt(dx*dx+dy*dy);
         return tmp;
     }
+    public static double getHypotenuse(double dx,double dy){
+        double tmp;
+        tmp=Math.sqrt(dx*dx+dy*dy);
+        return tmp;
+    }
     public static double anglesFinder(double a, double b, double c) {
 
         double alpha;
