@@ -183,6 +183,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
 
     public abstract void paintComponent(Graphics g);
 
+
     public enum State {
         BURN,
         DISAPPEAR,

@@ -75,7 +75,6 @@ public class StartScene extends Scene {
             show = true;
         }
         if (show) {
-
             startPaint = true;
             show = false;
 //            System.out.println("L:"+startButton.painter().left()+

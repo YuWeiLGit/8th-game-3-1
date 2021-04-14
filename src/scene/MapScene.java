@@ -1,18 +1,15 @@
 package scene;
 
 import camera.Camera;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import controllers.ImageController;
 import gameobj.*;
-import internet.server.ClientClass;
-import internet.server.CommandReceiver;
-import internet.server.Server;
 import maploader.MapInfo;
 import maploader.MapLoader;
 import utils.CommandSolver;
-import utils.GameKernel;
 import utils.Global;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,6 +19,7 @@ import java.util.logging.Logger;
 public class MapScene extends Scene {
     private Camera cam;
     private SpaceShip spaceShip;
+    private Image image;
     private Map map;
     private int num;
     private int XX;
@@ -35,11 +33,16 @@ public class MapScene extends Scene {
     int state;///能量bar
     private int count;//按壓時間
     private boolean willMove;
+<<<<<<< HEAD
     //    private int moveStep;//移動基礎步數
 //    private boolean willMove;
     private EnergyBar energyBar;
     private InBar inBar;
     private ArrayList<InBar> inBars;
+=======
+    private double mouseX;
+    private double mouseY;
+>>>>>>> origin/修改地圖物件
 
     public MapScene() {
     }
@@ -48,10 +51,12 @@ public class MapScene extends Scene {
     public void sceneBegin() {
 
         map = new Map();
+        image = ImageController.getInstance().tryGet("/mapSceneBack.png");
         gameObjectArr = new ArrayList();
         gameObjectArr1 = new ArrayList();
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
+<<<<<<< HEAD
         spaceShip = new SpaceShip(100, 1200, 7);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
@@ -61,6 +66,10 @@ public class MapScene extends Scene {
         inBars.add(new InBar(72, 14));
         inBars.add(new InBar(93, 14));
         int state = 0;
+=======
+        spaceShip = new SpaceShip(200, 800,7);
+        willMove = false;
+>>>>>>> origin/修改地圖物件
         degree = 0;
         dx = 0;
         dy = 0;
@@ -283,6 +292,10 @@ public class MapScene extends Scene {
         int XM = (int) xM;
         int YM = (int) yM;
     }
+    public void mouseUpdate(){
+        mouseX = XX + cam.getCameraWindowX();
+        mouseY= YY + cam.getCameraWindowY();
+    }
 
     @Override
     public CommandSolver.MouseListener mouseListener() {
@@ -320,6 +333,7 @@ public class MapScene extends Scene {
     @Override
     public void paint(Graphics g) {
         cam.start(g);
+        g.drawImage(image,0,0,null);
         for (int i = 0; i < gameObjectArr.size(); i++) {
             gameObjectArr.get(i).paint(g);
         }
@@ -344,6 +358,7 @@ public class MapScene extends Scene {
     @Override
     public void update() {
         cam.update();
+<<<<<<< HEAD
         if (count < 0) {
             count = 0;
         } else if (count > 70) {
@@ -352,6 +367,48 @@ public class MapScene extends Scene {
         count--;
         for (int i = 0; i < state; i++) {
             inBars.get(i).setShow(true);
+=======
+
+        for (int i = 0; i < gameObjectArr.size(); i++) {
+            if (cam.isCollision(gameObjectArr.get(i))) {
+                gameObjectArr.get(i).update();
+            }
+        }
+        for(int i=0;i<gameObjectArr1.size();i++) {
+            gameObjectArr1.get(i).update();
+        }
+        for(int i=0;i<gameObjectArr1.size();i++) {
+            if (gameObjectArr1.get(i).getState() == GameObject.State.BURN) {
+            //如果撞到就改變狀態
+                if (spaceShip.isCollision(gameObjectArr1.get(i))) {
+                //如果狀態是出生狀態才可以進去
+                    //設定為消失狀態
+                    gameObjectArr1.get(i).setState(GameObject.State.DISAPPEAR);
+                    //接著加速
+                    gameObjectArr1.get(i).active(spaceShip);
+                }
+            }
+        }
+        for(int i =0;i<gameObjectArr2.size();i++){
+            gameObjectArr2.get(i).update();
+        }
+        for(int i=0;i<gameObjectArr2.size();i++) {
+            if (gameObjectArr2.get(i).getState() == GameObject.State.BURN) {
+                if (spaceShip.isCollision(gameObjectArr2.get(i))) {
+                    gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
+                }
+            }
+        }
+        for(int i =0;i<gameObjectArr2.size();i++){
+            gameObjectArr2.get(i).update();
+        }
+        mouseUpdate();
+        spaceShip.update();
+
+        if (XX - spaceShip.painter().centerX() < 3 && YY - spaceShip.painter().centerY() < 3) {
+            willMove = false;
+            return;
+>>>>>>> origin/修改地圖物件
         }
 //        for (int i = 0; i < gameObjectArr.size(); i++) {
 //            if (cam.isCollision(gameObjectArr.get(i))) {
@@ -386,7 +443,11 @@ public class MapScene extends Scene {
         } else {
             willMove = false;
         }
+<<<<<<< HEAD
     }
+=======
+        System.out.println(willMove);
+>>>>>>> origin/修改地圖物件
 
 //        for (int i = 0; i < gameObjectArr1.size(); i++) {
 //            if (spaceShip.isCollision(gameObjectArr.get(i))) {
