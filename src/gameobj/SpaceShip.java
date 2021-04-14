@@ -12,6 +12,7 @@ public class SpaceShip extends GameObject{
     private Image img;
     private boolean isGetMaterials;
     private int moveStep;
+    private final  int initialSocks ;
     private ArrayList<GameObject> materials; //道具
 
     public SpaceShip(int x, int y,int moveStep) {
@@ -21,6 +22,9 @@ public class SpaceShip extends GameObject{
         materials = new ArrayList<>();
         isGetMaterials = false;
         setMoveStep(moveStep);
+        initialSocks = moveStep;
+//        initialSocks =
+
 //        image=ImageController.getInstance().addBuff("/airplane1.png");
 //        img=  Rotate.BufferedImageToImage(Rotate.rotateImage(image,33));
     }
@@ -33,11 +37,17 @@ public class SpaceShip extends GameObject{
     public  void offSetMoveStep(int x){
         setMoveStep(getMoveStep()+x);
     }
+
+    public int getInitialSocks() {
+        return initialSocks;
+    }
+
     //得到道具的方法
     public void getMaterials(gameobj.RandomMaterial randomMaterial){
         materials.add(randomMaterial);
         this.isGetMaterials = true;
     }
+
     @Override
     public void paintComponent(Graphics g) {
 

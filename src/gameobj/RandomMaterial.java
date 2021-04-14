@@ -39,7 +39,7 @@ public class RandomMaterial extends GameObject {
     @Override
     public void update() {
         if (getState() == GameObject.State.DISAPPEAR) {
-            delay.play();
+                delay.play();
             if (delay.count()) {
                 setState(GameObject.State.BURN);
                 delay.isPause();

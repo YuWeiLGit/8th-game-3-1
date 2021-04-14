@@ -24,7 +24,7 @@ public class SlowDownRoad extends GameObject {
     public void active(GameObject gameObject) {
         if (gameObject instanceof SpaceShip) {
             SpaceShip spaceShip = (SpaceShip) gameObject;
-            spaceShip.offSetMoveStep(SLOWDOWN_VALUE);
+            spaceShip.offSetMoveStep(-SLOWDOWN_VALUE);
         }
     }
 

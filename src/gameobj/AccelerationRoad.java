@@ -27,6 +27,7 @@ public class AccelerationRoad extends GameObject {
             //如果加速道的狀態不是消失的話,有加速的效果
             if (getState() != State.DISAPPEAR) {
                 SpaceShip spaceShip = (SpaceShip) gameObject;
+                int x = spaceShip.getMoveStep();
                 spaceShip.offSetMoveStep(ACCELERATION_VALUE);
             }
         }
@@ -40,16 +41,12 @@ public class AccelerationRoad extends GameObject {
     @Override
     public void update() {
         if (getState() == GameObject.State.DISAPPEAR) {
-            if (delay.isPlaying()) {
                 delay.play();
-            } else {
-                delay.pause();
-            }
             if (delay.count()) {
                 setState(GameObject.State.BURN);
+                delay.pause();
+
             }
-
-
         }
     }
 }

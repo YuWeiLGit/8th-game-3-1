@@ -41,7 +41,6 @@ public class MapScene extends Scene {
     private double mouseX;
     private double mouseY;
 
-
     public MapScene() {
     }
 
@@ -54,7 +53,7 @@ public class MapScene extends Scene {
         gameObjectArr1 = new ArrayList();
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 1200, 7);
+        spaceShip = new SpaceShip(100, 1200,7);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
@@ -369,29 +368,36 @@ public class MapScene extends Scene {
             gameObjectArr1.get(i).update();
         }
         for(int i=0;i<gameObjectArr1.size();i++) {
+            //只有狀態是一開始是BURN的時候才可以
             if (gameObjectArr1.get(i).getState() == GameObject.State.BURN) {
-            //如果撞到就改變狀態
+                //如果撞到就改變狀態
+                //先設定船的速度
                 if (spaceShip.isCollision(gameObjectArr1.get(i))) {
-                //如果狀態是出生狀態才可以進去
+                    //如果狀態是出生狀態才可以進去
                     //設定為消失狀態
                     gameObjectArr1.get(i).setState(GameObject.State.DISAPPEAR);
                     //接著加速
                     gameObjectArr1.get(i).active(spaceShip);
                 }
+                //如果count<0 &&還有不能移動
+                if(count<0||willMove==false){
+                    spaceShip.setMoveStep(spaceShip.getInitialSocks());
+                    System.out.println(moveStep);
+                }
             }
-        }
+                }
+
+        //這邊是跑隨機道具的
         for(int i =0;i<gameObjectArr2.size();i++){
             gameObjectArr2.get(i).update();
         }
         for(int i=0;i<gameObjectArr2.size();i++) {
+
             if (gameObjectArr2.get(i).getState() == GameObject.State.BURN) {
                 if (spaceShip.isCollision(gameObjectArr2.get(i))) {
                     gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
                 }
             }
-        }
-        for(int i =0;i<gameObjectArr2.size();i++){
-            gameObjectArr2.get(i).update();
         }
         mouseUpdate();
         spaceShip.update();
