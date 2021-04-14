@@ -32,27 +32,39 @@ public class MapScene extends Scene {
     private double degree;
     public int dx;
     public int dy;
+    int state;///能量bar
     private int count;//按壓時間
-//    private int moveStep;//移動基礎步數
     private boolean willMove;
+    //    private int moveStep;//移動基礎步數
+//    private boolean willMove;
+    private EnergyBar energyBar;
+    private InBar inBar;
+    private ArrayList<InBar> inBars;
 
     public MapScene() {
     }
 
     @Override
     public void sceneBegin() {
-        count = 0;
+
         map = new Map();
         gameObjectArr = new ArrayList();
         gameObjectArr1 = new ArrayList();
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 200,7);
-
-        willMove = false;
+        spaceShip = new SpaceShip(100, 1200, 7);
+        energyBar = new EnergyBar(60, 30, 118, 51);
+        inBars = new ArrayList<>();
+        inBars.add(new InBar(13, 14));
+        inBars.add(new InBar(32, 14));
+        inBars.add(new InBar(52, 14));
+        inBars.add(new InBar(72, 14));
+        inBars.add(new InBar(93, 14));
+        int state = 0;
         degree = 0;
         dx = 0;
         dy = 0;
+        willMove = false;
         //______________
         //System.out.print("輸入0~7決定角色: ");
         //this.num = sc.nextInt();
@@ -186,15 +198,11 @@ public class MapScene extends Scene {
             public void keyPressed(int commandCode, long trigTime) {
                 if (commandCode == 2) {
                     count = count + 3;
-//                    System.out.println("Mx: "+x);
-//                    System.out.println("My: "+y);
+                    state = count / 10;
+                    if(state>5){
+                        state=5;
+                    }
                 }
-//                count = count + 3;
-//                if(commandCode==2){
-//                    Move(x,y);
-////                    System.out.println("Mx: "+x);
-////                    System.out.println("My: "+y);
-//                }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
 //                    ArrayList<String> strs = new ArrayList<String>();
 //                    strs.add(String.valueOf(ClientClass.getInstance().getID()));
@@ -202,18 +210,16 @@ public class MapScene extends Scene {
 //                    ClientClass.getInstance().disConnect();
 //                    System.exit(0);
 //                }
-
             }
-
             @Override
             public void keyReleased(int commandCode, long trigTime) {
                 if (commandCode == 2) {
-                    willMove = true;
-//                    Move(XX, YY,spaceShip);
-//                    count = 0;
-//                    System.out.println("Mx: "+XX);
-//                    System.out.println("My: "+YY);
+                    for (int i = 0; i < inBars.size(); i++) {
+                        inBars.get(i).setShow(false);
+                    }
+                    state = 0;
                 }
+                willMove = true;
             }
         };
     }
@@ -231,13 +237,17 @@ public class MapScene extends Scene {
 //        System.out.println(spaceShip.painter().centerX()+"/"+spaceShip.painter().centerY());
 
         if (gameObject.painter().centerX() - cam.painter().left() == 0 && gameObject.painter().centerY() - cam.painter().top() == 0) {
+            System.out.println("return1");
+            System.out.println("QQQ2");
             return;
         }
 
         if (gameObject.painter().centerX() - cam.painter().left() < 5 && gameObject.painter().centerY() - cam.painter().top() < 5) {
+            System.out.println("QQQ3");
             return;
         }
         if (a == 0 && b == 0) {
+            System.out.println("QQQ4");
             return;
         }
         double d = Math.sqrt(a * a + b * b);
@@ -268,36 +278,25 @@ public class MapScene extends Scene {
                 gameObject.collider().offset(spaceShip.getMoveStep() * 0.2, 0);
             }
         }
-//        System.out.println("ym:"+yM);
-//        System.out.println("xm:"+xM);
         gameObject.painter().offset(xM, yM);
         gameObject.collider().offset(xM, yM);
-
         int XM = (int) xM;
         int YM = (int) yM;
-
-
-        System.out.println("x:" + spaceShip.painter().centerX() + "y:" + spaceShip.painter().centerY());
     }
 
     @Override
     public CommandSolver.MouseListener mouseListener() {
         return (e, state, trigTime) -> {
-            if (willMove) {
-                return;
-            }
+            if(!willMove){
             if (state != null) {
                 XX = e.getX();
                 YY = e.getY();
-//                System.out.println("x" + x);
-//                System.out.println("y" + y);
                 setDegree(XX, YY);
-            }
+            }}
         };
     }
 
     private void setDegree(int x, int y) {
-
         double a = 0.5 * spaceShip.painter().height();//check
         double b = Global.getHypotenuse(x, y
                 , spaceShip.painter().centerX() - cam.painter().left(), spaceShip.painter().top() - cam.painter().top());
@@ -314,8 +313,8 @@ public class MapScene extends Scene {
         if (x < spaceShip.painter().centerX() - cam.painter().left() && y < spaceShip.painter().top() - cam.painter().top()) {
             t5 = -t5;
         }
-//        System.out.println("t5:" + t5);
         degree = t5;
+
     }
 
     @Override
@@ -336,55 +335,59 @@ public class MapScene extends Scene {
 //        spaceShip.paint(g);
 //      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
+        energyBar.paintComponent(g);
+        for (int i = 0; i < inBars.size(); i++) {
+            inBars.get(i).paintComponent(g);
+        }
     }
+
     @Override
     public void update() {
         cam.update();
-
-        for (int i = 0; i < gameObjectArr.size(); i++) {
-            if (cam.isCollision(gameObjectArr.get(i))) {
-                gameObjectArr.get(i).update();
-            }
+        if (count < 0) {
+            count = 0;
+        } else if (count > 70) {
+            count = 70;
         }
-        for(int i=0;i<gameObjectArr1.size();i++) {
-            if (spaceShip.isCollision(gameObjectArr1.get(i))) {
-                gameObjectArr1.get(i).active(spaceShip);
-            }
+        count--;
+        for (int i = 0; i < state; i++) {
+            inBars.get(i).setShow(true);
         }
-        for(int i=0;i<gameObjectArr1.size();i++) {
-            gameObjectArr1.get(i).update();
-        }
-        for(int i =0;i<gameObjectArr2.size();i++){
-            gameObjectArr2.get(i).update();
-        }
-        for(int i=0;i<gameObjectArr2.size();i++){
-            if(spaceShip.isCollision(gameObjectArr2.get(i))){
-                gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
-            }
-        }
-        for(int i =0;i<gameObjectArr2.size();i++){
-            gameObjectArr2.get(i).update();
-        }
-        spaceShip.update();
-
-        if (XX - spaceShip.painter().centerX() < 3 && YY - spaceShip.painter().centerY() < 3) {
-            willMove = false;
-            return;
-        }
-        if (count > 0) {
-           if  (willMove) {
-                Move(XX, YY, spaceShip);
-                count = count - 10;
-                }
-//            if(!willMove){
-//                count=0;
+//        for (int i = 0; i < gameObjectArr.size(); i++) {
+//            if (cam.isCollision(gameObjectArr.get(i))) {
+//                gameObjectArr.get(i).update();
 //            }
+//        }
+//        for(int i=0;i<gameObjectArr1.size();i++) {
+//            if (spaceShip.isCollision(gameObjectArr1.get(i))) {
+//                gameObjectArr1.get(i).active(spaceShip);
+//            }
+//        }
+//        for(int i=0;i<gameObjectArr1.size();i++) {
+//            gameObjectArr1.get(i).update();
+//        }
+//        for(int i =0;i<gameObjectArr2.size();i++){
+//            gameObjectArr2.get(i).update();
+//        }
+//        for(int i=0;i<gameObjectArr2.size();i++){
+//            if(spaceShip.isCollision(gameObjectArr2.get(i))){
+//                gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
+//            }
+//        }
+//        for(int i =0;i<gameObjectArr2.size();i++){
+//            gameObjectArr2.get(i).update();
+//        }
+        if (count > 0) {
+            if (willMove) {
+                Move(XX, YY, spaceShip);
+                count = count -1;
+                System.out.println("count" + count);
             }
-        else  {
+        } else {
             willMove = false;
         }
-        System.out.println("!"+count);
-        System.out.println(willMove);
+    }
+
 //        for (int i = 0; i < gameObjectArr1.size(); i++) {
 //            if (spaceShip.isCollision(gameObjectArr.get(i))) {
 //                gameObjectArr.get(i).active(spaceShip);
@@ -447,5 +450,5 @@ public class MapScene extends Scene {
 //        });
 //        }
 
-  }
 }
+

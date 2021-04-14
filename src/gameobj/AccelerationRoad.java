@@ -10,7 +10,7 @@ import utils.Global;
 import java.awt.*;
 
 public class AccelerationRoad extends GameObject {
-    private static final int ACCELERATION_VALUE = 10;
+    private static final int ACCELERATION_VALUE = 3;
     private Image img;
     private Delay delay;
 

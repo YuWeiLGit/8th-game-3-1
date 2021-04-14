@@ -63,7 +63,7 @@ public class StartScene extends Scene {
         g.drawImage(image, 0, 0, null);
         startScenePic.paintComponent(g);
         if (startPaint) {
-            startButton.paintComponent(g);
+            startButton.paint(g);
         }
     }
 

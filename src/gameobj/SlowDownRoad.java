@@ -9,7 +9,7 @@ import utils.Global;
 import java.awt.*;
 
 public class SlowDownRoad extends GameObject {
-    private static final int SLOWDOWN_VALUE = 100;
+    private static final int SLOWDOWN_VALUE = 3;
     private Image img;
     private Delay delay;
 
