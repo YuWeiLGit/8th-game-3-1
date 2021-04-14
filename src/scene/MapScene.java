@@ -381,8 +381,7 @@ public class MapScene extends Scene {
                 }
                 //如果count<0 &&還有不能移動
                 if(count<0||willMove==false){
-                    spaceShip.setMoveStep(spaceShip.getInitialSocks());
-                    System.out.println(moveStep);
+                    spaceShip.setMoveStep(spaceShip.initialMoveStep());
                 }
             }
                 }
