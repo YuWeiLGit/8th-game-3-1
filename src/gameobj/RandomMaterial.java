@@ -13,7 +13,7 @@ public class RandomMaterial extends GameObject {
     private Delay delay;
 
     public RandomMaterial(int x, int y) {
-        super(x+Global.UNIT_X, y+Global.UNIT_Y, Global.UNIT_X * 2, Global.UNIT_Y * 2,State.BURN);
+        super(x + Global.UNIT_X, y + Global.UNIT_Y, Global.UNIT_X * 2, Global.UNIT_Y * 2, State.BURN);
         img = ImageController.getInstance().tryGet("/randomMaterial.png");
         this.delay = new Delay(300);
         delay.isPause();
@@ -27,6 +27,7 @@ public class RandomMaterial extends GameObject {
 //        }
 
     }
+
     //確定他是否存在
     @Override
     public void paintComponent(Graphics g) {
@@ -41,11 +42,13 @@ public class RandomMaterial extends GameObject {
             delay.play();
             if (delay.count()) {
                 setState(GameObject.State.BURN);
+                delay.isPause();
             }
         }
-    }
 
     }
+}
+//如果只採到一次
 
 
 

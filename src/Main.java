@@ -1,4 +1,5 @@
 import camera.MapInformation;
+import controllers.ImageController;
 import controllers.SceneController;
 import scene.MapScene;
 import scene.OpenScene;
@@ -8,9 +9,11 @@ import utils.GameKernel;
 import utils.Global;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Main {
+    private Image image;
     //遊戲建置步驟
     //1.導入遊戲素材包和CommandSolver-->Resource包和src平行的資料夾，並標記為Resource；CommandSolver在src之中
     //2.建置遊戲視窗-->用JFrame類建立
@@ -25,8 +28,8 @@ public class Main {
     //問題:1.延時器好像沒有起到作用?!!!
     public static void main(String[] args) {
         JFrame jframe=new JFrame();
-
-
+        //滑鼠鼠標的圖片
+        Image image = ImageController.getInstance().tryGet("/MousePointV2.png");
         SceneController sceneController=SceneController.getInstance(); //取得單例模式的控場實體
         sceneController.changeScene(new StartScene()); //一開始使用開場畫面
         GameKernel gameKernel = new GameKernel.Builder().input(  //創建遊戲核心
@@ -40,7 +43,10 @@ public class Main {
         jframe.setTitle("打飛機遊戲");
         jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //設置關閉時結束程式
         jframe.add(gameKernel);
+        Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(image,new Point(10,10),"image");
+        jframe.setCursor(cursor);
         jframe.setVisible(true);
+
         gameKernel.run();
     }
 }

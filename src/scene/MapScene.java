@@ -1,18 +1,15 @@
 package scene;
 
 import camera.Camera;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import controllers.ImageController;
 import gameobj.*;
-import internet.server.ClientClass;
-import internet.server.CommandReceiver;
-import internet.server.Server;
 import maploader.MapInfo;
 import maploader.MapLoader;
 import utils.CommandSolver;
-import utils.GameKernel;
 import utils.Global;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,6 +19,7 @@ import java.util.logging.Logger;
 public class MapScene extends Scene {
     private Camera cam;
     private SpaceShip spaceShip;
+    private Image image;
     private Map map;
     private int num;
     private int XX;
@@ -35,6 +33,8 @@ public class MapScene extends Scene {
     private int count;//按壓時間
 //    private int moveStep;//移動基礎步數
     private boolean willMove;
+    private double mouseX;
+    private double mouseY;
 
     public MapScene() {
     }
@@ -43,12 +43,12 @@ public class MapScene extends Scene {
     public void sceneBegin() {
         count = 0;
         map = new Map();
+        image = ImageController.getInstance().tryGet("/mapSceneBack.png");
         gameObjectArr = new ArrayList();
         gameObjectArr1 = new ArrayList();
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 200,7);
-
+        spaceShip = new SpaceShip(200, 800,7);
         willMove = false;
         degree = 0;
         dx = 0;
@@ -279,6 +279,10 @@ public class MapScene extends Scene {
 
         System.out.println("x:" + spaceShip.painter().centerX() + "y:" + spaceShip.painter().centerY());
     }
+    public void mouseUpdate(){
+        mouseX = XX + cam.getCameraWindowX();
+        mouseY= YY + cam.getCameraWindowY();
+    }
 
     @Override
     public CommandSolver.MouseListener mouseListener() {
@@ -321,6 +325,7 @@ public class MapScene extends Scene {
     @Override
     public void paint(Graphics g) {
         cam.start(g);
+        g.drawImage(image,0,0,null);
         for (int i = 0; i < gameObjectArr.size(); i++) {
             gameObjectArr.get(i).paint(g);
         }
@@ -347,24 +352,34 @@ public class MapScene extends Scene {
             }
         }
         for(int i=0;i<gameObjectArr1.size();i++) {
-            if (spaceShip.isCollision(gameObjectArr1.get(i))) {
-                gameObjectArr1.get(i).active(spaceShip);
-            }
-        }
-        for(int i=0;i<gameObjectArr1.size();i++) {
             gameObjectArr1.get(i).update();
         }
-        for(int i =0;i<gameObjectArr2.size();i++){
-            gameObjectArr2.get(i).update();
-        }
-        for(int i=0;i<gameObjectArr2.size();i++){
-            if(spaceShip.isCollision(gameObjectArr2.get(i))){
-                gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
+        for(int i=0;i<gameObjectArr1.size();i++) {
+            if (gameObjectArr1.get(i).getState() == GameObject.State.BURN) {
+            //如果撞到就改變狀態
+                if (spaceShip.isCollision(gameObjectArr1.get(i))) {
+                //如果狀態是出生狀態才可以進去
+                    //設定為消失狀態
+                    gameObjectArr1.get(i).setState(GameObject.State.DISAPPEAR);
+                    //接著加速
+                    gameObjectArr1.get(i).active(spaceShip);
+                }
             }
         }
         for(int i =0;i<gameObjectArr2.size();i++){
             gameObjectArr2.get(i).update();
         }
+        for(int i=0;i<gameObjectArr2.size();i++) {
+            if (gameObjectArr2.get(i).getState() == GameObject.State.BURN) {
+                if (spaceShip.isCollision(gameObjectArr2.get(i))) {
+                    gameObjectArr2.get(i).setState(GameObject.State.DISAPPEAR);
+                }
+            }
+        }
+        for(int i =0;i<gameObjectArr2.size();i++){
+            gameObjectArr2.get(i).update();
+        }
+        mouseUpdate();
         spaceShip.update();
 
         if (XX - spaceShip.painter().centerX() < 3 && YY - spaceShip.painter().centerY() < 3) {
@@ -383,8 +398,8 @@ public class MapScene extends Scene {
         else  {
             willMove = false;
         }
-        System.out.println("!"+count);
         System.out.println(willMove);
+
 //        for (int i = 0; i < gameObjectArr1.size(); i++) {
 //            if (spaceShip.isCollision(gameObjectArr.get(i))) {
 //                gameObjectArr.get(i).active(spaceShip);

@@ -250,5 +250,12 @@ public class Camera extends GameObject implements KeyListener{
     public int cameraWindowY(){
         return cameraWindowY;
     }
-    
+    //拿到鏡頭的左邊(鏡頭方塊的左邊)
+    public int getCameraWindowX(){
+        return painter().left();
+    }
+    //拿到鏡頭的上面(鏡頭方塊的上面)
+    public int getCameraWindowY(){
+        return painter().top();
+    }
 }
