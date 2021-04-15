@@ -49,7 +49,7 @@ public class MapScene extends Scene {
 
         map = new Map();
         image = ImageController.getInstance().tryGet("/mapSceneBack.png");
-        gameObjectArr = new ArrayList();
+
         gameObjectArr1 = new ArrayList();
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);

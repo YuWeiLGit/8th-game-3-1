@@ -5,7 +5,9 @@ import controllers.SceneController;
 import gameobj.GameObject;
 import gameobj.MillenniumFalcon;
 import gameobj.StartButton;
+import gameobj.Title;
 import utils.CommandSolver;
+import utils.Delay;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -16,12 +18,17 @@ public class StartScene extends Scene {
     private Image image;
     private MillenniumFalcon startScenePic;
     private StartButton startButton;
+    private Title title;
+    private Delay delay;
 
     @Override
     public void sceneBegin() {
+        delay=new Delay(40);
+        delay.play();
         image = ImageController.getInstance().tryGet("/back.png");
         startScenePic = new MillenniumFalcon(-30, 0, 32, 32, GameObject.State.NULL);
         startButton = new StartButton(startScenePic.painter().centerX() + 520, startScenePic.painter().centerY() + 400, 170, 100, GameObject.State.NULL);
+        title=new Title(startScenePic.painter().centerX() + 520, startScenePic.painter().centerY()+ 450 , 780, 777, GameObject.State.NULL) ;
     }
 
     @Override
@@ -64,6 +71,7 @@ public class StartScene extends Scene {
         startScenePic.paintComponent(g);
         if (startPaint) {
             startButton.paint(g);
+            title.paint(g);
         }
     }
 
@@ -76,11 +84,11 @@ public class StartScene extends Scene {
         }
         if (show) {
             startPaint = true;
+            title.isTouch();
             show = false;
-//            System.out.println("L:"+startButton.painter().left()+
-//                                "T:"+startButton.painter().top()+
-//                                "R:"+startButton.painter().right()+
-//                                "B:"+startButton.painter().bottom()    );
+            if(delay.count()){
+                startButton.show();
+            };
         }
 
 
