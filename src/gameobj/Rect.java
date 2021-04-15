@@ -71,6 +71,9 @@ public class Rect {
     public final void offset(double x,double y ){
         setCenter(centerX()+x,centerY()+y);
     }
+    public final void back(double x,double y ){
+        setCenter(x,y);
+    }
     public final Rect translateX(int dx){
         this.left += dx;
         this.right += dx;

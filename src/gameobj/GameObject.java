@@ -12,17 +12,20 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
     private final Rect painter;
     private boolean isCircle;
     private State state;
+    private MoveState moveState;
 
     public GameObject(int x, int y, int width, int height, State state) {
         this(x, y, width, height, x, y, width, height);
         isCircle = false;
         this.state = state;
+        this.moveState = MoveState.NORMAL;
     }
 
     public GameObject(int x, int y, int width, int height) {
         this(x, y, width, height, x, y, width, height);
         isCircle = false;
         this.state = null;
+        this.moveState = MoveState.NORMAL;
     }
 
     public GameObject(Rect rect) {
@@ -42,6 +45,14 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         collider = new Rect(rect);
         painter = new Rect(rect2);
         state = State.NULL;
+    }
+
+    public void changeMoveState(MoveState moveState) {
+        this.moveState = moveState;
+    }
+
+    public MoveState getMoveState() {
+        return this.moveState;
     }
 
     public boolean outOfScreen() {
@@ -82,11 +93,15 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
             double hy = Math.abs(obj.painter.height() * 0.5);
             double ux = vx - hx;
             double uy = vy - hy;
-            if (ux < 0) {
-                ux = 0;
-            }
-            if (uy < 0) {
-                uy = 0;
+            double dis;
+            if (ux >= 0 && uy >= 0) {
+                dis = Global.getHypotenuse(ux, uy);
+            } else if (ux < 0) {
+                dis = uy - (obj.painter.height() * 0.5);
+            } else if (uy < 0) {
+                dis = uy - (obj.painter.width() * 0.5);
+            } else {
+                dis = -1;
             }
             if (Global.getHypotenuse(ux, uy) < this.painter.width()) {
                 return true;
@@ -100,6 +115,13 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
 
     //    }
     public boolean topIsCollision(GameObject obj) {
+        if (isCircle) {
+//            System.out.println("obj.top");
+//            System.out.println(painter.top()<obj.painter.top()&&
+//                    painter.bottom()>=obj.painter.top());
+            return painter.top() >= obj.painter.bottom() &&
+                    painter.bottom() > obj.painter.top();
+        }
         return collider.left() < obj.collider.right() &&
                 obj.collider.bottom() <= collider.top() &&//
                 obj.collider.top() > collider.bottom() &&
@@ -107,6 +129,14 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
     }
 
     public boolean leftIsCollision(GameObject obj) {
+        if (isCircle) {
+            //   System.out.println("obj.Left");
+            //  System.out.println(painter.left()>=obj.painter.right()&&
+            //          painter.right()>obj.painter.right());
+            return painter.left() >= obj.painter.right() &&
+                    painter.left() > obj.painter.left();
+
+        }
         return collider.left() <= obj.collider.right() &&
                 obj.collider.bottom() > collider.top() &&
                 obj.collider.top() < collider.bottom() &&
@@ -114,6 +144,13 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
     }
 
     public boolean rightIsCollision(GameObject obj) {
+        if (isCircle) {
+//            System.out.println("obj.right");
+//            System.out.println(painter.right()<=obj.painter.left()&& painter.right()>obj.painter.right());
+            return painter.right() <= obj.painter.left() &&
+                    painter.right() < obj.painter.right();
+
+        }
         return collider.right() >= obj.collider.left() &&
                 obj.collider.bottom() > collider.top() &&
                 obj.collider.top() < collider.bottom() &&
@@ -121,6 +158,13 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
     }
 
     public boolean bottomIsCollision(GameObject obj) {
+        if (isCircle) {
+//            System.out.println("obj.bot");
+//            System.out.println(painter.top()<obj.painter.top()&&
+//                    painter.bottom()<=obj.painter.top());
+            return painter.top() < obj.painter.top() &&
+                    painter.bottom() <= obj.painter.top();
+        }
         return collider.left() < obj.collider.right() &&
                 obj.collider.bottom() > collider.top() &&//
                 obj.collider.top() >= collider.bottom() &&
@@ -137,6 +181,11 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
 
     public State getState() {
         return state;
+    }
+
+    public final void back(int x, int y) {
+        collider.setCenter(x, y);
+        painter.setCenter(x, y);
     }
 
     public final void translate(int x, int y) {
@@ -187,6 +236,14 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
 
     public abstract void paintComponent(Graphics g);
 
+    public enum MoveState {
+        NORMAL,
+        BOTTLE,
+        TOP,
+        RIGHT,
+        LEFT;
+
+    }
 
     public enum State {
         BURN,

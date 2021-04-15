@@ -8,18 +8,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class SpaceShip extends GameObject{
+public class Goal extends GameObject{
     private Image img;
     private boolean isGetMaterials;
-    private double moveStep;
-    private final  double initialMoveStep ;
-    private ArrayList<GameObject> materials; //道具
+    private int moveStep;
+    private final  int initialMoveStep ;
 
-    public SpaceShip(int x, int y,double moveStep) {
-        super(x+32/2, y+32/2, 32, 32,null);
+    public Goal(int x, int y, int moveStep) {
+        super(x+32/2, y+32/2, 64, 64,null);
        this.img = ImageController.getInstance().tryGet("/spaceship.png");
        isCircle();
-        materials = new ArrayList<>();
         isGetMaterials = false;
         setMoveStep(moveStep);
         initialMoveStep = moveStep;
@@ -28,26 +26,19 @@ public class SpaceShip extends GameObject{
 //        image=ImageController.getInstance().addBuff("/airplane1.png");
 //        img=  Rotate.BufferedImageToImage(Rotate.rotateImage(image,33));
     }
-    public void setMoveStep(double moveStep) {
+    public void setMoveStep(int moveStep) {
         this.moveStep = moveStep;
     }
-    public double getMoveStep(){
+    public int getMoveStep(){
         return  this.moveStep;
     }
     public  void offSetMoveStep(int x){
         setMoveStep(getMoveStep()+x);
     }
 
-    public double initialMoveStep() {
+    public int initialMoveStep() {
         return initialMoveStep;
     }
-
-    //得到道具的方法
-    public void getMaterials(gameobj.RandomMaterial randomMaterial){
-        materials.add(randomMaterial);
-        this.isGetMaterials = true;
-    }
-
     @Override
     public void paintComponent(Graphics g) {
 

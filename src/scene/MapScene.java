@@ -239,17 +239,13 @@ public class MapScene extends Scene {
 //        System.out.println(spaceShip.painter().centerX()+"/"+spaceShip.painter().centerY());
 
         if (gameObject.painter().centerX() - cam.painter().left() == 0 && gameObject.painter().centerY() - cam.painter().top() == 0) {
-            System.out.println("return1");
-            System.out.println("QQQ2");
             return;
         }
 
         if (gameObject.painter().centerX() - cam.painter().left() < 5 && gameObject.painter().centerY() - cam.painter().top() < 5) {
-            System.out.println("QQQ3");
             return;
         }
         if (a == 0 && b == 0) {
-            System.out.println("QQQ4");
             return;
         }
         double d = Math.sqrt(a * a + b * b);
@@ -282,8 +278,6 @@ public class MapScene extends Scene {
         }
         gameObject.painter().offset(xM, yM);
         gameObject.collider().offset(xM, yM);
-        int XM = (int) xM;
-        int YM = (int) yM;
     }
     public void mouseUpdate(){
         mouseX = XX + cam.getCameraWindowX();
