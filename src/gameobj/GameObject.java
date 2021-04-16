@@ -3,6 +3,7 @@ package gameobj;
 import camera.MapInformation;
 import utils.GameKernel;
 import utils.Global;
+import utils.Vector;
 
 import java.awt.*;
 
@@ -12,20 +13,22 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
     private final Rect painter;
     private boolean isCircle;
     private State state;
-    private MoveState moveState;
+    private CollisionState collisionState;
+
 
     public GameObject(int x, int y, int width, int height, State state) {
         this(x, y, width, height, x, y, width, height);
         isCircle = false;
         this.state = state;
-        this.moveState = MoveState.NORMAL;
+        this.collisionState = CollisionState.NORMAL;
+
     }
 
     public GameObject(int x, int y, int width, int height) {
         this(x, y, width, height, x, y, width, height);
         isCircle = false;
         this.state = null;
-        this.moveState = MoveState.NORMAL;
+        this.collisionState = CollisionState.NORMAL;
     }
 
     public GameObject(Rect rect) {
@@ -47,12 +50,12 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         state = State.NULL;
     }
 
-    public void changeMoveState(MoveState moveState) {
-        this.moveState = moveState;
+    public void changeCollisionState(CollisionState collisionState) {
+        this.collisionState = collisionState;
     }
 
-    public MoveState getMoveState() {
-        return this.moveState;
+    public CollisionState getCollisionState() {
+        return collisionState;
     }
 
     public boolean outOfScreen() {
@@ -67,7 +70,6 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         }
         return painter.top() >= Global.SCREEN_Y;
     }
-
 
     public boolean touchTop() {
         return collider.top() <= 0;
@@ -97,15 +99,30 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
             if (ux >= 0 && uy >= 0) {
                 dis = Global.getHypotenuse(ux, uy);
             } else if (ux < 0) {
-                dis = uy - (obj.painter.height() * 0.5);
+                dis = vy - (obj.painter.height() * 0.5);
             } else if (uy < 0) {
-                dis = uy - (obj.painter.width() * 0.5);
+                dis = vx - (obj.painter.width() * 0.5);
             } else {
-                dis = -1;
+                return true;
             }
-            if (Global.getHypotenuse(ux, uy) < this.painter.width()) {
+            if (dis < this.painter.width()) {
+                if (ux >= 0 && uy >= 0) {
+                    changeCollisionState(GameObject.CollisionState.ANGLE);
+                } else if (ux < 0) {
+                    if(painter.centerY() - obj.painter.centerY()>0){
+                        changeCollisionState(CollisionState.TOP);
+                    }else
+                    changeCollisionState(CollisionState.BOTTOM);
+                }else if (uy < 0) {
+                    if(painter.centerX() - obj.painter.centerX()>0){
+                    changeCollisionState(CollisionState.LEFT);}
+                    else {
+                        changeCollisionState(CollisionState.RIGHT);
+                    }
+                }
                 return true;
             } else {
+                changeCollisionState(CollisionState.NORMAL);
                 return false;
             }
         } else {
@@ -113,63 +130,6 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         }
     }
 
-    //    }
-    public boolean topIsCollision(GameObject obj) {
-        if (isCircle) {
-//            System.out.println("obj.top");
-//            System.out.println(painter.top()<obj.painter.top()&&
-//                    painter.bottom()>=obj.painter.top());
-            return painter.top() >= obj.painter.bottom() &&
-                    painter.bottom() > obj.painter.top();
-        }
-        return collider.left() < obj.collider.right() &&
-                obj.collider.bottom() <= collider.top() &&//
-                obj.collider.top() > collider.bottom() &&
-                obj.collider.left() < collider.right();
-    }
-
-    public boolean leftIsCollision(GameObject obj) {
-        if (isCircle) {
-            //   System.out.println("obj.Left");
-            //  System.out.println(painter.left()>=obj.painter.right()&&
-            //          painter.right()>obj.painter.right());
-            return painter.left() >= obj.painter.right() &&
-                    painter.left() > obj.painter.left();
-
-        }
-        return collider.left() <= obj.collider.right() &&
-                obj.collider.bottom() > collider.top() &&
-                obj.collider.top() < collider.bottom() &&
-                obj.collider.left() < collider.left();
-    }
-
-    public boolean rightIsCollision(GameObject obj) {
-        if (isCircle) {
-//            System.out.println("obj.right");
-//            System.out.println(painter.right()<=obj.painter.left()&& painter.right()>obj.painter.right());
-            return painter.right() <= obj.painter.left() &&
-                    painter.right() < obj.painter.right();
-
-        }
-        return collider.right() >= obj.collider.left() &&
-                obj.collider.bottom() > collider.top() &&
-                obj.collider.top() < collider.bottom() &&
-                obj.collider.right() > collider.right();
-    }
-
-    public boolean bottomIsCollision(GameObject obj) {
-        if (isCircle) {
-//            System.out.println("obj.bot");
-//            System.out.println(painter.top()<obj.painter.top()&&
-//                    painter.bottom()<=obj.painter.top());
-            return painter.top() < obj.painter.top() &&
-                    painter.bottom() <= obj.painter.top();
-        }
-        return collider.left() < obj.collider.right() &&
-                obj.collider.bottom() > collider.top() &&//
-                obj.collider.top() >= collider.bottom() &&
-                obj.collider.left() < collider.right();
-    }
 
     public void isCircle() {
         isCircle = true;
@@ -231,17 +191,21 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         }
     }
 
+
     public void active(GameObject obj) {
     }
 
     public abstract void paintComponent(Graphics g);
 
-    public enum MoveState {
+
+    public enum CollisionState {
         NORMAL,
-        BOTTLE,
+        ANGLE,
         TOP,
+        BOTTOM,
         RIGHT,
         LEFT;
+
 
     }
 

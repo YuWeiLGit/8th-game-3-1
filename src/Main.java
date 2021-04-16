@@ -34,7 +34,7 @@ public class Main {
         SceneController sceneController=SceneController.getInstance(); //取得單例模式的控場實體
         sceneController.changeScene(new TestScene()); //一開始使用開場畫面
         GameKernel gameKernel = new GameKernel.Builder().input(  //創建遊戲核心
-                new CommandSolver.BuildStream().mouseTrack().subscribe(sceneController).keyboardTrack()
+                new CommandSolver.BuildStream().mouseTrack().forceRelease().subscribe(sceneController).keyboardTrack()
                         .add(KeyEvent.VK_W,2)
                         .add(KeyEvent.VK_S,3)
                         .add(KeyEvent.VK_R,0)

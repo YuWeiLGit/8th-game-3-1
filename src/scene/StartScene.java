@@ -52,8 +52,8 @@ public class StartScene extends Scene {
                 }
             }
         if(startButton.isTouched()){
-            if(state== CommandSolver.MouseState.CLICKED){
-                SceneController.getInstance().changeScene(new MapScene());
+            if(state== CommandSolver.MouseState.RELEASED){
+                SceneController.getInstance().changeScene(new TestScene());
             }
         }
         };
