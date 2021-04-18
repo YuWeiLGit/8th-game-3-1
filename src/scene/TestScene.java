@@ -37,12 +37,10 @@ public class TestScene extends Scene {
     private EnergyBar energyBar;
     private InBar inBar;
     private ArrayList<InBar> inBars;
-    private double mouseX;
-    private double mouseY;
     private int savePointX;
     private int savePointY;
-    private double moveDirX;
-    private double moveDirY;
+
+    private Goal goal;
     private Delay delay;
 
 
@@ -57,7 +55,7 @@ public class TestScene extends Scene {
         image = ImageController.getInstance().tryGet("/mapSceneBack.png");
         Scanner sc = new Scanner(System.in);
         spaceShip = new SpaceShip(100, 150, 7);
-//        goal=new Goal(130,150,2);
+        goal=new Goal(150,150);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
@@ -125,7 +123,6 @@ public class TestScene extends Scene {
             @Override
             public void keyReleased(int commandCode, long trigTime) {
                 if (commandCode == 2) {
-
                     for (int i = 0; i < inBars.size(); i++) {
                         inBars.get(i).setShow(false);
                     }
@@ -213,19 +210,22 @@ public class TestScene extends Scene {
         return (e, state, trigTime) -> {
                 if (state == CommandSolver.MouseState.RELEASED) {
                     spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
+                    goal.changeCollisionState(GameObject.CollisionState.STEADY);
                     count=30;
-
-                    double x = e.getX() -spaceShip.painter().centerX();
-                    double y = e.getY()  -spaceShip.painter().centerY();
-                    System.out.println("mx:"+e.getX());
-                    System.out.println("my:"+e.getY());
-                    System.out.println("sx:"+spaceShip.painter().centerX());
-                    System.out.println("sx:"+spaceShip.painter().centerY());
-                    System.out.println("x:"+x);
-                    System.out.println("y:"+y);
+                    double x = e.getX() + cam.painter().left()-spaceShip.painter().centerX();
+                    double y = e.getY() +cam.painter().top() -spaceShip.painter().centerY();
+//                    System.out.println("mx:"+e.getX());
+//                    System.out.println("my:"+e.getY());
+//                    System.out.println("sx:"+spaceShip.painter().centerX());
+//                    System.out.println("sx:"+spaceShip.painter().centerY());
+//                    System.out.println("x:"+x);
+//                    System.out.println("y:"+y);
                     Vector speed = new Vector(x, y);
-                    speed.setLength(Global.getHypotenuse(x, y) / 100);
+                    Vector tmpSpeed=new Vector(0,0);
+                    speed.setLength(Global.getHypotenuse(x, y) / 50);
                     spaceShip.setSpeed(speed);
+                    goal.setSpeed(tmpSpeed);
+
                 }
 //                if (state != null) {
 //                     XX = e.getX();
@@ -266,7 +266,8 @@ public class TestScene extends Scene {
         }
         spaceShip.paintComponent(g, degree);
         spaceShip.paint(g);
-//        goal.paint(g);
+        goal.paint(g);
+        goal.paintComponent(g);
 //        spaceShip.paint(g);
 //      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
@@ -291,7 +292,16 @@ public class TestScene extends Scene {
                 break;
             }
         }
+        for (int i = 0; i < gameObjectArr.size(); i++) {
+            if (goal.isCollision(gameObjectArr.get(i)) ) {
+                break;
+            }
+        }
+        System.out.println("goal:"+goal.getCollisionState());
+        spaceShip.isCollision(goal);
+
         if (count > 0) {
+            goal.move();
             spaceShip.move();
             }
         }
