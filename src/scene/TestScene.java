@@ -39,10 +39,10 @@ public class TestScene extends Scene {
     private ArrayList<InBar> inBars;
     private int savePointX;
     private int savePointY;
-
+    private ClockBack clockBack;
     private Goal goal;
     private Delay delay;
-
+    private ArrayList<ClockNum>clockNums;
 
     public TestScene() {
     }
@@ -54,7 +54,7 @@ public class TestScene extends Scene {
         map = new Map();
         image = ImageController.getInstance().tryGet("/mapSceneBack.png");
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 150, 7);
+        spaceShip = new SpaceShip(100, 150);
         goal=new Goal(150,150);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
@@ -63,8 +63,15 @@ public class TestScene extends Scene {
         inBars.add(new InBar(52, 14));
         inBars.add(new InBar(72, 14));
         inBars.add(new InBar(93, 14));
+        clockBack=new ClockBack(450, 40, 106, 69);
         savePointX = 100;
         savePointY = 150;
+        clockNums=new ArrayList<>();
+        clockNums.add(new ClockNum(460,40,0,0,520,25, ClockNum.Hand.SecondHand));
+        clockNums.add(new ClockNum(460,40,0,0,483,25, ClockNum.Hand.SecondHand10));
+        clockNums.add(new ClockNum(460,40,0,0,433,25, ClockNum.Hand.MinuteHand));
+        clockNums.add(new ClockNum(460,40,0,0,399,25, ClockNum.Hand.HourHand));
+
         willMove = false;
         degree = 0;
         dx = 0;
@@ -102,9 +109,7 @@ public class TestScene extends Scene {
         return new CommandSolver.KeyListener() {
             @Override
             public void keyTyped(char c, long trigTime) {
-
             }
-
             @Override
             public void keyPressed(int commandCode, long trigTime) {
                 if (commandCode == 2) {
@@ -129,6 +134,7 @@ public class TestScene extends Scene {
                     state = 0;
                 } else if (commandCode == 0) {
                     spaceShip.back(savePointX, savePointY);
+                    goal.back(savePointX+40, savePointY);
                 }
             }
         };
@@ -272,8 +278,9 @@ public class TestScene extends Scene {
 //      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
         energyBar.paintComponent(g);
-        for (int i = 0; i < inBars.size(); i++) {
-            inBars.get(i).paintComponent(g);
+        clockBack.paint(g);
+        for (int i = 0; i < clockNums.size(); i++) {
+            clockNums.get(i).paintComponent(g);
         }
     }
 
@@ -297,7 +304,9 @@ public class TestScene extends Scene {
                 break;
             }
         }
-        System.out.println("goal:"+goal.getCollisionState());
+        for (int i = 0; i < clockNums.size(); i++) {
+            clockNums.get(i).update();
+        }
         spaceShip.isCollision(goal);
 
         if (count > 0) {

@@ -1,11 +1,13 @@
 package scene;
 
+import controllers.AudioResourceController;
 import controllers.ImageController;
 import controllers.SceneController;
 import gameobj.GameObject;
 import gameobj.MillenniumFalcon;
 import gameobj.StartButton;
 import gameobj.Title;
+import javafx.scene.media.AudioClip;
 import utils.CommandSolver;
 import utils.Delay;
 
@@ -20,6 +22,7 @@ public class StartScene extends Scene {
     private StartButton startButton;
     private Title title;
     private Delay delay;
+    private AudioClip audioClip;
 
     @Override
     public void sceneBegin() {
@@ -29,11 +32,12 @@ public class StartScene extends Scene {
         startScenePic = new MillenniumFalcon(-30, 0, 32, 32, GameObject.State.NULL);
         startButton = new StartButton(startScenePic.painter().centerX() + 520, startScenePic.painter().centerY() + 400, 170, 100, GameObject.State.NULL);
         title=new Title(startScenePic.painter().centerX() + 520, startScenePic.painter().centerY()+ 450 , 780, 777, GameObject.State.NULL) ;
+        AudioResourceController.getInstance().loop("/entre.wav",20);
     }
 
     @Override
     public void sceneEnd() {
-
+    AudioResourceController.getInstance().stop("/entre.wav");
     }
 
     @Override

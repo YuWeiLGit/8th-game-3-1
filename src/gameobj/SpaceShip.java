@@ -18,7 +18,7 @@ public class SpaceShip extends GameObject {
     private ArrayList<GameObject> materials; //道具
 
 
-    public SpaceShip(int x, int y, double moveStep) {
+    public SpaceShip(int x, int y) {
         super(x + 32 / 2, y + 32 / 2, 32, 32);
         this.img = ImageController.getInstance().tryGet("/spaceship.png");
         isCircle();
