@@ -52,7 +52,6 @@ public class ClockNum extends GameObject {
         second10=count/600;
         minute=second10/6;
         hour=second10/60;
-        System.out.println(count);
     }
 
     public enum Hand {

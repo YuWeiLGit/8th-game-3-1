@@ -130,7 +130,7 @@ public static class Builder {
 
     //設定相機
     public Builder setCam(int width, int height,GameObject ChaseObj) {
-        this.cam = new Camera.Builder(width, height)
+        this.cam = new Camera.Builder(800   , 1000)
                 .setChaseObj(ChaseObj, 1, 1)
                 .setCameraStartLocation(0,0)
                 .gen();
@@ -406,9 +406,7 @@ public static class Builder {
                     }
                     return null;
                 });
-
     }
-
     //清除Scene用
     public void clear() {
         background = null;

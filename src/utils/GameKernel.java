@@ -61,7 +61,7 @@ public class GameKernel extends Canvas {
                 passedUpdated++;
             }
             if (currentTime - timer >= 1000000000) {  //3.印出FPS
-//                System.out.println("FPS: " + paintTimes);
+                System.out.println("FPS: " + paintTimes);
                 paintTimes = 0;
                 timer = currentTime;
             }

@@ -139,14 +139,15 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                         changeCollisionState(CollisionState.RIGHT);
                     }
                 }
-//                AudioResourceController.getInstance().shot("/hit.wav");
+                AudioResourceController.getInstance().play("/hit.wav");
+                System.out.println("Collision"+collisionState+"/"+obj);
                 return true;
             } else {
                 changeCollisionState(CollisionState.NORMAL);
                 return false;
             }
         }
-       else if (isCircle && !obj.isCircle&&isGoal) {
+        else if (isCircle && !obj.isCircle&&isGoal) {
             int vx = Math.abs(painter.centerX() - obj.painter.centerX());
             int vy = Math.abs(painter.centerY() - obj.painter.centerY());
             double hx = Math.abs(obj.painter.width() * 0.5);
@@ -165,7 +166,8 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
             }
             if (dis < this.painter.width() / 2f) {
                 if (ux >= 0 && uy >= 0) {
-                    changeCollisionState(GameObject.CollisionState.ANGLE);
+                    return false;
+//                    changeCollisionState(GameObject.CollisionState.ANGLE);
                 } else if (ux < 0) {
                     if (painter.centerY() - obj.painter.centerY() > 0) {
                         changeCollisionState(CollisionState.TOP);
@@ -195,7 +197,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                 double x= painter().centerX()-obj.painter.centerX();
                 double y= painter().centerY()-obj.painter.centerY();
                 Vector tmpSpeed=new Vector(-x,-y);
-                tmpSpeed.setLength(Global.getHypotenuse(x, y)/3 );
+                tmpSpeed.setLength(Global.getHypotenuse(x, y)/2 );
                 obj.setSpeed(tmpSpeed);
                 return true;
             }
@@ -204,8 +206,167 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
             return collider.overlap(obj.collider);
         }
     }
-
-
+    public boolean isCollisionNotAngle(GameObject obj) {
+        if (isCircle && !obj.isCircle&&!isGoal) {
+            int vx = Math.abs(painter.centerX() - obj.painter.centerX());
+            int vy = Math.abs(painter.centerY() - obj.painter.centerY());
+            double hx = Math.abs(obj.painter.width() * 0.5);
+            double hy = Math.abs(obj.painter.height() * 0.5);
+            double ux = vx - hx;
+            double uy = vy - hy;
+            double dis;
+            if (ux >= 0 && uy >= 0) {
+                dis = Global.getHypotenuse(ux, uy);
+            } else if (ux < 0) {
+                dis = vy - (obj.painter.height() * 0.5);
+            } else if (uy < 0) {
+                dis = vx - (obj.painter.width() * 0.5);
+            } else {
+                return true;
+            }
+            if (dis < this.painter.width() / 2f) {
+                if (ux >= 0 && uy >= 0) {
+                    return false;//1
+//                        changeCollisionState(GameObject.CollisionState.ANGLE);
+                } else if (ux < 0) {
+                    if (painter.centerY() - obj.painter.centerY() > 0) {
+                        changeCollisionState(CollisionState.TOP);
+                    } else
+                        changeCollisionState(CollisionState.BOTTOM);
+                } else if (uy < 0) {
+                    if (painter.centerX() - obj.painter.centerX() > 0) {
+                        changeCollisionState(CollisionState.LEFT);
+                    } else {
+                        changeCollisionState(CollisionState.RIGHT);
+                    }
+                }
+                AudioResourceController.getInstance().play("/hit.wav");
+                System.out.println("Collision"+collisionState+"/"+obj);
+                return true;
+            } else {
+                changeCollisionState(CollisionState.NORMAL);
+                return false;
+            }
+        }
+       else if (isCircle && !obj.isCircle&&isGoal) {
+            int vx = Math.abs(painter.centerX() - obj.painter.centerX());
+            int vy = Math.abs(painter.centerY() - obj.painter.centerY());
+            double hx = Math.abs(obj.painter.width() * 0.5);
+            double hy = Math.abs(obj.painter.height() * 0.5);
+            double ux = vx - hx;
+            double uy = vy - hy;
+            double dis;
+            if (ux >= 0 && uy >= 0) {
+                dis = Global.getHypotenuse(ux, uy);
+            } else if (ux < 0) {
+                dis = vy - (obj.painter.height() * 0.5);
+            } else if (uy < 0) {
+                dis = vx - (obj.painter.width() * 0.5);
+            } else {
+                return true;
+            }
+            if (dis < this.painter.width() / 2f) {
+                if (ux >= 0 && uy >= 0) {
+                    return false;
+//                    changeCollisionState(GameObject.CollisionState.ANGLE);
+                } else if (ux < 0) {
+                    if (painter.centerY() - obj.painter.centerY() > 0) {
+                        changeCollisionState(CollisionState.TOP);
+                    } else
+                        changeCollisionState(CollisionState.BOTTOM);
+                } else if (uy < 0) {
+                    if (painter.centerX() - obj.painter.centerX() > 0) {
+                        changeCollisionState(CollisionState.LEFT);
+                    } else {
+                        changeCollisionState(CollisionState.RIGHT);
+                    }
+                }
+                return true;
+            } else {
+                changeCollisionState(CollisionState.STEADY);
+                return false;
+            }
+        }
+        else if (isCircle && obj.isCircle) {
+            double dx = Math.abs(painter.centerX() - obj.painter.centerX());
+            double dy = Math.abs(painter.centerY() - obj.painter.centerY());
+            if (Global.getHypotenuse(dx, dy) > (painter.width() + obj.painter.width()) / 2f) {
+                return false;
+            } else {
+                changeCollisionState(CollisionState.CIRCLE);
+                obj.changeCollisionState(CollisionState.CIRCLE);
+                double x= painter().centerX()-obj.painter.centerX();
+                double y= painter().centerY()-obj.painter.centerY();
+                Vector tmpSpeed=new Vector(-x,-y);
+                tmpSpeed.setLength(Global.getHypotenuse(x, y)/2 );
+                obj.setSpeed(tmpSpeed);
+                return true;
+            }
+        }
+        else {
+            return collider.overlap(obj.collider);
+        }
+    }
+    public boolean AngleisCollision(GameObject obj) {
+        if (isCircle && !obj.isCircle&&!isGoal) {
+            int vx = Math.abs(painter.centerX() - obj.painter.centerX());
+            int vy = Math.abs(painter.centerY() - obj.painter.centerY());
+            double hx = Math.abs(obj.painter.width() * 0.5);
+            double hy = Math.abs(obj.painter.height() * 0.5);
+            double ux = vx - hx;
+            double uy = vy - hy;
+            double dis;
+            if (ux >= 0 && uy >= 0) {
+                dis = Global.getHypotenuse(ux, uy);
+            } else if (ux < 0) {
+                dis = vy - (obj.painter.height() * 0.5);
+            } else if (uy < 0) {
+                dis = vx - (obj.painter.width() * 0.5);
+            } else {
+                return true;
+            }
+            if (dis < this.painter.width() / 2f) {
+                if (ux >= 0 && uy >= 0) {
+                    changeCollisionState(GameObject.CollisionState.ANGLE);
+                }
+                System.out.println("Collision"+collisionState+"/"+obj);
+                return true;
+            } else {
+                changeCollisionState(CollisionState.NORMAL);
+                return false;
+            }
+        }
+        else if (isCircle && !obj.isCircle&&isGoal) {
+            int vx = Math.abs(painter.centerX() - obj.painter.centerX());
+            int vy = Math.abs(painter.centerY() - obj.painter.centerY());
+            double hx = Math.abs(obj.painter.width() * 0.5);
+            double hy = Math.abs(obj.painter.height() * 0.5);
+            double ux = vx - hx;
+            double uy = vy - hy;
+            double dis;
+            if (ux >= 0 && uy >= 0) {
+                dis = Global.getHypotenuse(ux, uy);
+            } else if (ux < 0) {
+                dis = vy - (obj.painter.height() * 0.5);
+            } else if (uy < 0) {
+                dis = vx - (obj.painter.width() * 0.5);
+            } else {
+                return true;
+            }
+            if (dis < this.painter.width() / 2f) {
+                if (ux >= 0 && uy >= 0) {
+                    changeCollisionState(GameObject.CollisionState.ANGLE);
+                }
+                return true;
+            } else {
+                changeCollisionState(CollisionState.STEADY);
+                return false;
+            }
+        }
+        else {
+            return collider.overlap(obj.collider);
+        }
+    }
     public void isCircle() {
         isCircle = true;
     }
@@ -251,8 +412,8 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         paintComponent(g);
         if (Global.IS_DEBUG) {
             g.setColor(Color.RED);
-            g.drawString(this.painter.left() + "," + this.painter.top(), this.painter.left() + 5, this.painter.top() + 12);
-            g.drawString(this.painter.width() + "," + this.painter.height(), this.painter.left() + 5, this.painter.top() + 27);
+//            g.drawString(this.painter.left() + "," + this.painter.top(), this.painter.left() + 5, this.painter.top() + 12);
+//            g.drawString(this.painter.width() + "," + this.painter.height(), this.painter.left() + 5, this.painter.top() + 27);
             if (isCircle) {
                 g.setColor(Color.RED);
                 g.drawOval(this.painter.left(), this.painter.top(), this.painter.width(), this.painter.height());

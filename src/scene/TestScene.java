@@ -75,9 +75,9 @@ public class TestScene extends Scene {
         cam = new Camera.Builder(1000, 1000).setChaseObj(spaceShip, 1, 1)
                 .setCameraStartLocation(0, 0).gen();
         try {
-            MapLoader mapLoader = new MapLoader("/genMap.bmp", "/genMap.txt");
+            MapLoader mapLoader = new MapLoader("/genTestMap1.bmp", "/genTestMap1.txt");
             ArrayList<MapInfo> test = mapLoader.combineInfo();
-            this.gameObjectArr = mapLoader.creatObjectArray("wall", 32, test, new MapLoader.CompareClass() {
+            this.gameObjectArr = mapLoader.creatObjectArray("Name", 64, test, new MapLoader.CompareClass() {
                         @Override
                         public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
                             GameObject tmp = null;
@@ -225,6 +225,7 @@ public class TestScene extends Scene {
                     Vector tmpSpeed=new Vector(0,0);
                     speed.setLength(Global.getHypotenuse(x, y) / 50);
                     spaceShip.setSpeed(speed);
+                    System.out.println("!");
                     goal.setSpeed(tmpSpeed);
 
                 }
@@ -286,19 +287,40 @@ public class TestScene extends Scene {
             inBars.get(i).setShow(true);
         }
         for (int i = 0; i < gameObjectArr.size(); i++) {
-            if (spaceShip.isCollision(gameObjectArr.get(i)) ) {
+            if (spaceShip.AngleisCollision(gameObjectArr.get(i)) ) {
                 break;
             }
         }
         for (int i = 0; i < gameObjectArr.size(); i++) {
-            if (goal.isCollision(gameObjectArr.get(i)) ) {
+            if (spaceShip.isCollisionNotAngle(gameObjectArr.get(i)) ) {
+            }
+        }
+        for (int i = 0; i < gameObjectArr.size(); i++) {
+            if (goal.AngleisCollision(gameObjectArr.get(i)) ) {
                 break;
             }
         }
+        for (int i = 0; i < gameObjectArr.size(); i++) {
+            if (goal.isCollisionNotAngle(gameObjectArr.get(i)) ) {
+            }
+        }
+//        for (int i = 0; i < gameObjectArr.size(); i++) {
+//            if (goal.isCollision(gameObjectArr.get(i)) ) {
+//                break;
+//            }
+//        }
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).update();
         }
-
+        spaceShip.isCollision(goal);
+        if (count < 0) {
+            count = 0;
+        }
+        count--;
+        if (count > 0) {
+            goal.move();
+            spaceShip.move();
+        }
     }}
 
 

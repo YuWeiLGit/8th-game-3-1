@@ -47,9 +47,8 @@ public class StartScene extends Scene {
                 int x = e.getX();
                 int y = e.getY();
                 if (startPaint) {
-                    if (415 <= x && x <= 585 && y >= 300 && y <= 400) {
+                    if (415 <= x && x <= 585 && y >= 350 && y <= 400) {
                         startButton.isTouch();
-                        System.out.println("!!!");
                     } else {
                         startButton.notTouch();
                     }
@@ -57,7 +56,7 @@ public class StartScene extends Scene {
             }
         if(startButton.isTouched()){
             if(state== CommandSolver.MouseState.RELEASED){
-                SceneController.getInstance().changeScene(new TestScene());
+                SceneController.getInstance().changeScene(new GameScene());
             }
         }
         };

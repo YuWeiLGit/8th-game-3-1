@@ -41,17 +41,16 @@ public class GameScene extends Scene {
     @Override
     public void sceneBegin() {
         delay=new Delay(30);
-        spaceShip = new SpaceShip(100, 1500);
+        spaceShip = new SpaceShip(100, 2400);
         delay.loop();
         map = new Map();
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
         st = new SceneTool.Builder()
                 .setMaploader("/genMap2.bmp", "/genMap2.txt")
-//                .setSpaceShip((new SpaceShip(300,2000)))
-                .setCam(1280,1280,spaceShip)
+                .setCam(800,1500,spaceShip)
                 .gen();
         st.genMap();
-        goal=new Goal(150,150);
+        goal=new Goal(150,2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
@@ -61,7 +60,7 @@ public class GameScene extends Scene {
         inBars.add(new InBar(93, 14));
         clockBack=new ClockBack(450, 40, 106, 69);
         savePointX = 100;
-        savePointY = 150;
+        savePointY = 2400;
         clockNums=new ArrayList<>();
         clockNums.add(new ClockNum(460,40,0,0,520,25, ClockNum.Hand.SecondHand));
         clockNums.add(new ClockNum(460,40,0,0,483,25, ClockNum.Hand.SecondHand10));
@@ -83,7 +82,7 @@ public class GameScene extends Scene {
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
                 goal.changeCollisionState(GameObject.CollisionState.STEADY);
-                count=30;
+                count=40;
                 double x = e.getX() + st.getCam().painter().left()-spaceShip.painter().centerX();
                 double y = e.getY() +st.getCam().painter().top() -spaceShip.painter().centerY();
 //                    System.out.println("mx:"+e.getX());
@@ -94,7 +93,7 @@ public class GameScene extends Scene {
 //                    System.out.println("y:"+y);
                 Vector speed = new Vector(x, y);
                 Vector tmpSpeed=new Vector(0,0);
-                speed.setLength(Global.getHypotenuse(x, y) / 50);
+                speed.setLength(Global.getHypotenuse(x, y) / 75);
                 spaceShip.setSpeed(speed);
                 goal.setSpeed(tmpSpeed);
             }
@@ -109,9 +108,6 @@ public class GameScene extends Scene {
             }
             @Override
             public void keyPressed(int commandCode, long trigTime) {
-                if (commandCode == 2) {
-//                    Move(XX, YY, spaceShip);
-                }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
 //                    ArrayList<String> strs = new ArrayList<String>();
 //                    strs.add(String.valueOf(ClientClass.getInstance().getID()));
@@ -160,13 +156,21 @@ public class GameScene extends Scene {
             clockNums.get(i).update();
         }
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
-            if (spaceShip.isCollision(st.getBasicBlock().get(i)) ) {
+            if (spaceShip.AngleisCollision(st.getBasicBlock().get(i)) ) {
                 break;
             }
         }
-        for (int i = 0; i <st.getBasicBlock().size(); i++) {
-            if (goal.isCollision(st.getBasicBlock().get(i)) ) {
+        for (int i = 0; i < st.getBasicBlock().size(); i++) {
+            if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i)) ) {
+            }
+        }
+        for (int i = 0; i < st.getBasicBlock().size(); i++) {
+            if (goal.AngleisCollision(st.getBasicBlock().get(i)) ) {
                 break;
+            }
+        }
+        for (int i = 0; i < st.getBasicBlock().size(); i++) {
+            if (goal.isCollisionNotAngle(st.getBasicBlock().get(i)) ) {
             }
         }
         spaceShip.isCollision(goal);
