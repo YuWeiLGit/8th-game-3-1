@@ -23,9 +23,6 @@ public class TestScene extends Scene {
     private SpaceShip spaceShip;
     private Image image;
     private Map map;
-    private int num;
-    private int XX;
-    private int YY;
     private ArrayList<GameObject> gameObjectArr; //牆
     private double degree;
     public int dx;
@@ -33,9 +30,7 @@ public class TestScene extends Scene {
     int state;///能量bar
     private int count;//按壓時間
     private boolean willMove;
-    private int moveStep;//移動基礎步數
     private EnergyBar energyBar;
-    private InBar inBar;
     private ArrayList<InBar> inBars;
     private int savePointX;
     private int savePointY;
@@ -265,6 +260,7 @@ public class TestScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
+
         cam.start(g);
         g.drawImage(image, 0, 0, null);
         for (int i = 0; i < gameObjectArr.size(); i++) {
@@ -274,8 +270,6 @@ public class TestScene extends Scene {
         spaceShip.paint(g);
         goal.paint(g);
         goal.paintComponent(g);
-//        spaceShip.paint(g);
-//      this.spaceShip.get(0).paint(g); //自己決角色
         cam.end(g);
         energyBar.paintComponent(g);
         clockBack.paint(g);
@@ -287,10 +281,7 @@ public class TestScene extends Scene {
     @Override
     public void update() {
         cam.update();
-        if (count < 0) {
-            count = 0;
-        }
-        count--;
+
         for (int i = 0; i < state; i++) {
             inBars.get(i).setShow(true);
         }
@@ -307,14 +298,8 @@ public class TestScene extends Scene {
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).update();
         }
-        spaceShip.isCollision(goal);
 
-        if (count > 0) {
-            goal.move();
-            spaceShip.move();
-            }
-        }
-    }
+    }}
 
 
 

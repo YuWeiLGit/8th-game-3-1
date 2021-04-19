@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintInterface {
-    private SpaceShip spaceShip;
     private Image background;
     private MapLoader mapLoader;
     private ArrayList<SpaceShip> spaceShips;
@@ -27,23 +26,22 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
     private Camera cam;
 
     //讓外面的人一定要透過gen才能創建SceneTool
-    private SceneTool(Image background, SpaceShip spaceShip, MapLoader maploader, ArrayList<SpaceShip> spaceShips, ArrayList<GameObject> basicBlock, ArrayList<DecorationBlock> decorationBlocks
+    private SceneTool(Image background , MapLoader maploader, ArrayList<SpaceShip> spaceShips, ArrayList<GameObject> basicBlock, ArrayList<DecorationBlock> decorationBlocks
             , ArrayList<MapInfo> mapInfo, Camera cam) {
         this.background = background;
         this.mapLoader = maploader;
-        this.spaceShips = spaceShips;
         this.basicBlock = basicBlock;
         this.decorationBlocks = decorationBlocks;
         this.mapInfo = mapInfo;
         this.cam = cam;
-        this.spaceShip =spaceShip;
+
     }
+
+
 
     @Override
     public void paint(Graphics g) {
         if (cam != null) {
-            cam.start(g);
-
             g.drawImage(background, (int) cam.painter().left(), (int) cam.painter().top(), null);
 
             for (int i = 0; i < basicBlock.size(); i++) {
@@ -62,8 +60,6 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
             for(int i =0;i<decorationBlocks.size();i++){
                 decorationBlocks.get(i).paint(g);
             }
-            spaceShip.paint(g);
-            cam.end(g);
         }
         else {
             if (background != null) {
@@ -76,19 +72,18 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
                 decorationBlocks.get(i).paint(g);
             }
         }
-        for (int i = 0; i < spaceShips.size(); i++) {
-            spaceShips.get(i).paint(g);
-        }
     }
-
+    public void paintCamStart(Graphics g){
+        cam.start(g);
+    }
+    public void paintCamEnd(Graphics g){
+        cam.end(g);
+    }
 
     @Override
     public void update() {
         if (cam != null) {
             cam.update();
-        }
-        if (spaceShip != null) {
-            spaceShip.update();
         }
     }
 
@@ -134,13 +129,13 @@ public static class Builder {
     }
 
     //設定相機
-    public Builder setCam(int width, int height) {
+    public Builder setCam(int width, int height,GameObject ChaseObj) {
         this.cam = new Camera.Builder(width, height)
-                .setChaseObj(spaceShip, 1, 1)
+                .setChaseObj(ChaseObj, 1, 1)
                 .setCameraStartLocation(0,0)
                 .gen();
         //之前沒有用
-        cam.setObj(spaceShip);
+        cam.setObj(ChaseObj);
         return this;
     }
     public void setCam(Camera cam) {
@@ -157,15 +152,11 @@ public static class Builder {
 
     //透過gen創建SceneTool的建構子
     public SceneTool gen() {
-        return new SceneTool(background,spaceShip, maploader, spaceShips, basicBlock,
+        return new SceneTool(background, maploader, spaceShips, basicBlock,
                 decorationBlocks, mapInfo, cam);
     }
 
 }
-
-    public SpaceShip getSpaceShip() {
-        return spaceShip;
-    }
 
     public MapLoader getMapLoader() {
         return mapLoader;
@@ -236,182 +227,182 @@ public static class Builder {
                     if (name.equals("1")){
                         DecorationBlock tmp =  new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize,DecorationBlock.Type.DecorationBlock_1);
                         decorationBlocks.add(tmp);
-                        return  tmp;
+                        return  null;
                     }
                     if (name.equals("2")){
                         DecorationBlock tmp =  new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize,DecorationBlock.Type.DecorationBlock_2);
                         decorationBlocks.add(tmp);
-                        return  tmp;
+                        return  null;
                     }
                     if (name.equals("3")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_3);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("4")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_4);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("5")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_5);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("6")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_6);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("7")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_7);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("8")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_8);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("9")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_9);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("10")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_10);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("11")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_11);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("12")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_12);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("13")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_13);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("15")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_15);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("16")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_16);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("17")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_17);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return      null                   ;
                     }
                     if (name.equals("18")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_18);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("20")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_20);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("21")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_21);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("22")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_22);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("23")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_23);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("24")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_24);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("25")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_25);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("26")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_26);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("27")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_27);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("28")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_28);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("29")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_29);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("30")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_30);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return  null;
                     }
                     if (name.equals("31")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_31);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("32")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_32);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("33")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_33);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("34")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_34);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("35")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_35);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("36")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_36);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("39")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_39);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     if (name.equals("40")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_40);
                         decorationBlocks.add(tmp);
-                        return tmp;
+                        return null;
                     }
                     return null;
                 });

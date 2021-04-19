@@ -18,13 +18,8 @@ public class SpaceShip extends GameObject {
     private ArrayList<GameObject> materials; //道具
     private Vector speed;
 
-<<<<<<< HEAD
-    public SpaceShip(int x, int y, double moveStep) {
-        super(x + 32 / 2, y + 32 / 2, 32, 32, (CollisionState) null);
-=======
     public SpaceShip(int x, int y) {
-        super(x + 32 / 2, y + 32 / 2, 32, 32);
->>>>>>> 0415雜修
+        super(x + 32 / 2, y + 32 / 2, 32, 32, (CollisionState) null);
         this.img = ImageController.getInstance().tryGet("/spaceship.png");
         isCircle();
         materials = new ArrayList<>();
