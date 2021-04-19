@@ -13,7 +13,7 @@ import java.util.Map;
 //單例模式的圖片管理者
 //需求: 所有圖片由圖片管理者掌控
 //      且每張圖片只會產生一次
-public class ImageController {
+public class   ImageController {
     private static ImageController imageController; //靜態實體
     private  Map<String,Image>imageMap;
     private ImageController(){//私有化建構子，杜絕外部new
@@ -56,6 +56,9 @@ public class ImageController {
             return imageMap.get(path);
         }
         return add(path);
+    }
+    public void clear() {
+        imageMap.clear();
     }
 
 

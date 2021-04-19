@@ -89,6 +89,8 @@ public class Global {
     // 視窗大小
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = 600;
+    public static final int GAME_SCENE_WIDTH = 3840;
+    public static final int GAME_SCENE_HEIGHT = 2560;
     public static final int MAP_WIDTH = 1280;
     public static final int MAP_HEIGHT = 1280;
     public static final int SCREEN_X = WINDOW_WIDTH - 8 - 8;

@@ -16,25 +16,29 @@ public class SpaceShip extends GameObject {
     private double moveStep;
     private final double initialMoveStep;
     private ArrayList<GameObject> materials; //道具
-
+    private Vector speed;
 
     public SpaceShip(int x, int y, double moveStep) {
-        super(x + 32 / 2, y + 32 / 2, 32, 32);
+        super(x + 32 / 2, y + 32 / 2, 32, 32, (CollisionState) null);
         this.img = ImageController.getInstance().tryGet("/spaceship.png");
         isCircle();
         materials = new ArrayList<>();
         isGetMaterials = false;
         setMoveStep(moveStep);
         initialMoveStep = moveStep;
-
+        speed = new Vector();
 
 //        image=ImageController.getInstance().addBuff("/airplane1.png");
 //        img=  Rotate.BufferedImageToImage(Rotate.rotateImage(image,33));
     }
 
+    public Vector getSpeed() {
+        return speed;
+    }
 
-
-
+    public void setSpeed(Vector speed) {
+        this.speed = speed;
+    }
 
     public void setMoveStep(double moveStep) {
         this.moveStep = moveStep;
@@ -52,11 +56,16 @@ public class SpaceShip extends GameObject {
         return initialMoveStep;
     }
 
+    //得到道具的方法
+    public void getMaterials(gameobj.RandomMaterial randomMaterial) {
+        materials.add(randomMaterial);
+        this.isGetMaterials = true;
+    }
 
     @Override
     public void paintComponent(Graphics g) {
 
-//        g.drawImage(img, painter().left(), painter().top(), null);
+        g.drawImage(img, painter().left(), painter().top(), null);
     }
 
     @Override
@@ -71,8 +80,7 @@ public class SpaceShip extends GameObject {
             speed.negX();
         } else if (collisionState == GameObject.CollisionState.LEFT) {
             speed.absX();
-        }else if (collisionState == CollisionState.CIRCLE) {
-            speed.reverse();}
+        }
         super.changeCollisionState(collisionState);
     }
 
@@ -87,6 +95,7 @@ public class SpaceShip extends GameObject {
         g2d.rotate(Math.toRadians(degree), painter().centerX(), painter().centerY());
         g2d.drawImage(img, painter().left(), painter().top(), null);
         g2d.setTransform(t);
+
 //        g.drawImage(img, painter().left(), painter().top(), null);
     }
 
