@@ -1,6 +1,7 @@
 package gameobj;
 
 import camera.MapInformation;
+import controllers.AudioResourceController;
 import utils.GameKernel;
 import utils.Global;
 import utils.Vector;
@@ -138,6 +139,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                         changeCollisionState(CollisionState.RIGHT);
                     }
                 }
+                AudioResourceController.getInstance().shot("/hit.wav");
                 return true;
             } else {
                 changeCollisionState(CollisionState.NORMAL);
@@ -195,7 +197,6 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                 Vector tmpSpeed=new Vector(-x,-y);
                 tmpSpeed.setLength(Global.getHypotenuse(x, y)/3 );
                 obj.setSpeed(tmpSpeed);
-
                 return true;
             }
         }
@@ -217,7 +218,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         return state;
     }
 
-    public final void back(int x, int y) {
+    public  void back(int x, int y) {
         collider.setCenter(x, y);
         painter.setCenter(x, y);
     }

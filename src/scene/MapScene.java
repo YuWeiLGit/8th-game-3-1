@@ -53,7 +53,7 @@ public class MapScene extends Scene {
         gameObjectArr1 = new ArrayList();
         gameObjectArr2 = new ArrayList();
         Scanner sc = new Scanner(System.in);
-        spaceShip = new SpaceShip(100, 1200,7);
+        spaceShip = new SpaceShip(100, 1200);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
