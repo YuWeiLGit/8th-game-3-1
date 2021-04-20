@@ -30,7 +30,6 @@ public class Title extends GameObject{
         public void paintComponent(Graphics g) {
             if(isTouch){
                 g.drawImage(img,painter().left(), painter().top(), null);}
-                System.out.println("title");
         }
 
         @Override

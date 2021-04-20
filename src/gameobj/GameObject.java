@@ -240,7 +240,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                         changeCollisionState(CollisionState.RIGHT);
                     }
                 }
-                AudioResourceController.getInstance().play("/hit.wav");
+//                AudioResourceController.getInstance().play("/hit.wav");
                 System.out.println("Collision"+collisionState+"/"+obj);
                 return true;
             } else {

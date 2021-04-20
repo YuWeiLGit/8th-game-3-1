@@ -8,6 +8,9 @@ import gameobj.MillenniumFalcon;
 import gameobj.StartButton;
 import gameobj.Title;
 import javafx.scene.media.AudioClip;
+import menumodule.menu.BackgroundType;
+import menumodule.menu.EditText;
+import menumodule.menu.Style;
 import utils.CommandSolver;
 import utils.Delay;
 
@@ -22,7 +25,7 @@ public class StartScene extends Scene {
     private StartButton startButton;
     private Title title;
     private Delay delay;
-    private AudioClip audioClip;
+    private EditText editText;
 
     @Override
     public void sceneBegin() {
@@ -33,6 +36,17 @@ public class StartScene extends Scene {
         startButton = new StartButton(startScenePic.painter().centerX() + 520, startScenePic.painter().centerY() + 400, 170, 100, GameObject.State.NULL);
         title=new Title(startScenePic.painter().centerX() + 520, startScenePic.painter().centerY()+ 450 , 780, 777, GameObject.State.NULL) ;
         AudioResourceController.getInstance().loop("/entre.wav",20);
+        Style aa = new Style.StyleOval(100, 100, true, new BackgroundType.BackgroundColor(new Color(184, 134, 11)))
+                .setTextColor(Color.BLACK)
+                .setHaveBorder(true)
+                .setBorderColor(new Color(230, 184, 0))
+                .setBorderThickness(5)
+                .setTextFont(new Font("", Font.TYPE1_FONT, 28))
+                .setText(" ");
+        String k=" name";
+        editText = new EditText(300, 500, k,aa);
+
+        editText.isFocus();
     }
 
     @Override
@@ -56,7 +70,7 @@ public class StartScene extends Scene {
             }
         if(startButton.isTouched()){
             if(state== CommandSolver.MouseState.RELEASED){
-                SceneController.getInstance().changeScene(new GameScene());
+                SceneController.getInstance().changeScene(new IntroScene());
             }
         }
         };
@@ -65,7 +79,24 @@ public class StartScene extends Scene {
 
     @Override
     public CommandSolver.KeyListener keyListener() {
-        return null;
+        return new CommandSolver.KeyListener() {
+            @Override
+            public void keyPressed(int commandCode, long trigTime) {
+
+            }
+
+            @Override
+            public void keyReleased(int commandCode, long trigTime) {
+
+            }
+
+            @Override
+            public void keyTyped(char c, long trigTime) {
+                if(editText.getIsFocus()){
+                    editText.keyTyped(c);
+                }
+            }
+        };
     }
 
     @Override
@@ -76,6 +107,7 @@ public class StartScene extends Scene {
             startButton.paint(g);
             title.paint(g);
         }
+        editText.paint(g);
     }
 
     @Override

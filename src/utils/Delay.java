@@ -19,6 +19,7 @@ public class Delay {
         count=0; //記時器歸0
         this.isPause=true; //暫停記時
     }
+
     //開始記時
     public void play(){
         this.isPause=false;
@@ -28,6 +29,11 @@ public class Delay {
         this.isLoop=true; //開始週期延遲
         this.isPause=false; //不要暫停
     }
+
+    public void setCountLimit(int countLimit) {
+        this.countLimit = countLimit;
+    }
+
     //暫停記時
     public void pause(){
         this.isPause=true;

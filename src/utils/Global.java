@@ -36,7 +36,7 @@ public class Global {
         }
     }
 
-    public static final boolean IS_DEBUG =true;
+    public static final boolean IS_DEBUG =false;
     public static double getDegree(int x1,int y1,int x2,int y2){
         double a=getHypotenuse( x1, y1, x2, y2);
         double b=getHypotenuse(x1,y1,x2,y1);
