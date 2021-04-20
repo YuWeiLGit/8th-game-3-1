@@ -53,6 +53,7 @@ public class Path {
             public static final String DECORATIONBLOCK_36 ="/36.png";
             public static final String DECORATIONBLOCK_39 ="/39.png";
             public static final String DECORATIONBLOCK_40 ="/40.png";
+            public static final String DECORATIONBLOCK_SKULL ="/Skull.png";
 
         }
         public static class GameScene {

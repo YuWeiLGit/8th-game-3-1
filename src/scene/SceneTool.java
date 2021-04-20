@@ -365,32 +365,32 @@ public static class Builder {
                         return  null;
                     }
                     if (name.equals("31")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_31);
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, 32, 64, DecorationBlock.Type.DecorationBlock_31);
                         decorationBlocks.add(tmp);
                         return null;
                     }
                     if (name.equals("32")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_32);
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize+16, 32, 64, DecorationBlock.Type.DecorationBlock_32);
                         decorationBlocks.add(tmp);
                         return null;
                     }
-                    if (name.equals("33")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_33);
+                    if (name.equals("38")) {
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize+16, mapInfo.getY() * MapObjectSize, 64, 32, DecorationBlock.Type.DecorationBlock_33);
                         decorationBlocks.add(tmp);
                         return null;
                     }
                     if (name.equals("34")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_34);
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, 32 ,96, DecorationBlock.Type.DecorationBlock_34);
                         decorationBlocks.add(tmp);
                         return null;
                     }
                     if (name.equals("35")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_35);
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, 64, 32, DecorationBlock.Type.DecorationBlock_35);
                         decorationBlocks.add(tmp);
                         return null;
                     }
                     if (name.equals("36")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_36);
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, 96, 32, DecorationBlock.Type.DecorationBlock_36);
                         decorationBlocks.add(tmp);
                         return null;
                     }
@@ -401,6 +401,11 @@ public static class Builder {
                     }
                     if (name.equals("40")) {
                         DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_40);
+                        decorationBlocks.add(tmp);
+                        return null;
+                    }
+                    if (name.equals("Skull")) {
+                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_Skull);
                         decorationBlocks.add(tmp);
                         return null;
                     }

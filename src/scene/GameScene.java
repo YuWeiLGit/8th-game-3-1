@@ -93,7 +93,7 @@ public class GameScene extends Scene {
 //                    System.out.println("y:"+y);
                 Vector speed = new Vector(x, y);
                 Vector tmpSpeed=new Vector(0,0);
-                speed.setLength(Global.getHypotenuse(x, y) / 75);
+                speed.setLength(Global.getHypotenuse(x, y) / 50);
                 spaceShip.setSpeed(speed);
                 goal.setSpeed(tmpSpeed);
             }
@@ -155,6 +155,7 @@ public class GameScene extends Scene {
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).update();
         }
+        spaceShip.isCollision(goal);
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (spaceShip.AngleisCollision(st.getBasicBlock().get(i)) ) {
                 break;
@@ -173,7 +174,7 @@ public class GameScene extends Scene {
             if (goal.isCollisionNotAngle(st.getBasicBlock().get(i)) ) {
             }
         }
-        spaceShip.isCollision(goal);
+
         if (count < 0) {
             count = 0;
         }

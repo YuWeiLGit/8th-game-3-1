@@ -45,7 +45,8 @@ public class DecorationBlock extends GameObject{
         DecorationBlock_35(Path.DecorationBlock.DECORATIONBLOCK_35),
         DecorationBlock_36(Path.DecorationBlock.DECORATIONBLOCK_36),
         DecorationBlock_39(Path.DecorationBlock.DECORATIONBLOCK_39),
-        DecorationBlock_40(Path.DecorationBlock.DECORATIONBLOCK_40);
+        DecorationBlock_40(Path.DecorationBlock.DECORATIONBLOCK_40),
+        DecorationBlock_Skull(Path.DecorationBlock.DECORATIONBLOCK_SKULL);
         private String path;
         Type( String path) {
             this.path = path;
