@@ -17,11 +17,8 @@ import static utils.Global.*;
 //測試地圖用
 //並創建SceneTool
 public class GameScene extends Scene {
-<<<<<<< HEAD
     private String name;
-=======
     private BarrierV barrier;
->>>>>>> origin/0420introScene
     private SceneTool st;
     private SpaceShip spaceShip;
     private Image image;
