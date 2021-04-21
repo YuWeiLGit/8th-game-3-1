@@ -8,7 +8,7 @@ import utils.CommandSolver;
 import utils.Delay;
 import utils.Global;
 import utils.Vector;
-
+import java.io.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -17,6 +17,7 @@ import static utils.Global.*;
 //測試地圖用
 //並創建SceneTool
 public class GameScene extends Scene {
+    private String name;
     private SceneTool st;
     private SpaceShip spaceShip;
     private Image image;
@@ -32,14 +33,19 @@ public class GameScene extends Scene {
     private ArrayList<InBar> inBars;
     private int savePointX;
     private int savePointY;
+    private int totalTime;
     private ClockBack clockBack;
     private Goal goal;
     private Delay delay;
     private ArrayList<ClockNum>clockNums;
 
+    public GameScene(String name){
+        this.name=name;
+    }
 
     @Override
     public void sceneBegin() {
+
         delay=new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
         delay.loop();
@@ -74,7 +80,12 @@ public class GameScene extends Scene {
     @Override
     public void sceneEnd() {
         ImageController.getInstance().clear();
-
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+            bw.write(name+"/"+totalTime/60);
+        }catch (Exception ex){
+            return;
+        }
     }
     @Override
     public CommandSolver.MouseListener mouseListener() {
@@ -151,6 +162,7 @@ public class GameScene extends Scene {
 
     @Override
     public void update() {
+        totalTime++;
         st.update();
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).update();

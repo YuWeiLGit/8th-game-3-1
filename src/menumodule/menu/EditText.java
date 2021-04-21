@@ -41,7 +41,9 @@ public class EditText extends Label {
         super(x, y, styleRect);
         init(hint);
     }
-
+    public int getLength(){
+        return this.editText.length();
+    }
     public EditText(int x, int y, String hint, Theme theme) {
         super(x, y, theme);
         init(hint);
