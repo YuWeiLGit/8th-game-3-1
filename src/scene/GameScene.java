@@ -17,6 +17,7 @@ import static utils.Global.*;
 //測試地圖用
 //並創建SceneTool
 public class GameScene extends Scene {
+    private BarrierV barrier;
     private SceneTool st;
     private SpaceShip spaceShip;
     private Image image;
@@ -29,6 +30,10 @@ public class GameScene extends Scene {
     private int count;//按壓時間
     private boolean willMove;
     private EnergyBar energyBar;
+    private ArrayList<EnergyBall> energyBalls;
+    private ArrayList<BarrierH> barriersH;
+    private ArrayList<BarrierV> barriersV;
+    private EnergyBall energyBall;
     private ArrayList<InBar> inBars;
     private int savePointX;
     private int savePointY;
@@ -50,6 +55,41 @@ public class GameScene extends Scene {
                 .setCam(800,1500,spaceShip)
                 .gen();
         st.genMap();
+        //能量球
+        energyBalls = new ArrayList<>();
+        //中間
+        energyBalls.add(new EnergyBall(random(1650,2200),random(780,848)));
+        //右下
+        energyBalls.add(new EnergyBall(random(2544,2832),random(1520,2032)));
+        //左上
+        energyBalls.add(new EnergyBall(random(560,720),random(250,400)));
+        //右上
+        energyBalls.add(new EnergyBall(random(3025,3344),random(496,432)));
+
+        //障礙物
+        barriersV = new ArrayList<>();
+        barriersH = new ArrayList<>();
+        //垂直的障礙物
+        barriersV.add(new BarrierV(386, 2095));
+        barriersV.add(new BarrierV(192, 1136));
+        barriersV.add(new BarrierV(976 , 752));
+        barriersV.add(new BarrierV(1636, 1104));
+        barriersV.add(new BarrierV(1348, 80));
+        barriersV.add(new BarrierV(2624, 1266));
+        barriersV.add(new BarrierV(1374, 2416));
+        barriersV.add(new BarrierV(2786, 2320));
+        barriersV.add(new BarrierV(3040, 592));
+        barriersV.add(new BarrierV(3392, 592));
+//        barriers.add(new Barrier())
+        //水平障礙物
+        barriersH.add(new BarrierH(112,2016));
+        barriersH.add(new BarrierH(1808, 770));
+        barriersH.add(new BarrierH(2096, 770));
+        barriersH.add(new BarrierH(2000, 1344));
+        barriersH.add(new BarrierH(3216, 736));
+        barriersH.add(new BarrierH(3214, 416));
+
+
         goal=new Goal(150,2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
         inBars = new ArrayList<>();
@@ -139,7 +179,24 @@ public class GameScene extends Scene {
         spaceShip.paint(g);
         goal.paint(g);
         goal.paintComponent(g);
+        for(int i=0 ;i<energyBalls.size();i++){
+            energyBalls.get(i).paint(g);
+        }
+        for(int i =0;i<barriersV.size();i++){
+            barriersV.get(i).paint(g);
+            barriersV.get(i).paintComponent(g);
+        }
+        for(int i =0;i<barriersH.size();i++){
+            barriersH.get(i).paint(g);
+            barriersH.get(i).paintComponent(g);
+        }
+
         st.paintCamEnd(g);
+
+        energyBar.paint(g);
+        for(int i=0;i<state;i++){
+            inBars.get(i).paint(g);
+        }
         clockBack.paint(g);
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).paintComponent(g);
@@ -161,6 +218,59 @@ public class GameScene extends Scene {
                 break;
             }
         }
+        for (int i = 0; i < state; i++) {
+            inBars.get(i).setShow(true);
+        }
+        for (int i = 0; i < clockNums.size(); i++) {
+            clockNums.get(i).update();
+        }
+        spaceShip.isCollision(goal);
+        for(int i=0 ;i<energyBalls.size();i++) {
+            if (energyBalls.get(i).isCollision(spaceShip)) {
+                energyBalls.remove(i);
+                state++;
+            }
+        }
+
+        for (int i = 0;i< barriersV.size();i++) {
+            if (barriersV.get(i).isBarrier()) {
+                spaceShip.isCollision(barriersV.get(i));
+            }
+        }
+        for (int i = 0;i< barriersV.size();i++) {
+            if (barriersV.get(i).isBarrier()) {
+                if (spaceShip.AngleisCollision(barriersV.get(i))) {
+                    ;
+                }
+            }
+        }
+        for (int i = 0;i< barriersV.size();i++) {
+            if (barriersV.get(i).isBarrier()) {
+                if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
+                    ;
+                }
+            }
+        }
+        for (int i = 0;i< barriersH.size();i++) {
+            if (barriersH.get(i).isBarrier()) {
+                spaceShip.isCollision(barriersH.get(i));
+            }
+        }
+        for (int i = 0;i< barriersH.size();i++) {
+            if (barriersH.get(i).isBarrier()) {
+                if (spaceShip.AngleisCollision(barriersH.get(i))) {
+                    ;
+                }
+            }
+        }
+        for (int i = 0;i< barriersH.size();i++) {
+            if (barriersH.get(i).isBarrier()) {
+                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
+                    ;
+                }
+            }
+        }
+
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i)) ) {
             }
