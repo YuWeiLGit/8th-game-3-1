@@ -3,6 +3,7 @@ package scene;
 import camera.Camera;
 import camera.MapInformation;
 import controllers.ImageController;
+import controllers.SceneController;
 import gameobj.*;
 import utils.CommandSolver;
 import utils.Delay;
@@ -45,6 +46,7 @@ public class GameScene extends Scene {
     private Delay delay;
     private ArrayList<ClockNum> clockNums;
     private boolean isPardon;
+    private ArrayList<String> ranking;
 
     public GameScene(String name) {
         this.name = name;
@@ -52,6 +54,21 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
+        ranking = new ArrayList<>();
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+            for (int i = 0; i < ranking.size(); i++) {
+                bw.write(ranking.get(i));
+            }
+
+            bw.write("name:" + name + "+" + totalTime);
+            bw.flush();
+            bw.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+        }
+
         isPardon = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
@@ -125,6 +142,8 @@ public class GameScene extends Scene {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
             bw.write(name + "/" + totalTime / 60);
+            bw.flush();
+            bw.close();
         } catch (Exception ex) {
             return;
         }
@@ -182,6 +201,11 @@ public class GameScene extends Scene {
                 } else if (commandCode == 0) {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
+                } else if (commandCode == 1) {
+                    for (int i = 0; i < ranking.size(); i++) {
+                        System.out.println("!" + ranking.get(i));
+                    }
+                    SceneController.getInstance().changeScene(new EndScene());
                 }
             }
         };
