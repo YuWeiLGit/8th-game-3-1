@@ -55,19 +55,19 @@ public class GameScene extends Scene {
     @Override
     public void sceneBegin() {
         ranking = new ArrayList<>();
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
-            for (int i = 0; i < ranking.size(); i++) {
-                bw.write(ranking.get(i));
-            }
-
-            bw.write("name:" + name + "+" + totalTime);
-            bw.flush();
-            bw.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return;
-        }
+//        try {
+////            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+//            for (int i = 0; i < ranking.size(); i++) {
+//                bw.write(ranking.get(i));
+//            }
+//
+//            bw.write("name:" + name + "+" + totalTime);
+//            bw.flush();
+//            bw.close();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return;
+//        }
 
         isPardon = false;
         delay = new Delay(30);
@@ -95,24 +95,24 @@ public class GameScene extends Scene {
         barriersV = new ArrayList<>();
         barriersH = new ArrayList<>();
         //垂直的障礙物
-        barriersV.add(new BarrierV(386, 2095));
-        barriersV.add(new BarrierV(192, 1136));
-        barriersV.add(new BarrierV(976, 752));
-        barriersV.add(new BarrierV(1636, 1104));
-        barriersV.add(new BarrierV(1348, 80));
-        barriersV.add(new BarrierV(2624, 1266));
-        barriersV.add(new BarrierV(1374, 2416));
-        barriersV.add(new BarrierV(2786, 2320));
-        barriersV.add(new BarrierV(3040, 592));
-        barriersV.add(new BarrierV(3392, 592));
+        barriersV.add(new BarrierV(386, 2111));
+        barriersV.add(new BarrierV(252, 1152));
+        barriersV.add(new BarrierV(980, 768));
+        barriersV.add(new BarrierV(1636, 1088));
+        barriersV.add(new BarrierV(1348, 96));
+        barriersV.add(new BarrierV(2624, 1250));
+        barriersV.add(new BarrierV(1374, 2432));
+        barriersV.add(new BarrierV(2690, 2302));
+        barriersV.add(new BarrierV(3040, 576));
+        barriersV.add(new BarrierV(3392, 608));
 //        barriers.add(new Barrier())
         //水平障礙物
-        barriersH.add(new BarrierH(112, 2016));
-        barriersH.add(new BarrierH(1808, 770));
-        barriersH.add(new BarrierH(2096, 770));
-        barriersH.add(new BarrierH(2000, 1344));
-        barriersH.add(new BarrierH(3216, 736));
-        barriersH.add(new BarrierH(3214, 416));
+        barriersH.add(new BarrierH(126, 2016));
+        barriersH.add(new BarrierH(1824, 770));
+        barriersH.add(new BarrierH(2080, 770));
+        barriersH.add(new BarrierH(2016, 1344));
+        barriersH.add(new BarrierH(3232, 736));
+        barriersH.add(new BarrierH(3208, 416));
 
 
         goal = new Goal(150, 2400);
@@ -264,14 +264,16 @@ public class GameScene extends Scene {
                 }
             }
         }
-
-        for (int i = 0; i < st.getBasicBlock().size(); i++) {
-            if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
-                break;
-            }
-        }
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
+                isPardon = true;
+            }
+        }
+        if (!isPardon) {
+            for (int i = 0; i < st.getBasicBlock().size(); i++) {
+                if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
+                    break;
+                }
             }
         }
 
@@ -288,41 +290,67 @@ public class GameScene extends Scene {
                 state++;
             }
         }
-
-        for (int i = 0; i < barriersV.size(); i++) {
-            if (barriersV.get(i).isBarrier()) {
-                spaceShip.isCollision(barriersV.get(i));
-            }
-        }
-        for (int i = 0; i < barriersV.size(); i++) {
-            if (barriersV.get(i).isBarrier()) {
-                if (spaceShip.AngleisCollision(barriersV.get(i))) {
-                }
-            }
-        }
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
-                    ;
+                    isPardon = true;
+                }
+            }
+        }
+        if(!isPardon) {
+            for (int i = 0; i < barriersV.size(); i++) {
+                if (barriersV.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision(barriersV.get(i))) {
+                        break;
+                    }
                 }
             }
         }
         for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                spaceShip.isCollision(barriersH.get(i));
+            if ( barriersH.get(i).isBarrier()) {
+                if (spaceShip.isCollisionNotAngle( barriersH.get(i))) {
+                    isPardon = true;
+                }
             }
         }
-        for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                if (spaceShip.AngleisCollision(barriersH.get(i))) {
-                    ;
+        if(!isPardon) {
+            for (int i = 0; i <  barriersH.size(); i++) {
+                if ( barriersH.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision( barriersH.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < barriersV.size(); i++) {
+            if (barriersV.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle(barriersV.get(i))) {
+                    isPardon = true;
+                }
+            }
+        }
+        if(!isPardon) {
+            for (int i = 0; i < barriersV.size(); i++) {
+                if (barriersV.get(i).isBarrier()) {
+                    if (goal.AngleisCollision(barriersV.get(i))) {
+                        break;
+                    }
                 }
             }
         }
         for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
-                    ;
+            if ( barriersH.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle( barriersH.get(i))) {
+                    isPardon = true;
+                }
+            }
+        }
+        if(!isPardon) {
+            for (int i = 0; i <  barriersH.size(); i++) {
+                if ( barriersH.get(i).isBarrier()) {
+                    if (goal.AngleisCollision( barriersH.get(i))) {
+                        break;
+                    }
                 }
             }
         }
