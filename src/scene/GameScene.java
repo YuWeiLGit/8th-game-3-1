@@ -3,8 +3,10 @@ package scene;
 import camera.Camera;
 import camera.MapInformation;
 import controllers.ImageController;
+import controllers.RankControll;
 import controllers.SceneController;
 import gameobj.*;
+import sun.awt.SunHints;
 import utils.CommandSolver;
 import utils.Delay;
 import utils.Global;
@@ -13,6 +15,8 @@ import utils.Vector;
 import java.io.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import static utils.Global.*;
 
@@ -46,7 +50,8 @@ public class GameScene extends Scene {
     private Delay delay;
     private ArrayList<ClockNum> clockNums;
     private boolean isPardon;
-    private ArrayList<String> ranking;
+    private ArrayList<String> tmp;
+    private ArrayList<RankControll> rankControlls;
 
     public GameScene(String name) {
         this.name = name;
@@ -54,21 +59,22 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        ranking = new ArrayList<>();
+        rankControlls = new ArrayList<>();
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
-            for (int i = 0; i < ranking.size(); i++) {
-                bw.write(ranking.get(i));
-            }
+            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+            String s;
+            while ((s = br.readLine()) != null) {
+                String[] tmp = s.split("/");
 
-            bw.write("name:" + name + "+" + totalTime);
-            bw.flush();
-            bw.close();
+                System.out.println(tmp[0]);
+                System.out.println(Integer.parseInt(tmp[1]));
+                rankControlls.add(new RankControll(Integer.parseInt(tmp[1]), tmp[0]));
+
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return;
         }
-
         isPardon = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
@@ -139,9 +145,19 @@ public class GameScene extends Scene {
     @Override
     public void sceneEnd() {
         ImageController.getInstance().clear();
+        rankControlls.add(new RankControll(totalTime / 60, name));
+        for (int i = 0; i <rankControlls.size() ; i++) {
+            for(int j=0;j<rankControlls.size()-i-1;j++){
+                if(rankControlls.get(j).getScore()>rankControlls.get(j+1).getScore()){
+                    RankSwap(j,j+1,rankControlls);
+                }
+            }
+        }
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
-            bw.write(name + "/" + totalTime / 60);
+            for (int i = 0; i < rankControlls.size(); i++) {
+                bw.write(rankControlls.get(i).getName() + "/" + rankControlls.get(i).getScore() + "\n");
+            }
             bw.flush();
             bw.close();
         } catch (Exception ex) {
@@ -202,14 +218,12 @@ public class GameScene extends Scene {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
-                    for (int i = 0; i < ranking.size(); i++) {
-                        System.out.println("!" + ranking.get(i));
-                    }
                     SceneController.getInstance().changeScene(new EndScene());
                 }
             }
         };
     }
+
 
     @Override
     public void paint(Graphics g) {
@@ -264,7 +278,6 @@ public class GameScene extends Scene {
                 }
             }
         }
-
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
                 break;
@@ -335,5 +348,18 @@ public class GameScene extends Scene {
             spaceShip.move();
         }
     }
+
+    public void RankSwap(int t1, int t2, ArrayList<RankControll> arrayList) {
+        RankControll tmp1=new RankControll(0,null);
+        RankControll tmp2=new RankControll(0,null);
+        tmp1 = arrayList.get(t2);
+        tmp2 = arrayList.get(t1);
+        arrayList.add(t1 + 1, tmp1);
+        arrayList.remove(t1);
+        arrayList.add(t2 + 1, tmp2);
+        arrayList.remove(t2);
+
+    }
+
 }
 
