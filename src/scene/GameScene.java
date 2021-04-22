@@ -77,7 +77,7 @@ public class GameScene extends Scene {
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
         st = new SceneTool.Builder()
                 .setMaploader("/genMap2.bmp", "/genMap2.txt")
-                .setCam(800, 1500, spaceShip)
+                .setCam(1028 , 1280, spaceShip)
                 .gen();
         st.genMap();
         //能量球
