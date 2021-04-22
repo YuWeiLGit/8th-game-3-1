@@ -53,18 +53,15 @@ public class GameScene extends Scene {
     private Delay delay;
     private ArrayList<ClockNum> clockNums;
     private boolean isPardon;
-<<<<<<< HEAD
     private ArrayList<String> tmp;
     private ArrayList<RankControll> rankControlls;
-=======
     private boolean isPardon2;
     private boolean isPardon3;
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
 
-    private ArrayList<String> ranking;
->>>>>>> origin/火焰修改+地圖修改
+
 
     public GameScene(String name) {
         this.name = name;
@@ -72,7 +69,7 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
-<<<<<<< HEAD
+
         rankControlls = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
@@ -89,23 +86,6 @@ public class GameScene extends Scene {
             ex.printStackTrace();
             return;
         }
-=======
-        ranking = new ArrayList<>();
-//        try {
-////            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
-//            for (int i = 0; i < ranking.size(); i++) {
-//                bw.write(ranking.get(i));
-//            }
-//
-//            bw.write("name:" + name + "+" + totalTime);
-//            bw.flush();
-//            bw.close();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return;
-//        }
-
->>>>>>> origin/火焰修改+地圖修改
         isPardon = false;
         isPardon2 = false;
         isPardon3 = false;
@@ -226,8 +206,6 @@ public class GameScene extends Scene {
                 speed.setLength(Global.getHypotenuse(x, y) / 40);
                 spaceShip.setSpeed(speed);
                 goal.setSpeed(tmpSpeed);
-//                goalSetDegree((int)goal.getSpeed().vx(),(int)goal.getSpeed().vy());
-
             }
         };
     }
