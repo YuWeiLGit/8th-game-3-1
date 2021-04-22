@@ -8,6 +8,7 @@ import java.awt.*;
 public class BasicBlock extends GameObject{
     private Type type;
     private Image image;
+   protected boolean isPardon;
     public enum Type{
         COLLISION_BLOCK_BOT(Path.BasicBlock.COLLISIONBLOCK_BOT),
         COLLISION_Block_LEFT(Path.BasicBlock.COLLISIONBLOCK_LEFT),
@@ -33,8 +34,11 @@ public class BasicBlock extends GameObject{
         super(x, y, width, height);
         this.type =type;
         image = ImageController.getInstance().tryGet(type.path());
+        isPardon=false;
     }
-
+    public  void changeIsPardon(boolean isPardon){
+        this.isPardon=isPardon;
+    }
     @Override
     public void paintComponent(Graphics g) {
         g.drawImage(image, painter().left(), painter().top(), null);

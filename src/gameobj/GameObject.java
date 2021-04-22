@@ -197,7 +197,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                 double x= painter().centerX()-obj.painter.centerX();
                 double y= painter().centerY()-obj.painter.centerY();
                 Vector tmpSpeed=new Vector(-x,-y);
-                tmpSpeed.setLength(Global.getHypotenuse(x, y)/2 );
+                tmpSpeed.setLength(Global.getHypotenuse(x, y)/2.5 );
                 obj.setSpeed(tmpSpeed);
                 return true;
             }
@@ -298,7 +298,7 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
                 double x= painter().centerX()-obj.painter.centerX();
                 double y= painter().centerY()-obj.painter.centerY();
                 Vector tmpSpeed=new Vector(-x,-y);
-                tmpSpeed.setLength(Global.getHypotenuse(x, y)/2 );
+                tmpSpeed.setLength(Global.getHypotenuse(x, y)/2.5 );
                 obj.setSpeed(tmpSpeed);
                 return true;
             }

@@ -72,7 +72,11 @@ public class MissionScene extends Scene{
 
             @Override
             public void keyReleased(int commandCode, long trigTime) {
+                if(isLaunch){
+                    if(commandCode==1){
 
+                    }
+                }
             }
 
             @Override

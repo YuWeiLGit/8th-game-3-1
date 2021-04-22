@@ -84,7 +84,7 @@ public class IntroScene extends Scene {
         if(showSolo){
             g.drawImage(campaign,10,800,null);
         }
-        if(showDul){
+       else if(showDul){
             g.drawImage(gladiator,10,800,null);
         }
 
@@ -92,6 +92,12 @@ public class IntroScene extends Scene {
 
     @Override
     public void update() {
+        if(showDul){
+            showSolo=false;
+        }
+        if(showSolo){
+            showDul=false;
+        }
         if ((47 <= mx && mx <= 463 && my >= 45 && my <= 720)) {
             if (countSolo < 50)
                 countSolo++;
