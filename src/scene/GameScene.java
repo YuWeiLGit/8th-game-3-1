@@ -77,7 +77,7 @@ public class GameScene extends Scene {
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
         st = new SceneTool.Builder()
                 .setMaploader("/genMap2.bmp", "/genMap2.txt")
-                .setCam(1028 , 1280, spaceShip)
+                .setCam(1080   , 1280, spaceShip)
                 .gen();
         st.genMap();
         //能量球
@@ -101,7 +101,7 @@ public class GameScene extends Scene {
         barriersV.add(new BarrierV(1636, 1088));
         barriersV.add(new BarrierV(1348, 96));
         barriersV.add(new BarrierV(2624, 1250));
-        barriersV.add(new BarrierV(1374, 2432));
+        barriersV.add(new BarrierV(1374, 2400));
         barriersV.add(new BarrierV(2690, 2302));
         barriersV.add(new BarrierV(3040, 576));
         barriersV.add(new BarrierV(3392, 608));
