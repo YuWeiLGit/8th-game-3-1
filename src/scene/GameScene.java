@@ -29,8 +29,11 @@ public class GameScene extends Scene {
     private SpaceShip spaceShip;
     private Image image;
     private Map map;
+    private int XX;//滑鼠當下的X座標
+    private int YY;//滑鼠當下的Y座標
     private ArrayList<GameObject> gameObjectArr; //牆
     private double degree;
+    private double gDegree;//goal的degree;
     public int dx;
     public int dy;
     int state;///能量bar
@@ -50,8 +53,18 @@ public class GameScene extends Scene {
     private Delay delay;
     private ArrayList<ClockNum> clockNums;
     private boolean isPardon;
+<<<<<<< HEAD
     private ArrayList<String> tmp;
     private ArrayList<RankControll> rankControlls;
+=======
+    private boolean isPardon2;
+    private boolean isPardon3;
+    private boolean isPardon4;
+    private boolean isPardon5;
+    private boolean isPardon6;
+
+    private ArrayList<String> ranking;
+>>>>>>> origin/火焰修改+地圖修改
 
     public GameScene(String name) {
         this.name = name;
@@ -59,6 +72,7 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
+<<<<<<< HEAD
         rankControlls = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
@@ -75,7 +89,29 @@ public class GameScene extends Scene {
             ex.printStackTrace();
             return;
         }
+=======
+        ranking = new ArrayList<>();
+//        try {
+////            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+//            for (int i = 0; i < ranking.size(); i++) {
+//                bw.write(ranking.get(i));
+//            }
+//
+//            bw.write("name:" + name + "+" + totalTime);
+//            bw.flush();
+//            bw.close();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return;
+//        }
+
+>>>>>>> origin/火焰修改+地圖修改
         isPardon = false;
+        isPardon2 = false;
+        isPardon3 = false;
+        isPardon4 = false;
+        isPardon5 = false;
+        isPardon6 = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
         delay.loop();
@@ -83,7 +119,7 @@ public class GameScene extends Scene {
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
         st = new SceneTool.Builder()
                 .setMaploader("/genMap2.bmp", "/genMap2.txt")
-                .setCam(800, 1500, spaceShip)
+                .setCam(1080, 1280, spaceShip)
                 .gen();
         st.genMap();
         //能量球
@@ -101,24 +137,24 @@ public class GameScene extends Scene {
         barriersV = new ArrayList<>();
         barriersH = new ArrayList<>();
         //垂直的障礙物
-        barriersV.add(new BarrierV(386, 2095));
-        barriersV.add(new BarrierV(192, 1136));
-        barriersV.add(new BarrierV(976, 752));
-        barriersV.add(new BarrierV(1636, 1104));
-        barriersV.add(new BarrierV(1348, 80));
-        barriersV.add(new BarrierV(2624, 1266));
-        barriersV.add(new BarrierV(1374, 2416));
-        barriersV.add(new BarrierV(2786, 2320));
-        barriersV.add(new BarrierV(3040, 592));
-        barriersV.add(new BarrierV(3392, 592));
+        barriersV.add(new BarrierV(386, 2111));
+        barriersV.add(new BarrierV(252, 1152));
+        barriersV.add(new BarrierV(980, 768));
+        barriersV.add(new BarrierV(1636, 1088));
+        barriersV.add(new BarrierV(1348, 96));
+        barriersV.add(new BarrierV(2624, 1250));
+        barriersV.add(new BarrierV(1374, 2400));
+        barriersV.add(new BarrierV(2690, 2302));
+        barriersV.add(new BarrierV(3040, 576));
+        barriersV.add(new BarrierV(3392, 608));
 //        barriers.add(new Barrier())
         //水平障礙物
-        barriersH.add(new BarrierH(112, 2016));
-        barriersH.add(new BarrierH(1808, 770));
-        barriersH.add(new BarrierH(2096, 770));
-        barriersH.add(new BarrierH(2000, 1344));
-        barriersH.add(new BarrierH(3216, 736));
-        barriersH.add(new BarrierH(3214, 416));
+        barriersH.add(new BarrierH(126, 2016));
+        barriersH.add(new BarrierH(1824, 770));
+        barriersH.add(new BarrierH(2080, 770));
+        barriersH.add(new BarrierH(2016, 1344));
+        barriersH.add(new BarrierH(3232, 736));
+        barriersH.add(new BarrierH(3208, 416));
 
 
         goal = new Goal(150, 2400);
@@ -168,6 +204,11 @@ public class GameScene extends Scene {
     @Override
     public CommandSolver.MouseListener mouseListener() {
         return (e, state, trigTime) -> {
+            if(state!=null){
+                XX = e.getX();
+                YY = e.getY();
+                setDegree(XX,YY);
+            }
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
                 goal.changeCollisionState(GameObject.CollisionState.STEADY);
@@ -185,9 +226,49 @@ public class GameScene extends Scene {
                 speed.setLength(Global.getHypotenuse(x, y) / 40);
                 spaceShip.setSpeed(speed);
                 goal.setSpeed(tmpSpeed);
+//                goalSetDegree((int)goal.getSpeed().vx(),(int)goal.getSpeed().vy());
+
             }
         };
     }
+    private void setDegree(int x, int y) {
+        double a = 0.5 * spaceShip.painter().height();//check
+        double b = Global.getHypotenuse(x, y
+                , spaceShip.painter().centerX() - st.getCam().painter().left(), spaceShip.painter().top() - st.getCam().painter().top());
+        double c = Global.getHypotenuse(x, y
+                , spaceShip.painter().centerX() - st.getCam().painter().left(), spaceShip.painter().centerY() - st.getCam().painter().top());
+        double t1 = 2 * a * c;
+        double t2 = (c * c + a * a - b * b);
+        double t3 = t2 / t1;
+        double t4 = Math.acos(t3);
+        double t5 = Math.toDegrees(t4);
+        if (x < spaceShip.painter().centerX() - st.getCam().painter().left() && y > spaceShip.painter().top() - st.getCam().painter().top()) {
+            t5 = -t5;
+        }
+        if (x < spaceShip.painter().centerX() - st.getCam().painter().left() && y < spaceShip.painter().top() - st.getCam().painter().top()) {
+            t5 = -t5;
+        }
+        degree = t5;
+    }
+//    private void goalSetDegree(int x, int y) {
+//        double a = 0.5 * goal.painter().height();//check
+//        double b = Global.getHypotenuse(x, y
+//                , goal.painter().centerX() - st.getCam().painter().left(), goal.painter().top() - st.getCam().painter().top());
+//        double c = Global.getHypotenuse(x, y
+//                , goal.painter().centerX() - st.getCam().painter().left(), goal.painter().centerY() - st.getCam().painter().top());
+//        double t1 = 2 * a * c;
+//        double t2 = (c * c + a * a - b * b);
+//        double t3 = t2 / t1;
+//        double t4 = Math.acos(t3);
+//        double t5 = Math.toDegrees(t4);
+//        if (x < goal.painter().centerX() - st.getCam().painter().left() && y > goal.painter().top() - st.getCam().painter().top()) {
+//            t5 = -t5;
+//        }
+//        if (x < goal.painter().centerX() - st.getCam().painter().left() && y < goal.painter().top() - st.getCam().painter().top()) {
+//            t5 = -t5;
+//        }
+//        gDegree = t5;
+//    }
 
     @Override
     public CommandSolver.KeyListener keyListener() {
@@ -231,8 +312,8 @@ public class GameScene extends Scene {
         st.paint(g);
         spaceShip.paintComponent(g, degree);
         spaceShip.paint(g);
-        goal.paint(g);
         goal.paintComponent(g);
+        goal.paint(g);
         for (int i = 0; i < energyBalls.size(); i++) {
             energyBalls.get(i).paint(g);
         }
@@ -262,10 +343,14 @@ public class GameScene extends Scene {
     @Override
     public void update() {
         isPardon = false;
+        isPardon2 = false;
+        isPardon3 = false;
+        isPardon4 = false;
+        isPardon5 = false;
+        isPardon6 = false;
         totalTime++;
         st.update();
         spaceShip.isCollision(goal);
-
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon = true;
@@ -279,12 +364,15 @@ public class GameScene extends Scene {
             }
         }
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
-            if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
-                break;
+            if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
+                isPardon2 = true;
             }
         }
-        for (int i = 0; i < st.getBasicBlock().size(); i++) {
-            if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
+        if (!isPardon2) {
+            for (int i = 0; i < st.getBasicBlock().size(); i++) {
+                if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
+                    break;
+                }
             }
         }
 
@@ -301,46 +389,73 @@ public class GameScene extends Scene {
                 state++;
             }
         }
-
-        for (int i = 0; i < barriersV.size(); i++) {
-            if (barriersV.get(i).isBarrier()) {
-                spaceShip.isCollision(barriersV.get(i));
-            }
-        }
-        for (int i = 0; i < barriersV.size(); i++) {
-            if (barriersV.get(i).isBarrier()) {
-                if (spaceShip.AngleisCollision(barriersV.get(i))) {
-                }
-            }
-        }
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
-                    ;
+                    isPardon3 = true;
                 }
             }
         }
-        for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                spaceShip.isCollision(barriersH.get(i));
-            }
-        }
-        for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                if (spaceShip.AngleisCollision(barriersH.get(i))) {
-                    ;
+        if (!isPardon3) {
+            for (int i = 0; i < barriersV.size(); i++) {
+                if (barriersV.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision(barriersV.get(i))) {
+                        break;
+                    }
                 }
             }
         }
         for (int i = 0; i < barriersH.size(); i++) {
             if (barriersH.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
-                    ;
+                    isPardon4 = true;
+                }
+            }
+        }
+        if (!isPardon4) {
+            for (int i = 0; i < barriersH.size(); i++) {
+                if (barriersH.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision(barriersH.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < barriersV.size(); i++) {
+            if (barriersV.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle(barriersV.get(i))) {
+                    isPardon5 = true;
+                }
+            }
+        }
+        if (!isPardon5) {
+            for (int i = 0; i < barriersV.size(); i++) {
+                if (barriersV.get(i).isBarrier()) {
+                    if (goal.AngleisCollision(barriersV.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < barriersH.size(); i++) {
+            if (barriersH.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle(barriersH.get(i))) {
+                    isPardon6 = true;
+                }
+            }
+        }
+        if (!isPardon6) {
+            for (int i = 0; i < barriersH.size(); i++) {
+                if (barriersH.get(i).isBarrier()) {
+                    if (goal.AngleisCollision(barriersH.get(i))) {
+                        break;
+                    }
                 }
             }
         }
         if (count < 0) {
             count = 0;
+            spaceShip.setIsMove(false);
         }
         count--;
         if (count > 0) {
