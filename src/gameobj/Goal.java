@@ -16,7 +16,7 @@ public class Goal extends GameObject{
 
     public Goal(int x, int y) {
         super(x+32/2, y+32/2, 32, 32,CollisionState.STEADY);
-       this.img = ImageController.getInstance().tryGet("/goal.png");
+       this.img = ImageController.getInstance().tryGet("/goal1-1.png");
        isCircle();
        GoalSpeed= new Vector();
        changeCollisionState(CollisionState.STEADY);
@@ -59,4 +59,16 @@ public class Goal extends GameObject{
     public void update() {
 
     }
+//    public void paintComponent(Graphics g, double degree) {
+//        Graphics2D g2d = (Graphics2D) g;
+//        AffineTransform t = g2d.getTransform();
+//        g2d.rotate(Math.toRadians(degree), painter().centerX(), painter().centerY());
+////        if(!isMove) {
+//        g2d.drawImage(img, painter().left(), painter().top(), null);
+//        }else {
+//            g2d.drawImage(img2, painter().left(), painter().top(), null);
+//        }
+//        g2d.setTransform(t);
+//        g.drawImage(img, painter().left(), painter().top(), null);
+//    }
 }

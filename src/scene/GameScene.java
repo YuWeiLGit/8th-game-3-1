@@ -25,8 +25,11 @@ public class GameScene extends Scene {
     private SpaceShip spaceShip;
     private Image image;
     private Map map;
+    private int XX;//滑鼠當下的X座標
+    private int YY;//滑鼠當下的Y座標
     private ArrayList<GameObject> gameObjectArr; //牆
     private double degree;
+    private double gDegree;//goal的degree;
     public int dx;
     public int dy;
     int state;///能量bar
@@ -46,6 +49,12 @@ public class GameScene extends Scene {
     private Delay delay;
     private ArrayList<ClockNum> clockNums;
     private boolean isPardon;
+    private boolean isPardon2;
+    private boolean isPardon3;
+    private boolean isPardon4;
+    private boolean isPardon5;
+    private boolean isPardon6;
+
     private ArrayList<String> ranking;
 
     public GameScene(String name) {
@@ -70,6 +79,11 @@ public class GameScene extends Scene {
 //        }
 
         isPardon = false;
+        isPardon2 = false;
+        isPardon3 = false;
+        isPardon4 = false;
+        isPardon5 = false;
+        isPardon6 = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
         delay.loop();
@@ -77,7 +91,7 @@ public class GameScene extends Scene {
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
         st = new SceneTool.Builder()
                 .setMaploader("/genMap2.bmp", "/genMap2.txt")
-                .setCam(1080   , 1280, spaceShip)
+                .setCam(1080, 1280, spaceShip)
                 .gen();
         st.genMap();
         //能量球
@@ -152,6 +166,11 @@ public class GameScene extends Scene {
     @Override
     public CommandSolver.MouseListener mouseListener() {
         return (e, state, trigTime) -> {
+            if(state!=null){
+                XX = e.getX();
+                YY = e.getY();
+                setDegree(XX,YY);
+            }
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
                 goal.changeCollisionState(GameObject.CollisionState.STEADY);
@@ -169,9 +188,49 @@ public class GameScene extends Scene {
                 speed.setLength(Global.getHypotenuse(x, y) / 40);
                 spaceShip.setSpeed(speed);
                 goal.setSpeed(tmpSpeed);
+//                goalSetDegree((int)goal.getSpeed().vx(),(int)goal.getSpeed().vy());
+
             }
         };
     }
+    private void setDegree(int x, int y) {
+        double a = 0.5 * spaceShip.painter().height();//check
+        double b = Global.getHypotenuse(x, y
+                , spaceShip.painter().centerX() - st.getCam().painter().left(), spaceShip.painter().top() - st.getCam().painter().top());
+        double c = Global.getHypotenuse(x, y
+                , spaceShip.painter().centerX() - st.getCam().painter().left(), spaceShip.painter().centerY() - st.getCam().painter().top());
+        double t1 = 2 * a * c;
+        double t2 = (c * c + a * a - b * b);
+        double t3 = t2 / t1;
+        double t4 = Math.acos(t3);
+        double t5 = Math.toDegrees(t4);
+        if (x < spaceShip.painter().centerX() - st.getCam().painter().left() && y > spaceShip.painter().top() - st.getCam().painter().top()) {
+            t5 = -t5;
+        }
+        if (x < spaceShip.painter().centerX() - st.getCam().painter().left() && y < spaceShip.painter().top() - st.getCam().painter().top()) {
+            t5 = -t5;
+        }
+        degree = t5;
+    }
+//    private void goalSetDegree(int x, int y) {
+//        double a = 0.5 * goal.painter().height();//check
+//        double b = Global.getHypotenuse(x, y
+//                , goal.painter().centerX() - st.getCam().painter().left(), goal.painter().top() - st.getCam().painter().top());
+//        double c = Global.getHypotenuse(x, y
+//                , goal.painter().centerX() - st.getCam().painter().left(), goal.painter().centerY() - st.getCam().painter().top());
+//        double t1 = 2 * a * c;
+//        double t2 = (c * c + a * a - b * b);
+//        double t3 = t2 / t1;
+//        double t4 = Math.acos(t3);
+//        double t5 = Math.toDegrees(t4);
+//        if (x < goal.painter().centerX() - st.getCam().painter().left() && y > goal.painter().top() - st.getCam().painter().top()) {
+//            t5 = -t5;
+//        }
+//        if (x < goal.painter().centerX() - st.getCam().painter().left() && y < goal.painter().top() - st.getCam().painter().top()) {
+//            t5 = -t5;
+//        }
+//        gDegree = t5;
+//    }
 
     @Override
     public CommandSolver.KeyListener keyListener() {
@@ -217,8 +276,8 @@ public class GameScene extends Scene {
         st.paint(g);
         spaceShip.paintComponent(g, degree);
         spaceShip.paint(g);
-        goal.paint(g);
         goal.paintComponent(g);
+        goal.paint(g);
         for (int i = 0; i < energyBalls.size(); i++) {
             energyBalls.get(i).paint(g);
         }
@@ -248,10 +307,14 @@ public class GameScene extends Scene {
     @Override
     public void update() {
         isPardon = false;
+        isPardon2 = false;
+        isPardon3 = false;
+        isPardon4 = false;
+        isPardon5 = false;
+        isPardon6 = false;
         totalTime++;
         st.update();
         spaceShip.isCollision(goal);
-
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon = true;
@@ -266,10 +329,10 @@ public class GameScene extends Scene {
         }
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
-                isPardon = true;
+                isPardon2 = true;
             }
         }
-        if (!isPardon) {
+        if (!isPardon2) {
             for (int i = 0; i < st.getBasicBlock().size(); i++) {
                 if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
                     break;
@@ -293,11 +356,11 @@ public class GameScene extends Scene {
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
-                    isPardon = true;
+                    isPardon3 = true;
                 }
             }
         }
-        if(!isPardon) {
+        if (!isPardon3) {
             for (int i = 0; i < barriersV.size(); i++) {
                 if (barriersV.get(i).isBarrier()) {
                     if (spaceShip.AngleisCollision(barriersV.get(i))) {
@@ -307,16 +370,16 @@ public class GameScene extends Scene {
             }
         }
         for (int i = 0; i < barriersH.size(); i++) {
-            if ( barriersH.get(i).isBarrier()) {
-                if (spaceShip.isCollisionNotAngle( barriersH.get(i))) {
-                    isPardon = true;
+            if (barriersH.get(i).isBarrier()) {
+                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
+                    isPardon4 = true;
                 }
             }
         }
-        if(!isPardon) {
-            for (int i = 0; i <  barriersH.size(); i++) {
-                if ( barriersH.get(i).isBarrier()) {
-                    if (spaceShip.AngleisCollision( barriersH.get(i))) {
+        if (!isPardon4) {
+            for (int i = 0; i < barriersH.size(); i++) {
+                if (barriersH.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision(barriersH.get(i))) {
                         break;
                     }
                 }
@@ -325,11 +388,11 @@ public class GameScene extends Scene {
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (goal.isCollisionNotAngle(barriersV.get(i))) {
-                    isPardon = true;
+                    isPardon5 = true;
                 }
             }
         }
-        if(!isPardon) {
+        if (!isPardon5) {
             for (int i = 0; i < barriersV.size(); i++) {
                 if (barriersV.get(i).isBarrier()) {
                     if (goal.AngleisCollision(barriersV.get(i))) {
@@ -339,16 +402,16 @@ public class GameScene extends Scene {
             }
         }
         for (int i = 0; i < barriersH.size(); i++) {
-            if ( barriersH.get(i).isBarrier()) {
-                if (goal.isCollisionNotAngle( barriersH.get(i))) {
-                    isPardon = true;
+            if (barriersH.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle(barriersH.get(i))) {
+                    isPardon6 = true;
                 }
             }
         }
-        if(!isPardon) {
-            for (int i = 0; i <  barriersH.size(); i++) {
-                if ( barriersH.get(i).isBarrier()) {
-                    if (goal.AngleisCollision( barriersH.get(i))) {
+        if (!isPardon6) {
+            for (int i = 0; i < barriersH.size(); i++) {
+                if (barriersH.get(i).isBarrier()) {
+                    if (goal.AngleisCollision(barriersH.get(i))) {
                         break;
                     }
                 }
@@ -356,6 +419,7 @@ public class GameScene extends Scene {
         }
         if (count < 0) {
             count = 0;
+            spaceShip.setIsMove(false);
         }
         count--;
         if (count > 0) {

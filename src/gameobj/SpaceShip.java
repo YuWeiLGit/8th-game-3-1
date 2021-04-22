@@ -12,21 +12,25 @@ import java.util.ArrayList;
 
 public class SpaceShip extends GameObject {
     private Image img;
+    private Image img2;
     private boolean isGetMaterials;
     private double moveStep;
     private final double initialMoveStep;
     private ArrayList<GameObject> materials; //道具
     private Vector speed;
+    private boolean isMove;
 
     public SpaceShip(int x, int y) {
         super(x + 32 / 2, y + 32 / 2, 32, 32, (CollisionState) null);
-        this.img = ImageController.getInstance().tryGet("/spaceship.png");
+        this.img = ImageController.getInstance().tryGet("/spaceShip1-2.png");
+//        this.img2 = ImageController.getInstance().tryGet("/spaceShip1-3.png");  //換圖效果不明顯,就不開了
         isCircle();
         materials = new ArrayList<>();
         isGetMaterials = false;
         setMoveStep(moveStep);
         initialMoveStep = moveStep;
         speed = new Vector();
+        isMove = false;
 
 //        image=ImageController.getInstance().addBuff("/airplane1.png");
 //        img=  Rotate.BufferedImageToImage(Rotate.rotateImage(image,33));
@@ -56,6 +60,13 @@ public class SpaceShip extends GameObject {
         return initialMoveStep;
     }
 
+    public boolean getIsMove(){
+        return  isMove;
+    }
+    public void setIsMove(boolean isMove){
+        this.isMove = isMove;
+    }
+
     //得到道具的方法
     public void getMaterials(gameobj.RandomMaterial randomMaterial) {
         materials.add(randomMaterial);
@@ -64,10 +75,12 @@ public class SpaceShip extends GameObject {
 
     @Override
     public void paintComponent(Graphics g) {
-
-        g.drawImage(img, painter().left(), painter().top(), null);
+//        if (!isMove) {
+//            g.drawImage(img, painter().left(), painter().top(), null);
+//        } else {
+//            g.drawImage(img2, painter().left(), painter().top(), null);
+//        }
     }
-
     @Override
     public void changeCollisionState(CollisionState collisionState) {
         if (collisionState == GameObject.CollisionState.ANGLE) {
@@ -85,6 +98,7 @@ public class SpaceShip extends GameObject {
     }
 
     public void move() {
+        isMove = true;
         painter().offset(speed.vx(), speed.vy());
         collider().offset(speed.vx(), speed.vy());
     }
@@ -93,9 +107,12 @@ public class SpaceShip extends GameObject {
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform t = g2d.getTransform();
         g2d.rotate(Math.toRadians(degree), painter().centerX(), painter().centerY());
-        g2d.drawImage(img, painter().left(), painter().top(), null);
+//        if(!isMove) {
+            g2d.drawImage(img, painter().left(), painter().top(), null);
+//        }else {
+//            g2d.drawImage(img2, painter().left(), painter().top(), null);
+//        }
         g2d.setTransform(t);
-
 //        g.drawImage(img, painter().left(), painter().top(), null);
     }
 
