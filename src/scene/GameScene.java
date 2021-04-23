@@ -2,6 +2,7 @@ package scene;
 
 import camera.Camera;
 import camera.MapInformation;
+import controllers.AudioResourceController;
 import controllers.ImageController;
 import controllers.RankControll;
 import controllers.SceneController;
@@ -60,8 +61,7 @@ public class GameScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
-
-
+    private String  path;
 
     public GameScene(String name) {
         this.name = name;
@@ -69,21 +69,26 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
-
+        AudioResourceController.getInstance().loop("/playing.wav", 50);
         rankControlls = new ArrayList<>();
+        path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        path = path + "rank2.txt";
         try {
-            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(path));
             String s;
             while ((s = br.readLine()) != null) {
                 String[] tmp = s.split("/");
-
-                System.out.println(tmp[0]);
-                System.out.println(Integer.parseInt(tmp[1]));
                 rankControlls.add(new RankControll(Integer.parseInt(tmp[1]), tmp[0]));
 
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            try {
+                System.out.println("!");
+                BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
             return;
         }
         isPardon = false;
@@ -162,15 +167,15 @@ public class GameScene extends Scene {
     public void sceneEnd() {
         ImageController.getInstance().clear();
         rankControlls.add(new RankControll(totalTime / 60, name));
-        for (int i = 0; i <rankControlls.size() ; i++) {
-            for(int j=0;j<rankControlls.size()-i-1;j++){
-                if(rankControlls.get(j).getScore()>rankControlls.get(j+1).getScore()){
-                    RankSwap(j,j+1,rankControlls);
+        for (int i = 0; i < rankControlls.size(); i++) {
+            for (int j = 0; j < rankControlls.size() - i - 1; j++) {
+                if (rankControlls.get(j).getScore() > rankControlls.get(j + 1).getScore()) {
+                    RankSwap(j, j + 1, rankControlls);
                 }
             }
         }
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
             for (int i = 0; i < rankControlls.size(); i++) {
                 bw.write(rankControlls.get(i).getName() + "/" + rankControlls.get(i).getScore() + "\n");
             }
@@ -184,10 +189,10 @@ public class GameScene extends Scene {
     @Override
     public CommandSolver.MouseListener mouseListener() {
         return (e, state, trigTime) -> {
-            if(state!=null){
+            if (state != null) {
                 XX = e.getX();
                 YY = e.getY();
-                setDegree(XX,YY);
+                setDegree(XX, YY);
             }
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
@@ -209,6 +214,7 @@ public class GameScene extends Scene {
             }
         };
     }
+
     private void setDegree(int x, int y) {
         double a = 0.5 * spaceShip.painter().height();//check
         double b = Global.getHypotenuse(x, y
@@ -277,7 +283,7 @@ public class GameScene extends Scene {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
-                    SceneController.getInstance().changeScene(new EndScene());
+                    SceneController.getInstance().changeScene(new EndScene(name));
                 }
             }
         };
@@ -316,6 +322,11 @@ public class GameScene extends Scene {
         }
         //用來碰撞判定的
         //st.getBasicBlock().get(i)
+    }
+
+    public void playFinalMusic() {
+        AudioResourceController.getInstance().stop("/playing.wav");
+        AudioResourceController.getInstance().loop("/trans.wav", 30);
     }
 
     @Override
@@ -443,8 +454,8 @@ public class GameScene extends Scene {
     }
 
     public void RankSwap(int t1, int t2, ArrayList<RankControll> arrayList) {
-        RankControll tmp1=new RankControll(0,null);
-        RankControll tmp2=new RankControll(0,null);
+        RankControll tmp1 = new RankControll(0, null);
+        RankControll tmp2 = new RankControll(0, null);
         tmp1 = arrayList.get(t2);
         tmp2 = arrayList.get(t1);
         arrayList.add(t1 + 1, tmp1);

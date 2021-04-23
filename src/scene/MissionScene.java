@@ -20,7 +20,7 @@ public class MissionScene extends Scene{
     @Override
     public void sceneBegin() {
         back0 = ImageController.getInstance().tryGet("/mission.png");
-//        AudioResourceController.getInstance().loop("/mission.wav",20);
+        AudioResourceController.getInstance().loop("/mission.wav",20);
         Style name = new Style.StyleRect(100, 100, false, new BackgroundType.BackgroundColor(Color.black))
                 .setTextColor(Color.white)
                 .setHaveBorder(false)
