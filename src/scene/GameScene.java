@@ -35,6 +35,7 @@ public class GameScene extends Scene {
     int state;///能量bar
     private int count;//按壓時間
     private boolean willMove;
+    private Portal portal;
     private EnergyBar energyBar;
     private ArrayList<EnergyBall> energyBalls;
     private ArrayList<BarrierH> barriersH;
@@ -54,6 +55,7 @@ public class GameScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
+    private boolean isCollectAll;
 
     private ArrayList<String> ranking;
 
@@ -84,26 +86,28 @@ public class GameScene extends Scene {
         isPardon4 = false;
         isPardon5 = false;
         isPardon6 = false;
+        isCollectAll = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
+        portal = new Portal(3750, 50);
         delay.loop();
         map = new Map();
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
         st = new SceneTool.Builder()
                 .setMaploader("/genMap2.bmp", "/genMap2.txt")
-                .setCam(1080, 1280, spaceShip)
+                .setCam(1080, 1080, spaceShip)
                 .gen();
         st.genMap();
         //能量球
         energyBalls = new ArrayList<>();
         //中間
-        energyBalls.add(new EnergyBall(random(1650, 2200), random(780, 848)));
+        energyBalls.add(new EnergyBall(random(1690, 2160), random(780, 848)));
         //右下
-        energyBalls.add(new EnergyBall(random(2544, 2832), random(1520, 2032)));
+        energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
         energyBalls.add(new EnergyBall(random(560, 720), random(250, 400)));
         //右上
-        energyBalls.add(new EnergyBall(random(3025, 3344), random(496, 432)));
+        energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
 
         //障礙物
         barriersV = new ArrayList<>();
@@ -126,7 +130,7 @@ public class GameScene extends Scene {
         barriersH.add(new BarrierH(2080, 770));
         barriersH.add(new BarrierH(2016, 1344));
         barriersH.add(new BarrierH(3232, 736));
-        barriersH.add(new BarrierH(3208, 416));
+        barriersH.add(new BarrierH(3200, 416));
 
 
         goal = new Goal(150, 2400);
@@ -166,10 +170,10 @@ public class GameScene extends Scene {
     @Override
     public CommandSolver.MouseListener mouseListener() {
         return (e, state, trigTime) -> {
-            if(state!=null){
+            if (state != null) {
                 XX = e.getX();
                 YY = e.getY();
-                setDegree(XX,YY);
+                setDegree(XX, YY);
             }
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
@@ -193,6 +197,7 @@ public class GameScene extends Scene {
             }
         };
     }
+
     private void setDegree(int x, int y) {
         double a = 0.5 * spaceShip.painter().height();//check
         double b = Global.getHypotenuse(x, y
@@ -252,12 +257,13 @@ public class GameScene extends Scene {
 
             @Override
             public void keyReleased(int commandCode, long trigTime) {
-                if (commandCode == 2) {
-                    for (int i = 0; i < inBars.size(); i++) {
-                        inBars.get(i).setShow(false);
-                    }
-                    state = 0;
-                } else if (commandCode == 0) {
+//                if (commandCode == 2) {
+//                    for (int i = 0; i < inBars.size(); i++) {
+//                        inBars.get(i).setShow(false);
+//                    }
+////                    state = 0;
+//                }
+                if (commandCode == 0) {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
@@ -278,6 +284,8 @@ public class GameScene extends Scene {
         spaceShip.paint(g);
         goal.paintComponent(g);
         goal.paint(g);
+        portal.paintComponent(g);
+
         for (int i = 0; i < energyBalls.size(); i++) {
             energyBalls.get(i).paint(g);
         }
@@ -315,6 +323,8 @@ public class GameScene extends Scene {
         totalTime++;
         st.update();
         spaceShip.isCollision(goal);
+
+
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon = true;
@@ -327,6 +337,7 @@ public class GameScene extends Scene {
                 }
             }
         }
+
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon2 = true;
@@ -340,19 +351,36 @@ public class GameScene extends Scene {
             }
         }
 
-        for (int i = 0; i < state; i++) {
-            inBars.get(i).setShow(true);
-        }
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).update();
         }
-
+//
+//        for (int i = 0; i < energyBalls.size(); i++) {
+//            if (energyBalls.get(i).isCollision(spaceShip)) {
+//                energyBalls.remove(i);
+//                state++;
+//            }
+//        }
         for (int i = 0; i < energyBalls.size(); i++) {
-            if (energyBalls.get(i).isCollision(spaceShip)) {
+            if (energyBalls.get(i).isCollision(goal)) {
+                savePointX = energyBalls.get(i).getX();
+                savePointY = energyBalls.get(i).getY();
                 energyBalls.remove(i);
-                state++;
+                //吃四顆的情況
+                if (state >= 5) {
+                    isCollectAll = true;
+                    state = 5;
+                } else if (state < 4) {
+                    state = state + 2;
+                } else {
+                    state++;
+                }
             }
         }
+        for (int i = 0; i < state; i++) {
+            inBars.get(i).setShow(true);
+        }
+
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
@@ -425,6 +453,10 @@ public class GameScene extends Scene {
         if (count > 0) {
             goal.move();
             spaceShip.move();
+
+            if (state == 5 && goal.isCollision(portal)) {
+                SceneController.getInstance().changeScene(new EndScene());
+            }
         }
     }
 }

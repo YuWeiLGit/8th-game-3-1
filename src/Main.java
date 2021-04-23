@@ -40,7 +40,7 @@ public class Main {
                         .next().keyCleanMode().trackChar().subscribe(sceneController)
         ).paint(sceneController).update(sceneController).gen();
 
-        jframe.setSize(1080, 1280);
+        jframe.setSize(1080, 1080);
         jframe.setTitle("打飛機遊戲");
         jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //設置關閉時結束程式
         jframe.add(gameKernel);
