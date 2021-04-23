@@ -35,12 +35,14 @@ public class GameScene extends Scene {
     int state;///能量bar
     private int count;//按壓時間
     private boolean willMove;
-    private Portal portal;
+    private Portal portal;//出口
+    private Portal portalMission;//給任務用
+    private EnergyBall energyBallMission;//給任務用
+    private MissionBoard  missionBoard;//任務用
     private EnergyBar energyBar;
     private ArrayList<EnergyBall> energyBalls;
     private ArrayList<BarrierH> barriersH;
     private ArrayList<BarrierV> barriersV;
-    private EnergyBall energyBall;
     private ArrayList<InBar> inBars;
     private int savePointX;
     private int savePointY;
@@ -49,6 +51,7 @@ public class GameScene extends Scene {
     private Goal goal;
     private Delay delay;
     private ArrayList<ClockNum> clockNums;
+    private boolean isDisplyMission; //一開始false
     private boolean isPardon;
     private boolean isPardon2;
     private boolean isPardon3;
@@ -87,9 +90,10 @@ public class GameScene extends Scene {
         isPardon5 = false;
         isPardon6 = false;
         isCollectAll = false;
+        isDisplyMission =false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
-        portal = new Portal(3750, 50);
+        portal = new Portal(3750, 50,96,64);
         delay.loop();
         map = new Map();
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
@@ -135,20 +139,23 @@ public class GameScene extends Scene {
 
         goal = new Goal(150, 2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
+        missionBoard = new MissionBoard(450,52,160,69,state);
+        energyBallMission = new EnergyBall(395,55);
+        portalMission = new Portal(395,55,32,32);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
         inBars.add(new InBar(32, 14));
         inBars.add(new InBar(52, 14));
         inBars.add(new InBar(72, 14));
         inBars.add(new InBar(93, 14));
-        clockBack = new ClockBack(450, 40, 106, 69);
+        clockBack = new ClockBack(650, 40, 106, 69);
         savePointX = 100;
         savePointY = 2400;
         clockNums = new ArrayList<>();
-        clockNums.add(new ClockNum(460, 40, 0, 0, 520, 25, ClockNum.Hand.SecondHand));
-        clockNums.add(new ClockNum(460, 40, 0, 0, 483, 25, ClockNum.Hand.SecondHand10));
-        clockNums.add(new ClockNum(460, 40, 0, 0, 433, 25, ClockNum.Hand.MinuteHand));
-        clockNums.add(new ClockNum(460, 40, 0, 0, 399, 25, ClockNum.Hand.HourHand));
+        clockNums.add(new ClockNum(660, 40, 0, 0, 720, 25, ClockNum.Hand.SecondHand));
+        clockNums.add(new ClockNum(660, 40, 0, 0, 683, 25, ClockNum.Hand.SecondHand10));
+        clockNums.add(new ClockNum(660, 40, 0, 0, 633, 25, ClockNum.Hand.MinuteHand));
+        clockNums.add(new ClockNum(660, 40, 0, 0, 599, 25, ClockNum.Hand.HourHand));
         degree = 0;
         dx = 0;
         dy = 0;
@@ -246,6 +253,10 @@ public class GameScene extends Scene {
 
             @Override
             public void keyPressed(int commandCode, long trigTime) {
+                if(commandCode==4){
+                    isDisplyMission =true;
+                    System.out.println("現在案4");
+                }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
 //                    ArrayList<String> strs = new ArrayList<String>();
 //                    strs.add(String.valueOf(ClientClass.getInstance().getID()));
@@ -263,6 +274,9 @@ public class GameScene extends Scene {
 //                    }
 ////                    state = 0;
 //                }
+                if(commandCode==4){
+                    isDisplyMission= false;
+                }
                 if (commandCode == 0) {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
@@ -304,9 +318,18 @@ public class GameScene extends Scene {
         for (int i = 0; i < state; i++) {
             inBars.get(i).paint(g);
         }
-        clockBack.paint(g);
-        for (int i = 0; i < clockNums.size(); i++) {
-            clockNums.get(i).paintComponent(g);
+        //任務訊息
+        if(isDisplyMission==true){
+            missionBoard.paintComponent(g);
+            if(state!=5) {
+                energyBallMission.paintComponent(g);
+            }else {
+                portalMission.paintComponent(g);
+                }
+            clockBack.paint(g);
+            for (int i = 0; i < clockNums.size(); i++) {
+                clockNums.get(i).paintComponent(g);
+            }
         }
         //用來碰撞判定的
         //st.getBasicBlock().get(i)
@@ -325,126 +348,110 @@ public class GameScene extends Scene {
         spaceShip.isCollision(goal);
 
 
-        for (int i = 0; i < st.getBasicBlock().size(); i++) {
-            if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))) {
-                isPardon = true;
-            }
-        }
-        if (!isPardon) {
-            for (int i = 0; i < st.getBasicBlock().size(); i++) {
-                if (spaceShip.AngleisCollision(st.getBasicBlock().get(i))) {
-                    break;
-                }
-            }
-        }
 
-        for (int i = 0; i < st.getBasicBlock().size(); i++) {
-            if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
-                isPardon2 = true;
-            }
-        }
-        if (!isPardon2) {
-            for (int i = 0; i < st.getBasicBlock().size(); i++) {
-                if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
-                    break;
-                }
-            }
-        }
-
-        for (int i = 0; i < clockNums.size(); i++) {
-            clockNums.get(i).update();
-        }
-//
-//        for (int i = 0; i < energyBalls.size(); i++) {
-//            if (energyBalls.get(i).isCollision(spaceShip)) {
-//                energyBalls.remove(i);
-//                state++;
-//            }
-//        }
         for (int i = 0; i < energyBalls.size(); i++) {
-            if (energyBalls.get(i).isCollision(goal)) {
+            if (energyBalls.get(i).isCollision(spaceShip)) {
                 savePointX = energyBalls.get(i).getX();
                 savePointY = energyBalls.get(i).getY();
                 energyBalls.remove(i);
-                //吃四顆的情況
-                if (state >= 5) {
-                    isCollectAll = true;
-                    state = 5;
+                  if (state >= 5) {
+                        isCollectAll = true;
+                      state=5;
+                      missionBoard.setChangeCount(state);
                 } else if (state < 4) {
-                    state = state + 2;
+                    state =state+2;
+                      missionBoard.setChangeCount(state);
                 } else {
                     state++;
+                    missionBoard.setChangeCount(state);
                 }
+
             }
         }
+//        for (int i = 0; i < energyBalls.size(); i++) {
+//            if (energyBalls.get(i).isCollision(goal)) {
+//                savePointX = energyBalls.get(i).getX();
+//                savePointY = energyBalls.get(i).getY();
+//                energyBalls.remove(i);
+//                //吃四顆的情況
+//                if (state >= 5) {
+//                    isCollectAll = true;
+//                    state = 5;
+//                } else if (state < 4) {
+//                    state = state + 2;
+//                } else {
+//                    state++;
+//                }
+//            }
+//        }
         for (int i = 0; i < state; i++) {
             inBars.get(i).setShow(true);
         }
 
-        for (int i = 0; i < barriersV.size(); i++) {
-            if (barriersV.get(i).isBarrier()) {
-                if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
-                    isPardon3 = true;
-                }
-            }
-        }
-        if (!isPardon3) {
-            for (int i = 0; i < barriersV.size(); i++) {
-                if (barriersV.get(i).isBarrier()) {
-                    if (spaceShip.AngleisCollision(barriersV.get(i))) {
-                        break;
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
-                    isPardon4 = true;
-                }
-            }
-        }
-        if (!isPardon4) {
-            for (int i = 0; i < barriersH.size(); i++) {
-                if (barriersH.get(i).isBarrier()) {
-                    if (spaceShip.AngleisCollision(barriersH.get(i))) {
-                        break;
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < barriersV.size(); i++) {
-            if (barriersV.get(i).isBarrier()) {
-                if (goal.isCollisionNotAngle(barriersV.get(i))) {
-                    isPardon5 = true;
-                }
-            }
-        }
-        if (!isPardon5) {
-            for (int i = 0; i < barriersV.size(); i++) {
-                if (barriersV.get(i).isBarrier()) {
-                    if (goal.AngleisCollision(barriersV.get(i))) {
-                        break;
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < barriersH.size(); i++) {
-            if (barriersH.get(i).isBarrier()) {
-                if (goal.isCollisionNotAngle(barriersH.get(i))) {
-                    isPardon6 = true;
-                }
-            }
-        }
-        if (!isPardon6) {
-            for (int i = 0; i < barriersH.size(); i++) {
-                if (barriersH.get(i).isBarrier()) {
-                    if (goal.AngleisCollision(barriersH.get(i))) {
-                        break;
-                    }
-                }
-            }
-        }
+//        for (int i = 0; i < barriersV.size(); i++) {
+//            if (barriersV.get(i).isBarrier()) {
+//                if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
+//                    isPardon3 = true;
+//                }
+//            }
+//        }
+//        if (!isPardon3) {
+//            for (int i = 0; i < barriersV.size(); i++) {
+//                if (barriersV.get(i).isBarrier()) {
+//                    if (spaceShip.AngleisCollision(barriersV.get(i))) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        for (int i = 0; i < barriersH.size(); i++) {
+//            if (barriersH.get(i).isBarrier()) {
+//                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
+//                    isPardon4 = true;
+//                }
+//            }
+//        }
+//        if (!isPardon4) {
+//            for (int i = 0; i < barriersH.size(); i++) {
+//                if (barriersH.get(i).isBarrier()) {
+//                    if (spaceShip.AngleisCollision(barriersH.get(i))) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        for (int i = 0; i < barriersV.size(); i++) {
+//            if (barriersV.get(i).isBarrier()) {
+//                if (goal.isCollisionNotAngle(barriersV.get(i))) {
+//                    isPardon5 = true;
+//                }
+//            }
+//        }
+//        if (!isPardon5) {
+//            for (int i = 0; i < barriersV.size(); i++) {
+//                if (barriersV.get(i).isBarrier()) {
+//                    if (goal.AngleisCollision(barriersV.get(i))) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        for (int i = 0; i < barriersH.size(); i++) {
+//            if (barriersH.get(i).isBarrier()) {
+//                if (goal.isCollisionNotAngle(barriersH.get(i))) {
+//                    isPardon6 = true;
+//                }
+//            }
+//        }
+//        if (!isPardon6) {
+//            for (int i = 0; i < barriersH.size(); i++) {
+//                if (barriersH.get(i).isBarrier()) {
+//                    if (goal.AngleisCollision(barriersH.get(i))) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
         if (count < 0) {
             count = 0;
             spaceShip.setIsMove(false);

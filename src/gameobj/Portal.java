@@ -9,8 +9,8 @@ import java.awt.*;
 public class Portal extends GameObject{
     private Image img ;
     private PortalAnimator portalAnimator;
-    public Portal(int x, int y) {
-        super(x, y, 96,64);
+    public Portal(int x, int y,int width,int height) {
+        super(x, y,width ,height);
         portalAnimator = new PortalAnimator();
 
     }
