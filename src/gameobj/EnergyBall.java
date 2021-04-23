@@ -10,17 +10,23 @@ public class EnergyBall extends GameObject{
     private EnergyAnimator energyAnimator;
     private Delay delay;
     //避開障礙物中間障礙物用
-    private int fx;
-    private int fy;
-    //避開右邊障礙物用
-    private int rx;
-    private int ry;
+    private int x;
+    private int y;
     public EnergyBall(int x, int y) {
         super(x, y, Global.UNIT_X, Global.UNIT_Y,State.BURN);
         energyAnimator = new EnergyAnimator();
         delay = new Delay(30);
+        this.x= x;
+        this.y = y;
     }
 
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -28,6 +34,7 @@ public class EnergyBall extends GameObject{
             energyAnimator.paintComponent(g, painter().left(), painter().top(), painter().right(), painter().bottom());
         }
     }
+
 
     @Override
     public void update() {
@@ -37,11 +44,14 @@ public class EnergyBall extends GameObject{
         private Image img;
         private int count;
         private Delay delay;
-        private static final int[] ENERGYANIMATOR = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        private static final int[] ENERGYANIMATOR = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+                ,10,11,12,13,14,15,16,17,18,19,20
+                ,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40
+        };
 
         //建構子
         private  EnergyAnimator() {
-            img = ImageController.getInstance().tryGet("/energyBall1.png");
+            img = ImageController.getInstance().tryGet("/energyBall2.png");
             delay = new Delay(5);
             delay.loop();
             count = 0;
@@ -54,7 +64,7 @@ public class EnergyBall extends GameObject{
         public void paintComponent(Graphics g, int left, int top, int right, int bottom) {
             if (delay.count()) {
                 count++;
-                if (count >=10) {
+                if (count >40) {
                     count = 0;
                 }
             }
