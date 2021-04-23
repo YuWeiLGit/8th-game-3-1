@@ -43,7 +43,7 @@ public class GameScene extends Scene {
     private Portal portal;//出口
     private Portal portalMission;//給任務用
     private EnergyBall energyBallMission;//給任務用
-    private MissionBoard  missionBoard;//任務用
+    private MissionBoard missionBoard;//任務用
     private EnergyBar energyBar;
     private ArrayList<EnergyBall> energyBalls;
     private ArrayList<BarrierH> barriersH;
@@ -65,13 +65,10 @@ public class GameScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
-<<<<<<< HEAD
-    private String  path;
-=======
+    private String path;
     private boolean isCollectAll;
-
     private ArrayList<String> ranking;
->>>>>>> origin/火焰修改+地圖修改
+    private boolean fin;
 
     public GameScene(String name) {
         this.name = name;
@@ -79,6 +76,7 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
+        fin = false;
         AudioResourceController.getInstance().loop("/playing.wav", 50);
         rankControlls = new ArrayList<>();
         path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
@@ -108,10 +106,10 @@ public class GameScene extends Scene {
         isPardon5 = false;
         isPardon6 = false;
         isCollectAll = false;
-        isDisplyMission =false;
+        isDisplyMission = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
-        portal = new Portal(3750, 50,96,64);
+        portal = new Portal(3750, 50, 96, 64);
         delay.loop();
         map = new Map();
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
@@ -157,9 +155,9 @@ public class GameScene extends Scene {
 
         goal = new Goal(150, 2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
-        missionBoard = new MissionBoard(450,52,160,69,state);
-        energyBallMission = new EnergyBall(395,55);
-        portalMission = new Portal(395,55,32,32);
+        missionBoard = new MissionBoard(450, 52, 160, 69, state);
+        energyBallMission = new EnergyBall(395, 55);
+        portalMission = new Portal(395, 55, 32, 32);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
         inBars.add(new InBar(32, 14));
@@ -181,6 +179,7 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneEnd() {
+        AudioResourceController.getInstance().stop("/trans.wav");
         ImageController.getInstance().clear();
         rankControlls.add(new RankControll(totalTime / 60, name));
         for (int i = 0; i < rankControlls.size(); i++) {
@@ -279,8 +278,8 @@ public class GameScene extends Scene {
 
             @Override
             public void keyPressed(int commandCode, long trigTime) {
-                if(commandCode==4){
-                    isDisplyMission =true;
+                if (commandCode == 4) {
+                    isDisplyMission = true;
                     System.out.println("現在案4");
                 }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
@@ -300,8 +299,8 @@ public class GameScene extends Scene {
 //                    }
 ////                    state = 0;
 //                }
-                if(commandCode==4){
-                    isDisplyMission= false;
+                if (commandCode == 4) {
+                    isDisplyMission = false;
                 }
                 if (commandCode == 0) {
                     spaceShip.back(savePointX, savePointY);
@@ -343,13 +342,13 @@ public class GameScene extends Scene {
             inBars.get(i).paint(g);
         }
         //任務訊息
-        if(isDisplyMission==true){
+        if (isDisplyMission == true) {
             missionBoard.paintComponent(g);
-            if(state!=5) {
+            if (state != 5) {
                 energyBallMission.paintComponent(g);
-            }else {
+            } else {
                 portalMission.paintComponent(g);
-                }
+            }
             clockBack.paint(g);
             for (int i = 0; i < clockNums.size(); i++) {
                 clockNums.get(i).paintComponent(g);
@@ -360,6 +359,7 @@ public class GameScene extends Scene {
     }
 
     public void playFinalMusic() {
+        fin = true;
         AudioResourceController.getInstance().stop("/playing.wav");
         AudioResourceController.getInstance().loop("/trans.wav", 30);
     }
@@ -376,20 +376,22 @@ public class GameScene extends Scene {
         st.update();
         spaceShip.isCollision(goal);
 
-
+        if (state >= 5 && !fin) {
+            playFinalMusic();
+        }
 
         for (int i = 0; i < energyBalls.size(); i++) {
             if (energyBalls.get(i).isCollision(spaceShip)) {
                 savePointX = energyBalls.get(i).getX();
                 savePointY = energyBalls.get(i).getY();
                 energyBalls.remove(i);
-                  if (state >= 5) {
-                        isCollectAll = true;
-                      state=5;
-                      missionBoard.setChangeCount(state);
+                if (state >= 5) {
+                    isCollectAll = true;
+                    state = 5;
+                    missionBoard.setChangeCount(state);
                 } else if (state < 4) {
-                    state =state+2;
-                      missionBoard.setChangeCount(state);
+                    state = state + 2;
+                    missionBoard.setChangeCount(state);
                 } else {
                     state++;
                     missionBoard.setChangeCount(state);
@@ -491,7 +493,7 @@ public class GameScene extends Scene {
             spaceShip.move();
 
             if (state == 5 && goal.isCollision(portal)) {
-                SceneController.getInstance().changeScene(new EndScene());
+                SceneController.getInstance().changeScene(new EndScene(name));
             }
         }
     }
@@ -505,7 +507,6 @@ public class GameScene extends Scene {
         arrayList.remove(t1);
         arrayList.add(t2 + 1, tmp2);
         arrayList.remove(t2);
-
     }
 
 }
