@@ -41,7 +41,7 @@ public class BarrierV extends GameObject {
         private int count;
         private Delay delay;
         private Delay delay2;
-            private static final int[] BARRIER_ANIMATOR = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        private static final int[] BARRIER_ANIMATOR = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
         //建構子
         private BarrierAnimatorV() {

@@ -39,7 +39,7 @@ public class InfoScene extends Scene{
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(image,0,0,null);
+        g.drawImage(image, 0, 0, null);
 
     }
 

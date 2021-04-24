@@ -106,6 +106,52 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         return collider.bottom() >= MapInformation.mapInfo().bottom();
     }
 
+    public boolean isCollisionBackBlock(GameObject obj){
+          if (isCircle && !obj.isCircle&&isGoal) {
+            int vx = Math.abs(painter.centerX() - obj.painter.centerX());
+            int vy = Math.abs(painter.centerY() - obj.painter.centerY());
+            double hx = Math.abs(obj.painter.width() * 0.5);
+            double hy = Math.abs(obj.painter.height() * 0.5);
+            double ux = vx - hx;
+            double uy = vy - hy;
+            double dis;
+            if (ux >= 0 && uy >= 0) {
+                dis = Global.getHypotenuse(ux, uy);
+            } else if (ux < 0) {
+                dis = vy - (obj.painter.height() * 0.5);
+            } else if (uy < 0) {
+                dis = vx - (obj.painter.width() * 0.5);
+            } else {
+                return true;
+            }
+            if (dis < this.painter.width() / 2f) {
+                if (ux >= 0 && uy >= 0) {
+                    return false;
+//                    changeCollisionState(GameObject.CollisionState.ANGLE);
+                } else if (ux < 0) {
+                    if (painter.centerY() - obj.painter.centerY() > 0) {
+                        obj.changeCollisionState(CollisionState.TOP);
+                    } else
+                        obj.changeCollisionState(CollisionState.BOTTOM);
+                } else if (uy < 0) {
+                    if (painter.centerX() - obj.painter.centerX() > 0) {
+                        obj.changeCollisionState(CollisionState.LEFT);
+                    } else {
+                        obj.changeCollisionState(CollisionState.RIGHT);
+                    }
+                }
+                return true;
+            } else {
+                changeCollisionState(CollisionState.STEADY);
+                return false;
+            }
+        }
+          else {
+              return collider.overlap(obj.collider);
+          }
+    }
+
+
     public boolean isCollision(GameObject obj) {
         if (isCircle && !obj.isCircle&&!isGoal) {
             int vx = Math.abs(painter.centerX() - obj.painter.centerX());
@@ -206,6 +252,8 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
             return collider.overlap(obj.collider);
         }
     }
+
+
     public boolean isCollisionNotAngle(GameObject obj) {
         if (isCircle && !obj.isCircle&&!isGoal) {
             int vx = Math.abs(painter.centerX() - obj.painter.centerX());
