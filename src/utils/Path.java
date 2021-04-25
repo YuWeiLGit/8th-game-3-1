@@ -56,9 +56,8 @@ public class Path {
             public static final String DECORATIONBLOCK_SKULL ="/Skull.png";
 
         }
-        public static class StrikeBlock{
-                public  static final String STRIKEBLOCK_1 ="/block3.png";
-                public  static final String STRIKEBLOCK_2 ="/block6.png";
+        public static class BrokenBricks{
+                public  static final String BROKENBRICKS_1 ="/brickA1.png";
 
 
         }

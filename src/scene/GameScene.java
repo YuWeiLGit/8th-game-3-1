@@ -59,6 +59,7 @@ public class GameScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
+    private boolean isPardon7;
     private boolean isCollectAll;
 
 
@@ -313,6 +314,7 @@ public class GameScene extends Scene {
         for (int i = 0; i < barriersH.size(); i++) {
             barriersH.get(i).paint(g);
             barriersH.get(i).paintComponent(g);
+
         }
 
         st.paintCamEnd(g);
@@ -329,7 +331,6 @@ public class GameScene extends Scene {
             }else {
                 portalMission.paintComponent(g);
                 }
-
             clockBack.paint(g);
             for (int i = 0; i < clockNums.size(); i++) {
                 clockNums.get(i).paintComponent(g);
@@ -352,6 +353,26 @@ public class GameScene extends Scene {
 
         spaceShip.isCollision(goal);
         spaceShip.isCollisionBackBlock(moveBlock);
+
+        for(int i = 0;i<st.getBrokenBricks().size();i++){
+            if(!st.getBrokenBricks().get(i).IsBroken()) {
+                if (spaceShip.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
+                    st.getBrokenBricks().get(i).collision();
+                    isPardon6 = true;
+                }
+            }
+        }
+        if(!isPardon6){
+            for(int i = 0;i<st.getBrokenBricks().size();i++){
+                if(!st.getBrokenBricks().get(i).IsBroken()) {
+                    if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
+                        st.getBrokenBricks().get(i).collision();
+                        break;
+                    }
+                }
+            }
+        }
+
         for(int i = 0;i<st.getBasicBlock().size();i++){
             if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
                 isPardon = true;

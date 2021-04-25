@@ -104,13 +104,15 @@ public class SimpleModeScene extends Scene {
                 .setCam(1080, 1080, spaceShip)
                 .gen();
         st.genMap();
+//        st.genMap2();
         //能量球
         energyBalls = new ArrayList<>();
         //中間
-        energyBalls.add(new EnergyBall(random(1690, 2160), random(780, 848)));
+        energyBalls.add(new EnergyBall(random(1750,1800), random(780, 848)));
         //右下
         energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
+        energyBalls.add(new EnergyBall(random(1360,1552), random(275, 350)));
         energyBalls.add(new EnergyBall(random(560, 720), random(250, 400)));
         //右上
         energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
@@ -133,7 +135,7 @@ public class SimpleModeScene extends Scene {
         //水平障礙物
         barriersH.add(new BarrierH(126, 2016));
         barriersH.add(new BarrierH(1824, 770));
-        barriersH.add(new BarrierH(2080, 770));
+//        barriersH.add(new BarrierH(2080, 770));
         barriersH.add(new BarrierH(2016, 1344));
         barriersH.add(new BarrierH(3232, 736));
         barriersH.add(new BarrierH(3200, 416));
@@ -352,6 +354,26 @@ public class SimpleModeScene extends Scene {
 
         spaceShip.isCollision(goal);
         spaceShip.isCollisionBackBlock(moveBlock);
+
+        for(int i = 0;i<st.getBrokenBricks().size();i++){
+            if(!st.getBrokenBricks().get(i).IsBroken()) {
+                if (spaceShip.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
+                    st.getBrokenBricks().get(i).collision();
+                    isPardon2 = true;
+                }
+            }
+        }
+        if(!isPardon2){
+            for(int i = 0;i<st.getBrokenBricks().size();i++){
+                if(!st.getBrokenBricks().get(i).IsBroken()) {
+                    if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
+                        st.getBrokenBricks().get(i).collision();
+                        break;
+                    }
+                }
+            }
+        }
+
         for(int i = 0;i<st.getBasicBlock().size();i++){
             if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
                 isPardon = true;

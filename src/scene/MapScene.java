@@ -97,7 +97,6 @@ public class MapScene extends Scene {
                         }
                     }
             );
-
             this.gameObjectArr1 = mapLoader.creatObjectArray("slowDown", 32, test, new MapLoader.CompareClass() {
                         @Override
                         public GameObject compareClassName(String gameObject, String name, MapInfo mapInfo, int size) {
