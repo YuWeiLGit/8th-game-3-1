@@ -29,11 +29,7 @@ public class Main {
         //滑鼠鼠標的圖片
         Image image = ImageController.getInstance().tryGet("/MousePointV2.png");
         SceneController sceneController = SceneController.getInstance(); //取得單例模式的控場實體
-<<<<<<< HEAD
         sceneController.changeScene(new MissionScene()); //一開始使用開場畫面
-=======
-        sceneController.changeScene(new FirstScene()); //一開始使用開場畫面
->>>>>>> origin/火焰修改+地圖修改
         GameKernel gameKernel = new GameKernel.Builder().input(  //創建遊戲核心
                 new CommandSolver.BuildStream()
                         .mouseTrack().forceRelease().subscribe(sceneController).keyboardTrack()

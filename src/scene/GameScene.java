@@ -49,11 +49,9 @@ public class GameScene extends Scene {
     private ArrayList<BarrierH> barriersH;
     private ArrayList<BarrierV> barriersV;
     private ArrayList<InBar> inBars;
-<<<<<<< HEAD
     private ArrayList<BrokenBricks>brokenBricks;
-=======
     private MoveBlock moveBlock;//推箱子用
->>>>>>> origin/火焰修改+地圖修改
+
     private int savePointX;
     private int savePointY;
     private int totalTime;
@@ -74,11 +72,6 @@ public class GameScene extends Scene {
     private boolean isPardonBrokenBricks2;
     private String path;
     private boolean isCollectAll;
-<<<<<<< HEAD
-=======
-
-
->>>>>>> origin/火焰修改+地圖修改
     private ArrayList<String> ranking;
     private boolean fin;
 
@@ -89,7 +82,6 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
-<<<<<<< HEAD
         fin = false;
         AudioResourceController.getInstance().loop("/playing.wav", 50);
         rankControlls = new ArrayList<>();
@@ -112,7 +104,6 @@ public class GameScene extends Scene {
             }
             return;
         }
-=======
         ranking = new ArrayList<>();
 //        try {
 ////            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
@@ -128,7 +119,6 @@ public class GameScene extends Scene {
 //            return;
 //        }
         moveBlock = new MoveBlock(200,2300);
->>>>>>> origin/火焰修改+地圖修改
         isPardon = false;
         isPardon2 = false;
         isPardon3 = false;
@@ -381,12 +371,8 @@ public class GameScene extends Scene {
                 energyBallMission.paintComponent(g);
             } else {
                 portalMission.paintComponent(g);
-<<<<<<< HEAD
             }
-=======
                 }
-
->>>>>>> origin/火焰修改+地圖修改
             clockBack.paint(g);
             for (int i = 0; i < clockNums.size(); i++) {
                 clockNums.get(i).paintComponent(g);
@@ -394,7 +380,7 @@ public class GameScene extends Scene {
         }
         //用來碰撞判定的
         //st.getBasicBlock().get(i)
-    }
+
 
     public void playFinalMusic() {
         fin = true;
@@ -414,18 +400,11 @@ public class GameScene extends Scene {
         isPardonBrokenBricks2=false;
         totalTime++;
         st.update();
-<<<<<<< HEAD
-        spaceShip.isCollision(goal);
-
         if (state >= 5 && !fin) {
             playFinalMusic();
         }
         spaceShip.isCollision(goal);
-=======
-
-        spaceShip.isCollision(goal);
         spaceShip.isCollisionBackBlock(moveBlock);
->>>>>>> origin/火焰修改+地圖修改
         for(int i = 0;i<st.getBasicBlock().size();i++){
             if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
                 isPardon = true;
@@ -450,10 +429,6 @@ public class GameScene extends Scene {
                 }
             }
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/火焰修改+地圖修改
         for (int i = 0; i < energyBalls.size(); i++) {
             if (energyBalls.get(i).isCollision(spaceShip)) {
                 savePointX = energyBalls.get(i).getX();
@@ -473,7 +448,6 @@ public class GameScene extends Scene {
 
             }
         }
-<<<<<<< HEAD
 //        for (int i = 0; i < brokenBricks.size(); i++) {
 //            if(brokenBricks.get(i).IsBroken()){
 //                brokenBricks.remove(brokenBricks.get(i));
@@ -541,7 +515,6 @@ public class GameScene extends Scene {
         for (int i = 0; i < state; i++) {
             inBars.get(i).setShow(true);
         }
-=======
 //        for (int i = 0; i < energyBalls.size(); i++) {
 //            if (energyBalls.get(i).isCollision(goal)) {
 //                savePointX = energyBalls.get(i).getX();
@@ -564,8 +537,6 @@ public class GameScene extends Scene {
         for (int i = 0; i < clockNums.size(); i++) {
             clockNums.get(i).update();
         }
->>>>>>> origin/火焰修改+地圖修改
-
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {

@@ -39,9 +39,7 @@ public class MissionScene extends Scene {
         isPress = false;
         demoVedio = new DemoVedio(400, 363);
         back0 = ImageController.getInstance().tryGet("/mission.png");
-<<<<<<< HEAD
         AudioResourceController.getInstance().loop("/mission.wav",20);
-=======
         img = ImageController.getInstance().tryGet("/shift.png");
         img2 = ImageController.getInstance().tryGet("/Shift2.png");
         missionImage = ImageController.getInstance().tryGet("/Mission0.png");
@@ -55,7 +53,6 @@ public class MissionScene extends Scene {
         mousePoint3 = ImageController.getInstance().tryGet("/mousePoint5.png");
 //        AudioResourceController.getInstance().loop("/mission.wav",20);
 
->>>>>>> origin/火焰修改+地圖修改
         Style name = new Style.StyleRect(100, 100, false, new BackgroundType.BackgroundColor(Color.black))
                 .setTextColor(Color.white)
                 .setHaveBorder(false)
