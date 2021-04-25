@@ -234,9 +234,10 @@ public class GameScene extends Scene {
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
                 goal.changeCollisionState(GameObject.CollisionState.STEADY);
-                count = 40;
+
                 double x = e.getX() + st.getCam().painter().left() - spaceShip.painter().centerX();
                 double y = e.getY() + st.getCam().painter().top() - spaceShip.painter().centerY();
+                count= (int) Global.getHypotenuse(x,y)/10;
 //                    System.out.println("mx:"+e.getX());
 //                    System.out.println("my:"+e.getY());
 //                    System.out.println("sx:"+spaceShip.painter().centerX());
