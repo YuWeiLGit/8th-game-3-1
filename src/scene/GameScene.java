@@ -49,7 +49,11 @@ public class GameScene extends Scene {
     private ArrayList<BarrierH> barriersH;
     private ArrayList<BarrierV> barriersV;
     private ArrayList<InBar> inBars;
+<<<<<<< HEAD
     private ArrayList<BrokenBricks>brokenBricks;
+=======
+    private MoveBlock moveBlock;//推箱子用
+>>>>>>> origin/火焰修改+地圖修改
     private int savePointX;
     private int savePointY;
     private int totalTime;
@@ -70,6 +74,11 @@ public class GameScene extends Scene {
     private boolean isPardonBrokenBricks2;
     private String path;
     private boolean isCollectAll;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/火焰修改+地圖修改
     private ArrayList<String> ranking;
     private boolean fin;
 
@@ -80,6 +89,7 @@ public class GameScene extends Scene {
 
     @Override
     public void sceneBegin() {
+<<<<<<< HEAD
         fin = false;
         AudioResourceController.getInstance().loop("/playing.wav", 50);
         rankControlls = new ArrayList<>();
@@ -102,6 +112,23 @@ public class GameScene extends Scene {
             }
             return;
         }
+=======
+        ranking = new ArrayList<>();
+//        try {
+////            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
+//            for (int i = 0; i < ranking.size(); i++) {
+//                bw.write(ranking.get(i));
+//            }
+//
+//            bw.write("name:" + name + "+" + totalTime);
+//            bw.flush();
+//            bw.close();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return;
+//        }
+        moveBlock = new MoveBlock(200,2300);
+>>>>>>> origin/火焰修改+地圖修改
         isPardon = false;
         isPardon2 = false;
         isPardon3 = false;
@@ -327,6 +354,7 @@ public class GameScene extends Scene {
         goal.paintComponent(g);
         goal.paint(g);
         portal.paintComponent(g);
+//        moveBlock.paintComponent(g);
 
         for (int i = 0; i < energyBalls.size(); i++) {
             energyBalls.get(i).paint(g);
@@ -353,7 +381,12 @@ public class GameScene extends Scene {
                 energyBallMission.paintComponent(g);
             } else {
                 portalMission.paintComponent(g);
+<<<<<<< HEAD
             }
+=======
+                }
+
+>>>>>>> origin/火焰修改+地圖修改
             clockBack.paint(g);
             for (int i = 0; i < clockNums.size(); i++) {
                 clockNums.get(i).paintComponent(g);
@@ -381,12 +414,18 @@ public class GameScene extends Scene {
         isPardonBrokenBricks2=false;
         totalTime++;
         st.update();
+<<<<<<< HEAD
         spaceShip.isCollision(goal);
 
         if (state >= 5 && !fin) {
             playFinalMusic();
         }
         spaceShip.isCollision(goal);
+=======
+
+        spaceShip.isCollision(goal);
+        spaceShip.isCollisionBackBlock(moveBlock);
+>>>>>>> origin/火焰修改+地圖修改
         for(int i = 0;i<st.getBasicBlock().size();i++){
             if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
                 isPardon = true;
@@ -411,6 +450,10 @@ public class GameScene extends Scene {
                 }
             }
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/火焰修改+地圖修改
         for (int i = 0; i < energyBalls.size(); i++) {
             if (energyBalls.get(i).isCollision(spaceShip)) {
                 savePointX = energyBalls.get(i).getX();
@@ -430,6 +473,7 @@ public class GameScene extends Scene {
 
             }
         }
+<<<<<<< HEAD
 //        for (int i = 0; i < brokenBricks.size(); i++) {
 //            if(brokenBricks.get(i).IsBroken()){
 //                brokenBricks.remove(brokenBricks.get(i));
@@ -497,6 +541,30 @@ public class GameScene extends Scene {
         for (int i = 0; i < state; i++) {
             inBars.get(i).setShow(true);
         }
+=======
+//        for (int i = 0; i < energyBalls.size(); i++) {
+//            if (energyBalls.get(i).isCollision(goal)) {
+//                savePointX = energyBalls.get(i).getX();
+//                savePointY = energyBalls.get(i).getY();
+//                energyBalls.remove(i);
+//                //吃四顆的情況
+//                if (state >= 5) {
+//                    isCollectAll = true;
+//                    state = 5;
+//                } else if (state < 4) {
+//                    state = state + 2;
+//                } else {
+//                    state++;
+//                }
+//            }
+//        }
+        for (int i = 0; i < state; i++) {
+            inBars.get(i).setShow(true);
+        }
+        for (int i = 0; i < clockNums.size(); i++) {
+            clockNums.get(i).update();
+        }
+>>>>>>> origin/火焰修改+地圖修改
 
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
@@ -570,7 +638,6 @@ public class GameScene extends Scene {
         if (count > 0) {
             goal.move();
             spaceShip.move();
-
             if (state == 5 && goal.isCollision(portal)) {
                 SceneController.getInstance().changeScene(new EndScene(name));
             }
