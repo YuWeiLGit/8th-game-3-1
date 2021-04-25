@@ -49,6 +49,7 @@ public class GameScene extends Scene {
     private ArrayList<BarrierH> barriersH;
     private ArrayList<BarrierV> barriersV;
     private ArrayList<InBar> inBars;
+    private ArrayList<BrokenBricks>brokenBricks;
     private int savePointX;
     private int savePointY;
     private int totalTime;
@@ -65,10 +66,13 @@ public class GameScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
+    private boolean isPardonBrokenBricks;
+    private boolean isPardonBrokenBricks2;
     private String path;
     private boolean isCollectAll;
     private ArrayList<String> ranking;
     private boolean fin;
+
 
     public GameScene(String name) {
         this.name = name;
@@ -80,6 +84,7 @@ public class GameScene extends Scene {
         AudioResourceController.getInstance().loop("/playing.wav", 50);
         rankControlls = new ArrayList<>();
         path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        System.out.println("path:"+path);
         path = path + "rank2.txt";
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
@@ -87,11 +92,9 @@ public class GameScene extends Scene {
             while ((s = br.readLine()) != null) {
                 String[] tmp = s.split("/");
                 rankControlls.add(new RankControll(Integer.parseInt(tmp[1]), tmp[0]));
-
             }
         } catch (Exception ex) {
             try {
-                System.out.println("!");
                 BufferedWriter bw = new BufferedWriter(new FileWriter(path));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -107,6 +110,8 @@ public class GameScene extends Scene {
         isPardon6 = false;
         isCollectAll = false;
         isDisplyMission = false;
+        isPardonBrokenBricks=false;
+        isPardonBrokenBricks2=false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
         portal = new Portal(3750, 50, 96, 64);
@@ -372,6 +377,8 @@ public class GameScene extends Scene {
         isPardon4 = false;
         isPardon5 = false;
         isPardon6 = false;
+        isPardonBrokenBricks=false;
+        isPardonBrokenBricks2=false;
         totalTime++;
         st.update();
         spaceShip.isCollision(goal);
@@ -379,7 +386,31 @@ public class GameScene extends Scene {
         if (state >= 5 && !fin) {
             playFinalMusic();
         }
-
+        spaceShip.isCollision(goal);
+        for(int i = 0;i<st.getBasicBlock().size();i++){
+            if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
+                isPardon = true;
+            }
+        }
+        if(!isPardon){
+            for(int i = 0;i<st.getBasicBlock().size();i++){
+                if(spaceShip.AngleisCollision(st.getBasicBlock().get(i))){
+                    break;
+                }
+            }
+        }
+        for(int i = 0;i<st.getBasicBlock().size();i++){
+            if(goal.isCollisionNotAngle(st.getBasicBlock().get(i))){
+                isPardon2 = true;
+            }
+        }
+        if(!isPardon2){
+            for(int i = 0;i<st.getBasicBlock().size();i++){
+                if(goal.AngleisCollision(st.getBasicBlock().get(i))){
+                    break;
+                }
+            }
+        }
         for (int i = 0; i < energyBalls.size(); i++) {
             if (energyBalls.get(i).isCollision(spaceShip)) {
                 savePointX = energyBalls.get(i).getX();
@@ -399,90 +430,138 @@ public class GameScene extends Scene {
 
             }
         }
-//        for (int i = 0; i < energyBalls.size(); i++) {
-//            if (energyBalls.get(i).isCollision(goal)) {
-//                savePointX = energyBalls.get(i).getX();
-//                savePointY = energyBalls.get(i).getY();
-//                energyBalls.remove(i);
-//                //吃四顆的情況
-//                if (state >= 5) {
-//                    isCollectAll = true;
-//                    state = 5;
-//                } else if (state < 4) {
-//                    state = state + 2;
-//                } else {
-//                    state++;
+//        for (int i = 0; i < brokenBricks.size(); i++) {
+//            if(brokenBricks.get(i).IsBroken()){
+//                brokenBricks.remove(brokenBricks.get(i));
+//                break;
+//            }
+//        }
+//        for(int i = 0;i<brokenBricks.size();i++){
+//            if(spaceShip.isCollisionNotAngle(brokenBricks.get(i))){
+//                brokenBricks.get(i).collision();
+//                isPardonBrokenBricks = true;
+//            }
+//        }
+//        if(!isPardonBrokenBricks){
+//            for(int i = 0;i<brokenBricks.size();i++){
+//                if(spaceShip.AngleisCollision(brokenBricks.get(i))){
+//                    brokenBricks.get(i).collision();
+//                    break;
 //                }
 //            }
 //        }
+//        for(int i = 0;i<brokenBricks.size();i++){
+//            if(spaceShip.isCollisionNotAngle(brokenBricks.get(i))){
+//                brokenBricks.get(i).collision();
+//                isPardonBrokenBricks = true;
+//            }
+//        }
+//        if(!isPardonBrokenBricks){
+//            for(int i = 0;i<brokenBricks.size();i++){
+//                if(spaceShip.AngleisCollision(brokenBricks.get(i))){
+//                    brokenBricks.get(i).collision();
+//                    break;
+//                }
+//            }
+//        }
+//        for(int i = 0;i<brokenBricks.size();i++){
+//            if(goal.isCollisionNotAngle(brokenBricks.get(i))){
+//                brokenBricks.get(i).collision();
+//                isPardonBrokenBricks2 = true;
+//            }
+//        }
+//        if(!isPardonBrokenBricks2){
+//            for(int i = 0;i<brokenBricks.size();i++){
+//                if(goal.AngleisCollision(brokenBricks.get(i))){
+//                    brokenBricks.get(i).collision();
+//                    break;
+//                }
+//            }
+//        }
+        for (int i = 0; i < energyBalls.size(); i++) {
+            if (energyBalls.get(i).isCollision(goal)) {
+                savePointX = energyBalls.get(i).getX();
+                savePointY = energyBalls.get(i).getY();
+                energyBalls.remove(i);
+                //吃四顆的情況
+                if (state >= 5) {
+                    isCollectAll = true;
+                    state = 5;
+                } else if (state < 4) {
+                    state = state + 2;
+                } else {
+                    state++;
+                }
+            }
+        }
         for (int i = 0; i < state; i++) {
             inBars.get(i).setShow(true);
         }
 
-//        for (int i = 0; i < barriersV.size(); i++) {
-//            if (barriersV.get(i).isBarrier()) {
-//                if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
-//                    isPardon3 = true;
-//                }
-//            }
-//        }
-//        if (!isPardon3) {
-//            for (int i = 0; i < barriersV.size(); i++) {
-//                if (barriersV.get(i).isBarrier()) {
-//                    if (spaceShip.AngleisCollision(barriersV.get(i))) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//        for (int i = 0; i < barriersH.size(); i++) {
-//            if (barriersH.get(i).isBarrier()) {
-//                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
-//                    isPardon4 = true;
-//                }
-//            }
-//        }
-//        if (!isPardon4) {
-//            for (int i = 0; i < barriersH.size(); i++) {
-//                if (barriersH.get(i).isBarrier()) {
-//                    if (spaceShip.AngleisCollision(barriersH.get(i))) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//        for (int i = 0; i < barriersV.size(); i++) {
-//            if (barriersV.get(i).isBarrier()) {
-//                if (goal.isCollisionNotAngle(barriersV.get(i))) {
-//                    isPardon5 = true;
-//                }
-//            }
-//        }
-//        if (!isPardon5) {
-//            for (int i = 0; i < barriersV.size(); i++) {
-//                if (barriersV.get(i).isBarrier()) {
-//                    if (goal.AngleisCollision(barriersV.get(i))) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//        for (int i = 0; i < barriersH.size(); i++) {
-//            if (barriersH.get(i).isBarrier()) {
-//                if (goal.isCollisionNotAngle(barriersH.get(i))) {
-//                    isPardon6 = true;
-//                }
-//            }
-//        }
-//        if (!isPardon6) {
-//            for (int i = 0; i < barriersH.size(); i++) {
-//                if (barriersH.get(i).isBarrier()) {
-//                    if (goal.AngleisCollision(barriersH.get(i))) {
-//                        break;
-//                    }
-//                }
-//            }
-//        }
+        for (int i = 0; i < barriersV.size(); i++) {
+            if (barriersV.get(i).isBarrier()) {
+                if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
+                    isPardon3 = true;
+                }
+            }
+        }
+        if (!isPardon3) {
+            for (int i = 0; i < barriersV.size(); i++) {
+                if (barriersV.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision(barriersV.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < barriersH.size(); i++) {
+            if (barriersH.get(i).isBarrier()) {
+                if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
+                    isPardon4 = true;
+                }
+            }
+        }
+        if (!isPardon4) {
+            for (int i = 0; i < barriersH.size(); i++) {
+                if (barriersH.get(i).isBarrier()) {
+                    if (spaceShip.AngleisCollision(barriersH.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < barriersV.size(); i++) {
+            if (barriersV.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle(barriersV.get(i))) {
+                    isPardon5 = true;
+                }
+            }
+        }
+        if (!isPardon5) {
+            for (int i = 0; i < barriersV.size(); i++) {
+                if (barriersV.get(i).isBarrier()) {
+                    if (goal.AngleisCollision(barriersV.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < barriersH.size(); i++) {
+            if (barriersH.get(i).isBarrier()) {
+                if (goal.isCollisionNotAngle(barriersH.get(i))) {
+                    isPardon6 = true;
+                }
+            }
+        }
+        if (!isPardon6) {
+            for (int i = 0; i < barriersH.size(); i++) {
+                if (barriersH.get(i).isBarrier()) {
+                    if (goal.AngleisCollision(barriersH.get(i))) {
+                        break;
+                    }
+                }
+            }
+        }
         if (count < 0) {
             count = 0;
             spaceShip.setIsMove(false);
@@ -499,8 +578,8 @@ public class GameScene extends Scene {
     }
 
     public void RankSwap(int t1, int t2, ArrayList<RankControll> arrayList) {
-        RankControll tmp1 = new RankControll(0, null);
-        RankControll tmp2 = new RankControll(0, null);
+        RankControll tmp1 ;
+        RankControll tmp2 ;
         tmp1 = arrayList.get(t2);
         tmp2 = arrayList.get(t1);
         arrayList.add(t1 + 1, tmp1);
