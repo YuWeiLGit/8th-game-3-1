@@ -2,10 +2,7 @@ package scene;
 
 import camera.Camera;
 import controllers.ImageController;
-import gameobj.BasicBlock;
-import gameobj.DecorationBlock;
-import gameobj.GameObject;
-import gameobj.SpaceShip;
+import gameobj.*;
 import maploader.MapInfo;
 import maploader.MapLoader;
 import utils.GameKernel;
@@ -23,15 +20,17 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
     private ArrayList<MapInfo> mapInfo;
     private ArrayList<GameObject> basicBlock;
     private ArrayList<DecorationBlock> decorationBlocks;
+    private ArrayList<StrikeBlock> strikeBlocks;
     private Camera cam;
 
     //讓外面的人一定要透過gen才能創建SceneTool
-    private SceneTool(Image background , MapLoader maploader, ArrayList<SpaceShip> spaceShips, ArrayList<GameObject> basicBlock, ArrayList<DecorationBlock> decorationBlocks
+    private SceneTool(Image background , MapLoader maploader, ArrayList<SpaceShip> spaceShips, ArrayList<GameObject> basicBlock, ArrayList<DecorationBlock> decorationBlocks,ArrayList<StrikeBlock> strikeBlocks
             , ArrayList<MapInfo> mapInfo, Camera cam) {
         this.background = background;
         this.mapLoader = maploader;
         this.basicBlock = basicBlock;
         this.decorationBlocks = decorationBlocks;
+        this.strikeBlocks =strikeBlocks;
         this.mapInfo = mapInfo;
         this.cam = cam;
 
@@ -49,27 +48,37 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
                     basicBlock.get(i).paint(g);
                 }
             }
-            for (int i = 0; i < basicBlock.size(); i++) {
-                basicBlock.get(i).paint(g);
+//            for (int i = 0; i < basicBlock.size(); i++) {
+//                basicBlock.get(i).paint(g);
+//            }
+            for (int i = 0; i < strikeBlocks.size(); i++) {
+                if (cam.isCollision(strikeBlocks.get(i))) {
+                    strikeBlocks.get(i).paint(g);
+                }
             }
-            for(int i=0;i<decorationBlocks.size();i++){
-                if(cam.isCollision(decorationBlocks.get(i))){
+            for (int i = 0; i < strikeBlocks.size(); i++) {
+                strikeBlocks.get(i).paint(g);
+            }
+            for (int i = 0; i < decorationBlocks.size(); i++) {
+                if (cam.isCollision(decorationBlocks.get(i))) {
                     decorationBlocks.get(i).paint(g);
                 }
             }
-            for(int i =0;i<decorationBlocks.size();i++){
+            for (int i = 0; i < decorationBlocks.size(); i++) {
                 decorationBlocks.get(i).paint(g);
             }
-        }
-        else {
+        } else {
             if (background != null) {
                 g.drawImage(background, (int) cam.painter().left(), (int) cam.painter().top(), null);
             }
             for (int i = 0; i < basicBlock.size(); i++) {
                 basicBlock.get(i).paint(g);
             }
-            for(int i =0;i<decorationBlocks.size();i++){
+            for (int i = 0; i < decorationBlocks.size(); i++) {
                 decorationBlocks.get(i).paint(g);
+            }
+            for (int i = 0; i < strikeBlocks.size(); i++) {
+                strikeBlocks.get(i).paint(g);
             }
         }
     }
@@ -95,6 +104,7 @@ public static class Builder {
     private ArrayList<MapInfo> mapInfo;
     private ArrayList<GameObject> basicBlock;
     private ArrayList<DecorationBlock> decorationBlocks;
+    private ArrayList<StrikeBlock> strikeBlocks;
     private Camera cam;
 
 
@@ -104,6 +114,7 @@ public static class Builder {
         basicBlock = new ArrayList<>();
         mapInfo = new ArrayList<>();
         decorationBlocks = new ArrayList<>();
+        strikeBlocks = new ArrayList<>();
     }
 
     //鏈式調用
@@ -153,7 +164,7 @@ public static class Builder {
     //透過gen創建SceneTool的建構子
     public SceneTool gen() {
         return new SceneTool(background, maploader, spaceShips, basicBlock,
-                decorationBlocks, mapInfo, cam);
+                decorationBlocks,strikeBlocks, mapInfo, cam);
     }
 
 }
@@ -176,6 +187,10 @@ public static class Builder {
     public ArrayList<SpaceShip> getSpaceShips() {
         return spaceShips;
     }
+    public ArrayList<StrikeBlock> getStrikeBlocks() {
+        return strikeBlocks;
+    }
+    public ArrayList<StrikeBlock> strikeBlocks(){return  strikeBlocks;}
 
     public ArrayList<DecorationBlock> getDecorationBlocks() {
         return decorationBlocks;
@@ -409,6 +424,17 @@ public static class Builder {
                         decorationBlocks.add(tmp);
                         return null;
                     }
+                    if (name.equals("block2")) {
+                        StrikeBlock tmp = new StrikeBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, StrikeBlock.Type.StrikeBlock_1);
+                        strikeBlocks.add(tmp);
+                        return null;
+                    }
+                    if (name.equals("block5")) {
+                        StrikeBlock tmp = new StrikeBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, StrikeBlock.Type.StrikeBlock_2);
+                        strikeBlocks.add(tmp);
+                        return null;
+                    }
+
                     return null;
                 });
     }

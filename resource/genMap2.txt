@@ -47,3 +47,8 @@ collisionBlock_top_right,-3342490,C:\Users\kukuman\Documents\20210417遊戲地圖\ma
 39,-10079233,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\decorationBlock\39.png,1,1
 40,-13382401,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\decorationBlock\shadow_left.png,1,1
 skull,-3368704,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\decorationBlock\skull.png,1,1
+block1,-13369396,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\block 裁切完\裁剪完\32X32\block2.png,1,1
+block2,-6710887,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\block 裁切完\裁剪完\32X32\block3.png,1,1
+block3,-3342388,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\block 裁切完\裁剪完\32X32\block4.png,1,1
+block4,-6684673,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\block 裁切完\裁剪完\32X32\block5.png,1,1
+block5,-6684877,C:\Users\kukuman\Documents\20210417遊戲地圖\mapResource\images\block 裁切完\裁剪完\32X32\block6.png,1,1
