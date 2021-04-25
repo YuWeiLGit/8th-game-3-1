@@ -425,7 +425,7 @@ public static class Builder {
                         return null;
                     }
                     if (name.equals("block2")) {
-                        StrikeBlock tmp = new StrikeBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize);
+                        StrikeBlock tmp = new StrikeBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, StrikeBlock.Type.StrikeBlock_1);
                         strikeBlocks.add(tmp);
                         return null;
                     }
