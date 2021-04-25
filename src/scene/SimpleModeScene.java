@@ -286,7 +286,7 @@ public class SimpleModeScene extends Scene {
                     for (int i = 0; i < ranking.size(); i++) {
                         System.out.println("!" + ranking.get(i));
                     }
-                    SceneController.getInstance().changeScene(new EndScene());
+                    SceneController.getInstance().changeScene(new EndScene(name));
                 }
             }
         };
@@ -492,7 +492,7 @@ public class SimpleModeScene extends Scene {
             goal.move();
             spaceShip.move();
             if (state == 5 && goal.isCollision(portal)) {
-                SceneController.getInstance().changeScene(new EndScene());
+                SceneController.getInstance().changeScene(new EndScene(name));
             }
         }
     }

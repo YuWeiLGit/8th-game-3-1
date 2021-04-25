@@ -58,7 +58,7 @@ public class IntroScene extends Scene {
             }
             if(showDul){
                 if(state== CommandSolver.MouseState.RELEASED){
-                    SceneController.getInstance().changeScene(new GameScene(" "));
+                    SceneController.getInstance().changeScene(new SimpleMissionScene());
                 }
             }
         };
