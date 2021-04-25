@@ -56,9 +56,11 @@ public class Path {
             public static final String DECORATIONBLOCK_SKULL ="/Skull.png";
 
         }
-        public static class GameScene {
-            public static final String GAMEMAP_BMP = "/genMap2.bmp";
-            public static final String GAMEMAP_TXT = "/genMap2.txt";
+        public static class StrikeBlock{
+                public  static final String STRIKEBLOCK_1 ="/block3.png";
+                public  static final String STRIKEBLOCK_2 ="/block6.png";
+
+
         }
 
     }
