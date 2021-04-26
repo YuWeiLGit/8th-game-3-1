@@ -53,7 +53,6 @@ public class BarrierH extends  GameObject{
             delay.loop();
             delay2.isPause();
             count = 0;
-
         }
 
         public int getCount() {
@@ -68,7 +67,6 @@ public class BarrierH extends  GameObject{
                 count = 0;
                 delay2.play();
                 delay.pause();
-
             }
             if (delay2.count()) {
                 delay2.pause();

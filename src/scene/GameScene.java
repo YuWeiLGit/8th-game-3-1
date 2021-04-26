@@ -43,6 +43,7 @@ public class GameScene extends Scene {
     private ArrayList<EnergyBall> energyBalls;
     private ArrayList<BarrierH> barriersH;
     private ArrayList<BarrierV> barriersV;
+    private ArrayList<MoveingBrick> moveingBricks;
     private ArrayList<InBar> inBars;
     private MoveBlock moveBlock;//推箱子用
     private int savePointX;
@@ -139,6 +140,10 @@ public class GameScene extends Scene {
         barriersH.add(new BarrierH(3232, 736));
         barriersH.add(new BarrierH(3200, 416));
 
+        //移動障礙物
+        moveingBricks = new ArrayList<>();
+
+        moveingBricks.add(new MoveingBrick(150,2300,32,96, MoveingBrick.MoveDir.DOWN,96));
 
         goal = new Goal(150, 2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
@@ -302,6 +307,9 @@ public class GameScene extends Scene {
         goal.paintComponent(g);
         goal.paint(g);
         portal.paintComponent(g);
+        for(int i=0;i<moveingBricks.size();i++){
+            moveingBricks.get(i).paint(g);
+        }
 //        moveBlock.paintComponent(g);
 
         for (int i = 0; i < energyBalls.size(); i++) {
@@ -353,6 +361,9 @@ public class GameScene extends Scene {
 
         spaceShip.isCollision(goal);
         spaceShip.isCollisionBackBlock(moveBlock);
+        for(int i=0;i<moveingBricks.size();i++){
+            moveingBricks.get(i).update();
+        }
 
         for(int i = 0;i<st.getBrokenBricks().size();i++){
             if(!st.getBrokenBricks().get(i).IsBroken()) {

@@ -11,6 +11,7 @@ public class MoveingBrick extends GameObject {
     private Image img1;
     private Image img2;
     private Image img3;
+    private Image img4;
     private MoveDir moveDir;
     private boolean isLoop;
     private boolean isPause;
@@ -23,10 +24,12 @@ public class MoveingBrick extends GameObject {
 
     public MoveingBrick(int x, int y, int width, int height,MoveDir moveDir, int moveDis) {
         super(x, y, width, height, State.NULL);
-        img = ImageController.getInstance().tryGet("/"); //上下
-        img1 = ImageController.getInstance().tryGet("/movingBrick2-1.png"); //上下
-        img2 = ImageController.getInstance().tryGet("/movingBrick2-3.png"); //左右
-        img3 = ImageController.getInstance().tryGet("/movingBrick2-4.png"); //左右
+        img = ImageController.getInstance().tryGet("/moveBlock2.png"); //上下
+        img1 = ImageController.getInstance().tryGet("/moveBlock3.png"); //上下
+        img2 = ImageController.getInstance().tryGet("/moveBlock4.png"); //左右
+        img3 = ImageController.getInstance().tryGet("/moveBlock5.png"); //左右
+        img4 = ImageController.getInstance().tryGet("/moveBlock6.png"); //左右
+
         isLoop = false;
         isPause = true;
         changeDir = false;
@@ -35,7 +38,7 @@ public class MoveingBrick extends GameObject {
         vertical = 0;
         parallel = 0;
         this.movingPerFrame = 1;
-        this.randomCount = Global.random(0,1);
+        this.randomCount = Global.random(1,5);
     }
 
     public void loop() {
@@ -65,13 +68,24 @@ public class MoveingBrick extends GameObject {
 
     @Override
     public void paintComponent(Graphics g) {
-        if (randomCount == 0) {
-            g.drawImage(img, painter().left(), painter().top(), null);
-        } else {
-            g.drawImage(img1, painter().left(), painter().top(), null);
+        switch (randomCount) {
+            case 1:
+                g.drawImage(img, painter().left(), painter().top(), null);
+                break;
+            case 2:
+                g.drawImage(img1, painter().left(), painter().top(), null);
+                break;
+            case 3:
+                g.drawImage(img2, painter().left(), painter().top(), null);
+                break;
+            case 4:
+                g.drawImage(img3, painter().left(), painter().top(), null);
+                break;
+            case 5:
+                g.drawImage(img4, painter().left(), painter().top(), null);
+                break;
         }
     }
-
     @Override
     public void update() {
             if (this.moveDir == MoveDir.TOP) {
@@ -125,15 +139,11 @@ public class MoveingBrick extends GameObject {
             }
 
         }
-
-    }
-
-    public enum MoveDir {
+             public enum MoveDir {
         OFF,
         TOP,
         DOWN,
         LEFT,
         RIGHT;
-        }
-
-}
+      }
+    }

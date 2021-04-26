@@ -1,5 +1,6 @@
 package scene;
 
+import controllers.AudioResourceController;
 import controllers.ImageController;
 import utils.CommandSolver;
 
@@ -14,9 +15,7 @@ public class EndScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        boolean isPress = false;
-        img = ImageController.getInstance().tryGet("/shift.png");
-        img2 = ImageController.getInstance().tryGet("/Shift2.png");
+        AudioResourceController.getInstance().loop("/endSecne1.wav",20);
 
     }
 
