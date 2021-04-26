@@ -20,17 +20,17 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
     private ArrayList<MapInfo> mapInfo;
     private ArrayList<GameObject> basicBlock;
     private ArrayList<DecorationBlock> decorationBlocks;
-    private ArrayList<StrikeBlock> strikeBlocks;
+    private ArrayList<BrokenBricks> brokenBricks;
     private Camera cam;
 
     //讓外面的人一定要透過gen才能創建SceneTool
-    private SceneTool(Image background , MapLoader maploader, ArrayList<SpaceShip> spaceShips, ArrayList<GameObject> basicBlock, ArrayList<DecorationBlock> decorationBlocks,ArrayList<StrikeBlock> strikeBlocks
+    private SceneTool(Image background , MapLoader maploader, ArrayList<SpaceShip> spaceShips, ArrayList<GameObject> basicBlock, ArrayList<DecorationBlock> decorationBlocks,ArrayList<BrokenBricks> brokenBricks
             , ArrayList<MapInfo> mapInfo, Camera cam) {
         this.background = background;
         this.mapLoader = maploader;
         this.basicBlock = basicBlock;
         this.decorationBlocks = decorationBlocks;
-        this.strikeBlocks =strikeBlocks;
+        this.brokenBricks =brokenBricks;
         this.mapInfo = mapInfo;
         this.cam = cam;
 
@@ -42,31 +42,30 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
     public void paint(Graphics g) {
         if (cam != null) {
             g.drawImage(background, (int) cam.painter().left(), (int) cam.painter().top(), null);
-
             for (int i = 0; i < basicBlock.size(); i++) {
                 if (cam.isCollision(basicBlock.get(i))) {
                     basicBlock.get(i).paint(g);
                 }
             }
-//            for (int i = 0; i < basicBlock.size(); i++) {
-//                basicBlock.get(i).paint(g);
-//            }
-            for (int i = 0; i < strikeBlocks.size(); i++) {
-                if (cam.isCollision(strikeBlocks.get(i))) {
-                    strikeBlocks.get(i).paint(g);
-                }
-            }
-            for (int i = 0; i < strikeBlocks.size(); i++) {
-                strikeBlocks.get(i).paint(g);
+            for (int i = 0; i < basicBlock.size(); i++) {
+                basicBlock.get(i).paint(g);
             }
             for (int i = 0; i < decorationBlocks.size(); i++) {
                 if (cam.isCollision(decorationBlocks.get(i))) {
                     decorationBlocks.get(i).paint(g);
                 }
             }
-            for (int i = 0; i < decorationBlocks.size(); i++) {
-                decorationBlocks.get(i).paint(g);
+            for (int i = 0; i < brokenBricks.size(); i++) {
+                if (cam.isCollision(brokenBricks.get(i))) {
+                    brokenBricks.get(i).paint(g);
+                }
             }
+            for (int i = 0; i < brokenBricks.size(); i++) {
+                brokenBricks.get(i).paint(g);
+            }
+//            for (int i = 0; i < decorationBlocks.size(); i++) {
+//                decorationBlocks.get(i).paint(g);
+//            }
         } else {
             if (background != null) {
                 g.drawImage(background, (int) cam.painter().left(), (int) cam.painter().top(), null);
@@ -77,8 +76,8 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
             for (int i = 0; i < decorationBlocks.size(); i++) {
                 decorationBlocks.get(i).paint(g);
             }
-            for (int i = 0; i < strikeBlocks.size(); i++) {
-                strikeBlocks.get(i).paint(g);
+            for (int i = 0; i < brokenBricks.size(); i++) {
+                brokenBricks.get(i).paint(g);
             }
         }
     }
@@ -93,6 +92,9 @@ public class SceneTool implements GameKernel.UpdateInterface, GameKernel.PaintIn
     public void update() {
         if (cam != null) {
             cam.update();
+//            for(int i=0;i<brokenBricks.size();i++){
+//                brokenBricks.get(i).update();
+//            }
         }
     }
 
@@ -104,7 +106,7 @@ public static class Builder {
     private ArrayList<MapInfo> mapInfo;
     private ArrayList<GameObject> basicBlock;
     private ArrayList<DecorationBlock> decorationBlocks;
-    private ArrayList<StrikeBlock> strikeBlocks;
+    private ArrayList<BrokenBricks> brokenBricks;
     private Camera cam;
 
 
@@ -114,7 +116,7 @@ public static class Builder {
         basicBlock = new ArrayList<>();
         mapInfo = new ArrayList<>();
         decorationBlocks = new ArrayList<>();
-        strikeBlocks = new ArrayList<>();
+        brokenBricks = new ArrayList<>();
     }
 
     //鏈式調用
@@ -138,6 +140,7 @@ public static class Builder {
         mapInfo = maploader.combineInfo();
         return this;
     }
+
 
     //設定相機
     public Builder setCam(int width, int height,GameObject ChaseObj) {
@@ -163,8 +166,8 @@ public static class Builder {
 
     //透過gen創建SceneTool的建構子
     public SceneTool gen() {
-        return new SceneTool(background, maploader, spaceShips, basicBlock,
-                decorationBlocks,strikeBlocks, mapInfo, cam);
+        return new SceneTool(background, maploader,spaceShips, basicBlock,
+                decorationBlocks,brokenBricks,mapInfo,cam);
     }
 
 }
@@ -187,10 +190,10 @@ public static class Builder {
     public ArrayList<SpaceShip> getSpaceShips() {
         return spaceShips;
     }
-    public ArrayList<StrikeBlock> getStrikeBlocks() {
-        return strikeBlocks;
+
+    public ArrayList<BrokenBricks> getBrokenBricks() {
+        return brokenBricks;
     }
-    public ArrayList<StrikeBlock> strikeBlocks(){return  strikeBlocks;}
 
     public ArrayList<DecorationBlock> getDecorationBlocks() {
         return decorationBlocks;
@@ -199,7 +202,16 @@ public static class Builder {
     public ArrayList<MapInfo> getMapInfo() {
         return mapInfo;
     }
-
+//    public void genMap(){
+//            brokenBricks = mapLoader.creatObjectArray("222", 32, mapInfo2
+//                    ,(String gameObject, String name, MapInfo mapInfo, int MapObjectSize) -> {
+//                        if (name.equals("block3")) {
+//                            BrokenBricks tmp = new  BrokenBricks(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize,BrokenBricks.Type.BROKENBRICKS1);
+//                            brokenBricks.add(tmp);
+//                        }
+//                        return null;
+//                    });
+//}
     public void genMap() {
         basicBlock = mapLoader.creatObjectArray("111", 32, mapInfo
                 , (String gameObject, String name, MapInfo mapInfo, int MapObjectSize) -> {
@@ -419,19 +431,9 @@ public static class Builder {
                         decorationBlocks.add(tmp);
                         return null;
                     }
-                    if (name.equals("Skull")) {
-                        DecorationBlock tmp = new DecorationBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, DecorationBlock.Type.DecorationBlock_Skull);
-                        decorationBlocks.add(tmp);
-                        return null;
-                    }
-                    if (name.equals("block2")) {
-                        StrikeBlock tmp = new StrikeBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, StrikeBlock.Type.StrikeBlock_1);
-                        strikeBlocks.add(tmp);
-                        return null;
-                    }
                     if (name.equals("block5")) {
-                        StrikeBlock tmp = new StrikeBlock(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize, StrikeBlock.Type.StrikeBlock_2);
-                        strikeBlocks.add(tmp);
+                        BrokenBricks tmp = new BrokenBricks(mapInfo.getX() * MapObjectSize, mapInfo.getY() * MapObjectSize, mapInfo.getSizeX() * MapObjectSize, mapInfo.getSizeY() * MapObjectSize,BrokenBricks.Type.BROKENBRICKS1);
+                        brokenBricks.add(tmp);
                         return null;
                     }
 

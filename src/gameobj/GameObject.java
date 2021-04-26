@@ -460,7 +460,11 @@ public abstract class GameObject implements GameKernel.UpdateInterface, GameKern
         paintComponent(g);
         if (Global.IS_DEBUG) {
             g.setColor(Color.RED);
+<<<<<<< HEAD
 //            g.drawString(this.painter.left() + "," + this.painter.top(), this.painter.left() + 5, this.painter.top() + 12);
+=======
+            g.drawString(","+ this.painter.top(), this.painter.left() + 5, this.painter.top() + 12);
+>>>>>>> origin/火焰修改+地圖修改
 //            g.drawString(this.painter.width() + "," + this.painter.height(), this.painter.left() + 5, this.painter.top() + 27);
             if (isCircle) {
                 g.setColor(Color.RED);
