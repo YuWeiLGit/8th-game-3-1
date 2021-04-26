@@ -30,7 +30,6 @@ private static class DemoVedioAnimator {
         this.delay = new Delay(1);
         delay.pause();
         count = 0;
-
     }
 
 
