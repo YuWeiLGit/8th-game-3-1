@@ -225,7 +225,7 @@ public class GameScene extends Scene {
 
     @Override
     public CommandSolver.MouseListener mouseListener() {
-        return (e, state, trigTime) -> {
+        return (e,state, trigTime) -> {
             if (state != null) {
                 XX = e.getX();
                 YY = e.getY();

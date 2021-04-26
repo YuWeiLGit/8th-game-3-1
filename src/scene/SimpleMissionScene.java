@@ -38,7 +38,7 @@ public class SimpleMissionScene extends Scene {
     public void sceneBegin() {
         isPress = false;
         demoVedio = new DemoVedio(400, 363);
-        back0 = ImageController.getInstance().tryGet("/mission.png");
+        back0 = ImageController.getInstance().tryGet("/111.png");
         AudioResourceController.getInstance().loop("/mission.wav",20);
         img = ImageController.getInstance().tryGet("/shift.png");
         img2 = ImageController.getInstance().tryGet("/Shift2.png");
