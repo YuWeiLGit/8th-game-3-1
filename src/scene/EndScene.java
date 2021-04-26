@@ -7,6 +7,7 @@ import menumodule.menu.EditText;
 import menumodule.menu.Style;
 import utils.CommandSolver;
 
+import javax.jws.soap.SOAPMessageHandlers;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -15,25 +16,38 @@ public class EndScene extends Scene {
     private Image image;
     private String name;
     private EditText editText;
+    private EditText editTextScore;
     private Image img;
     private Image img2;
     private boolean isPress;
-    public EndScene(String name){
-        this.name=name;
+    private int time;
+
+    public EndScene(String name,int s) {
+        this.name = name;
+        this.time=s;
     }
+
     @Override
     public void sceneBegin() {
-        String s=name;
-    image= ImageController.getInstance().tryGet("/end.png");
+        String s = name;
+        String t=String.valueOf(time);
+        image = ImageController.getInstance().tryGet("/end.png");
         Style name = new Style.StyleRect(100, 100, false, new BackgroundType.BackgroundColor(Color.black))
                 .setTextColor(Color.white)
                 .setHaveBorder(false)
                 .setTextFont(new Font("", Font.HANGING_BASELINE, 50))
                 .setText(s);
+        Style score = new Style.StyleRect(100, 100, false, new BackgroundType.BackgroundColor(Color.black))
+                .setTextColor(Color.white)
+                .setHaveBorder(false)
+                .setTextFont(new Font("", Font.HANGING_BASELINE, 50))
+                .setText(t+"s");
         isPress = false;
         img = ImageController.getInstance().tryGet("/shift.png");
         img2 = ImageController.getInstance().tryGet("/Shift2.png");
-        editText = new EditText(450+s.length()*20, 575,"",name);
+
+        editText = new EditText(470 + s.length() * 20, 571, "", name);
+        editTextScore=new EditText(470 + s.length() * 20, 640, "", score);
     }
 
     @Override
@@ -51,7 +65,7 @@ public class EndScene extends Scene {
         return new CommandSolver.KeyListener() {
             @Override
             public void keyPressed(int commandCode, long trigTime) {
-                if(commandCode==4) {
+                if (commandCode == 4) {
                     isPress = true;
                 }
             }
@@ -61,9 +75,9 @@ public class EndScene extends Scene {
                 if (commandCode == 1) {
                     SceneController.getInstance().changeScene(new RankScene());
                 }
-                if(commandCode==4){
-                isPress = false;
-            }
+                if (commandCode == 4) {
+                    isPress = false;
+                }
 
             }
 
@@ -78,14 +92,9 @@ public class EndScene extends Scene {
     @Override
     public void paint(Graphics g) {
 
-    g.drawImage(image,-20,-20,null);
-    editText.paint(g);
-        if (!isPress) {
-            g.drawImage(img, 100, 100, 200, 100, null);
-        }else{
-            g.drawImage(img2, 100, 100, 200, 100, null);
-        }
-
+        g.drawImage(image, -20, -20, null);
+        editText.paint(g);
+        editTextScore.paint(g);
     }
 
     @Override

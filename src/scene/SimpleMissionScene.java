@@ -36,10 +36,10 @@ public class SimpleMissionScene extends Scene {
 
     @Override
     public void sceneBegin() {
+        AudioResourceController.getInstance().loop("/mission.wav",20);
         isPress = false;
         demoVedio = new DemoVedio(400, 363);
         back0 = ImageController.getInstance().tryGet("/111.png");
-        AudioResourceController.getInstance().loop("/mission.wav",20);
         img = ImageController.getInstance().tryGet("/shift.png");
         img2 = ImageController.getInstance().tryGet("/Shift2.png");
         missionImage = ImageController.getInstance().tryGet("/Mission0.png");
@@ -71,6 +71,7 @@ public class SimpleMissionScene extends Scene {
     @Override
     public void sceneEnd() {
         AudioResourceController.getInstance().stop("/mission.wav");
+
     }
 
     @Override
@@ -126,7 +127,7 @@ public class SimpleMissionScene extends Scene {
                 }
                 if (editText.getLength() != 0) {
                     if (commandCode == 1) {
-                        SceneController.getInstance().changeScene(new GameScene(editText.getEditText()));
+                        SceneController.getInstance().changeScene(new SimpleModeScene(editText.getEditText()));
                     }
                 }
             }

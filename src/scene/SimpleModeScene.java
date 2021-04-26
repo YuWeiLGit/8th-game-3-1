@@ -1,7 +1,9 @@
 package scene;
 
 import camera.MapInformation;
+import controllers.AudioResourceController;
 import controllers.ImageController;
+import controllers.RankControll;
 import controllers.SceneController;
 import gameobj.*;
 import utils.CommandSolver;
@@ -10,7 +12,9 @@ import utils.Global;
 import utils.Vector;
 
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -38,13 +42,14 @@ public class SimpleModeScene extends Scene {
     private Portal portal;//出口
     private Portal portalMission;//給任務用
     private EnergyBall energyBallMission;//給任務用
-    private MissionBoard  missionBoard;//任務用
+    private MissionBoard missionBoard;//任務用
     private EnergyBar energyBar;
     private ArrayList<EnergyBall> energyBalls;
     private ArrayList<BarrierH> barriersH;
     private ArrayList<BarrierV> barriersV;
     private ArrayList<InBar> inBars;
     private MoveBlock moveBlock;//推箱子用
+
     private int savePointX;
     private int savePointY;
     private int totalTime;
@@ -60,9 +65,9 @@ public class SimpleModeScene extends Scene {
     private boolean isPardon5;
     private boolean isPardon6;
     private boolean isCollectAll;
+    private ArrayList<RankControll> rankControlls;
+    private String path;
 
-
-    private ArrayList<String> ranking;
 
     public SimpleModeScene(String name) {
         this.name = name;
@@ -70,21 +75,28 @@ public class SimpleModeScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        ranking = new ArrayList<>();
-//        try {
-////            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
-//            for (int i = 0; i < ranking.size(); i++) {
-//                bw.write(ranking.get(i));
-//            }
-//
-//            bw.write("name:" + name + "+" + totalTime);
-//            bw.flush();
-//            bw.close();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return;
-//        }
-        moveBlock = new MoveBlock(200,2300);
+        AudioResourceController.getInstance().loop("/playing.wav",20);
+        rankControlls = new ArrayList<>();
+        path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        System.out.println("path:" + path);
+        path = path + "rank2.txt";
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            String s;
+            while ((s = br.readLine()) != null) {
+                String[] tmp = s.split("/");
+                rankControlls.add(new RankControll(Integer.parseInt(tmp[1]), tmp[0]));
+            }
+        } catch (Exception ex) {
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+            return;
+        }
+        moveBlock = new MoveBlock(200, 2300);
         isPardon = false;
         isPardon2 = false;
         isPardon3 = false;
@@ -92,10 +104,10 @@ public class SimpleModeScene extends Scene {
         isPardon5 = false;
         isPardon6 = false;
         isCollectAll = false;
-        isDisplyMission =false;
+        isDisplyMission = false;
         delay = new Delay(30);
-        spaceShip = new SpaceShip(100, 2400);
-        portal = new Portal(3750, 50,96,64);
+        spaceShip = new SpaceShip(100, 2400);  ///100,2400
+        portal = new Portal(1850, 105, 96, 64);
         delay.loop();
         map = new Map();
         MapInformation.setMapInfo(0, 0, GAME_SCENE_WIDTH, GAME_SCENE_HEIGHT);
@@ -108,11 +120,11 @@ public class SimpleModeScene extends Scene {
         //能量球
         energyBalls = new ArrayList<>();
         //中間
-        energyBalls.add(new EnergyBall(random(1750,1800), random(780, 848)));
+        energyBalls.add(new EnergyBall(random(1750, 1800), random(780, 848)));
         //右下
         energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
-        energyBalls.add(new EnergyBall(random(1360,1552), random(275, 350)));
+        energyBalls.add(new EnergyBall(random(1360, 1552), random(275, 350)));
         energyBalls.add(new EnergyBall(random(560, 720), random(250, 400)));
         //右上
         energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
@@ -139,13 +151,11 @@ public class SimpleModeScene extends Scene {
         barriersH.add(new BarrierH(2016, 1344));
         barriersH.add(new BarrierH(3232, 736));
         barriersH.add(new BarrierH(3200, 416));
-
-
         goal = new Goal(150, 2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
-        missionBoard = new MissionBoard(450,52,160,69,state);
-        energyBallMission = new EnergyBall(395,55);
-        portalMission = new Portal(395,55,32,32);
+        missionBoard = new MissionBoard(450, 52, 160, 69, state);
+        energyBallMission = new EnergyBall(395, 55);
+        portalMission = new Portal(395, 55, 32, 32);
         inBars = new ArrayList<>();
         inBars.add(new InBar(13, 14));
         inBars.add(new InBar(32, 14));
@@ -168,9 +178,20 @@ public class SimpleModeScene extends Scene {
     @Override
     public void sceneEnd() {
         ImageController.getInstance().clear();
+        AudioResourceController.getInstance().stop("/playing.wav");
+        rankControlls.add(new RankControll(totalTime / 60, name));
+        for (int i = 0; i < rankControlls.size(); i++) {
+            for (int j = 0; j < rankControlls.size() - i - 1; j++) {
+                if (rankControlls.get(j).getScore() > rankControlls.get(j + 1).getScore()) {
+                    RankSwap(j, j + 1, rankControlls);
+                }
+            }
+        }
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\zxcv0\\OneDrive\\文件\\8th-game-3-1-\\rank.txt"));
-            bw.write(name + "/" + totalTime / 60);
+            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+            for (int i = 0; i < rankControlls.size(); i++) {
+                bw.write(rankControlls.get(i).getName() + "/" + rankControlls.get(i).getScore() + "\n");
+            }
             bw.flush();
             bw.close();
         } catch (Exception ex) {
@@ -185,26 +206,25 @@ public class SimpleModeScene extends Scene {
                 XX = e.getX();
                 YY = e.getY();
                 setDegree(XX, YY);
+                System.out.println("x:"+XX+"y:"+YY);
             }
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
                 goal.changeCollisionState(GameObject.CollisionState.STEADY);
-                count = 40;
+
                 double x = e.getX() + st.getCam().painter().left() - spaceShip.painter().centerX();
                 double y = e.getY() + st.getCam().painter().top() - spaceShip.painter().centerY();
-//                    System.out.println("mx:"+e.getX());
+//                   System.out.println("mx:"+e.getX());
 //                    System.out.println("my:"+e.getY());
 //                    System.out.println("sx:"+spaceShip.painter().centerX());
 //                    System.out.println("sx:"+spaceShip.painter().centerY());
-//                    System.out.println("x:"+x);
-//                    System.out.println("y:"+y);
+                count=(int)Global.getHypotenuse(x,y)/10;
                 Vector speed = new Vector(x, y);
                 Vector tmpSpeed = new Vector(0, 0);
-                speed.setLength(Global.getHypotenuse(x, y) / 40);
+                speed.setLength(10);
                 spaceShip.setSpeed(speed);
                 goal.setSpeed(tmpSpeed);
-//                goalSetDegree((int)goal.getSpeed().vx(),(int)goal.getSpeed().vy());
-
+//              goalSetDegree((int)goal.getSpeed().vx(),(int)goal.getSpeed().vy());
             }
         };
     }
@@ -257,8 +277,8 @@ public class SimpleModeScene extends Scene {
 
             @Override
             public void keyPressed(int commandCode, long trigTime) {
-                if(commandCode==4){
-                    isDisplyMission =true;
+                if (commandCode == 4) {
+                    isDisplyMission = true;
                     System.out.println("現在案4");
                 }
 //                if(commandCode==6){  //角色斷線時發送斷線訊息
@@ -278,17 +298,14 @@ public class SimpleModeScene extends Scene {
 //                    }
 ////                    state = 0;
 //                }
-                if(commandCode==4){
-                    isDisplyMission= false;
+                if (commandCode == 4) {
+                    isDisplyMission = false;
                 }
                 if (commandCode == 0) {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
-                    for (int i = 0; i < ranking.size(); i++) {
-                        System.out.println("!" + ranking.get(i));
-                    }
-                    SceneController.getInstance().changeScene(new EndScene(name));
+                    SceneController.getInstance().changeScene(new EndScene(name,totalTime/60));
                 }
             }
         };
@@ -324,18 +341,19 @@ public class SimpleModeScene extends Scene {
             inBars.get(i).paint(g);
         }
         //任務訊息
-        if(isDisplyMission==true){
-            missionBoard.paintComponent(g);
-            if(state!=5) {
-                energyBallMission.paintComponent(g);
-            }else {
-                portalMission.paintComponent(g);
-                }
-
+        if (isDisplyMission) {
             clockBack.paint(g);
             for (int i = 0; i < clockNums.size(); i++) {
                 clockNums.get(i).paintComponent(g);
             }
+            missionBoard.paintComponent(g);
+            if (state != 5) {
+                energyBallMission.paintComponent(g);
+            } else {
+                portalMission.paintComponent(g);
+            }
+
+
         }
         //用來碰撞判定的
         //st.getBasicBlock().get(i)
@@ -355,17 +373,17 @@ public class SimpleModeScene extends Scene {
         spaceShip.isCollision(goal);
         spaceShip.isCollisionBackBlock(moveBlock);
 
-        for(int i = 0;i<st.getBrokenBricks().size();i++){
-            if(!st.getBrokenBricks().get(i).IsBroken()) {
+        for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+            if (!st.getBrokenBricks().get(i).IsBroken()) {
                 if (spaceShip.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
                     st.getBrokenBricks().get(i).collision();
                     isPardon2 = true;
                 }
             }
         }
-        if(!isPardon2){
-            for(int i = 0;i<st.getBrokenBricks().size();i++){
-                if(!st.getBrokenBricks().get(i).IsBroken()) {
+        if (!isPardon2) {
+            for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+                if (!st.getBrokenBricks().get(i).IsBroken()) {
                     if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
                         st.getBrokenBricks().get(i).collision();
                         break;
@@ -374,26 +392,26 @@ public class SimpleModeScene extends Scene {
             }
         }
 
-        for(int i = 0;i<st.getBasicBlock().size();i++){
-            if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
+        for (int i = 0; i < st.getBasicBlock().size(); i++) {
+            if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon = true;
             }
         }
-        if(!isPardon){
-            for(int i = 0;i<st.getBasicBlock().size();i++){
-                if(spaceShip.AngleisCollision(st.getBasicBlock().get(i))){
+        if (!isPardon) {
+            for (int i = 0; i < st.getBasicBlock().size(); i++) {
+                if (spaceShip.AngleisCollision(st.getBasicBlock().get(i))) {
                     break;
                 }
             }
         }
-        for(int i = 0;i<st.getBasicBlock().size();i++){
-            if(goal.isCollisionNotAngle(st.getBasicBlock().get(i))){
+        for (int i = 0; i < st.getBasicBlock().size(); i++) {
+            if (goal.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon2 = true;
             }
         }
-        if(!isPardon2){
-            for(int i = 0;i<st.getBasicBlock().size();i++){
-                if(goal.AngleisCollision(st.getBasicBlock().get(i))){
+        if (!isPardon2) {
+            for (int i = 0; i < st.getBasicBlock().size(); i++) {
+                if (goal.AngleisCollision(st.getBasicBlock().get(i))) {
                     break;
                 }
             }
@@ -404,13 +422,13 @@ public class SimpleModeScene extends Scene {
                 savePointX = energyBalls.get(i).getX();
                 savePointY = energyBalls.get(i).getY();
                 energyBalls.remove(i);
-                  if (state >= 5) {
-                        isCollectAll = true;
-                      state=5;
-                      missionBoard.setChangeCount(state);
+                if (state >= 5) {
+                    isCollectAll = true;
+                    state = 5;
+                    missionBoard.setChangeCount(state);
                 } else if (state < 4) {
-                    state =state+2;
-                      missionBoard.setChangeCount(state);
+                    state = state + 2;
+                    missionBoard.setChangeCount(state);
                 } else {
                     state++;
                     missionBoard.setChangeCount(state);
@@ -514,9 +532,20 @@ public class SimpleModeScene extends Scene {
             goal.move();
             spaceShip.move();
             if (state == 5 && goal.isCollision(portal)) {
-                SceneController.getInstance().changeScene(new EndScene(name));
+                SceneController.getInstance().changeScene(new EndScene(name,totalTime/60));
             }
         }
+    }
+
+    public void RankSwap(int t1, int t2, ArrayList<RankControll> arrayList) {
+        RankControll tmp1;
+        RankControll tmp2;
+        tmp1 = arrayList.get(t2);
+        tmp2 = arrayList.get(t1);
+        arrayList.add(t1 + 1, tmp1);
+        arrayList.remove(t1);
+        arrayList.add(t2 + 1, tmp2);
+        arrayList.remove(t2);
     }
 }
 

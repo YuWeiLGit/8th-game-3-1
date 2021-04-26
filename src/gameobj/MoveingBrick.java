@@ -17,7 +17,7 @@ public class MoveingBrick extends GameObject {
 
     public MoveingBrick(int x, int y, int width, int height, MoveDir moveDir, int moveDis) {
         super(x, y, width, height, State.NULL);
-        img = ImageController.getInstance().tryGet("/movebricks.png");
+        img = ImageController.getInstance().tryGet("/moveBlock.png");
         isLoop = false;
         isPause = true;
         changeDir = false;
@@ -26,6 +26,7 @@ public class MoveingBrick extends GameObject {
         vertical = 0;
         parallel = 0;
         this.movingPerFrame=1;
+
     }
 
     public void loop() {
@@ -55,7 +56,8 @@ public class MoveingBrick extends GameObject {
 
     @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(img, painter().left() + parallel, painter().top() + vertical, null);
+        g.drawImage(img, painter().left() , painter().top(), null);
+
     }
 
     @Override
@@ -63,40 +65,49 @@ public class MoveingBrick extends GameObject {
         if (this.moveDir == MoveDir.TOP) {
             if (changeDir) {
                 vertical=vertical+movingPerFrame;
+                painter().offset(0,movingPerFrame);
             } else {
                 vertical=vertical-movingPerFrame;
+                painter().offset(0,-movingPerFrame);
             }
-            if (vertical == moveDis || vertical == 0) {
+            if (Math.abs(vertical) == moveDis || vertical == 0) {    ////1
                 changeBoolean();
             }
         }
        else if (this.moveDir == MoveDir.DOWN) {
             if (changeDir) {
                 vertical=vertical-movingPerFrame;
+                painter().offset(0,-movingPerFrame);
             } else {
                 vertical=vertical+movingPerFrame;
+                painter().offset(0,movingPerFrame);
             }
-            if (vertical == moveDis || vertical == 0) {
+            if (Math.abs(vertical) == moveDis || vertical == 0) {   ///2
                 changeBoolean();
             }
         }
         else if (this.moveDir == MoveDir.LEFT) {
             if (changeDir) {
                 parallel=parallel-movingPerFrame;
+                painter().offset(movingPerFrame,0);
             } else {
                 parallel=parallel+movingPerFrame;
+                painter().offset(-movingPerFrame,0);
             }
-            if (parallel == moveDis || parallel == 0) {
+            if (Math.abs(parallel )== moveDis || parallel == 0) {
                 changeBoolean();
             }
         }
         else if (this.moveDir == MoveDir.Right) {
+            System.out.println("p:"+parallel);
             if (changeDir) {
                 parallel=parallel+movingPerFrame;
+                painter().offset(-movingPerFrame,0);
             } else {
                 parallel=parallel-movingPerFrame;
+                painter().offset(movingPerFrame,0);
             }
-            if (parallel == moveDis || parallel == 0) {
+            if (Math.abs(parallel )== moveDis || parallel == 0) {
                 changeBoolean();
             }
         }
