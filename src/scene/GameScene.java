@@ -69,6 +69,8 @@ public class GameScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
+    private boolean isPardonMovingBrick;
+    private boolean isPardonMovingBrick2;
     private boolean isPardonBrokenBricks;
     private boolean isPardonBrokenBricks2;
     private String path;
@@ -129,8 +131,12 @@ public class GameScene extends Scene {
         isDisplyMission = false;
         isPardonBrokenBricks=false;
         isPardonBrokenBricks2=false;
+        isPardonMovingBrick=false;
+        isPardonMovingBrick2=false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
+
+
         portal = new Portal(3750, 50, 96, 64);
         delay.loop();
         map = new Map();
@@ -173,15 +179,17 @@ public class GameScene extends Scene {
         barriersH.add(new BarrierH(2016, 1344));
         barriersH.add(new BarrierH(3232, 736));
         barriersH.add(new BarrierH(3200, 416));
-<<<<<<< HEAD
-=======
 
         //移動障礙物
         moveingBricks = new ArrayList<>();
 
-        moveingBricks.add(new MoveingBrick(150,2300,32,96, MoveingBrick.MoveDir.DOWN,96));
+        moveingBricks.add(new MoveingBrick(350,1760,32,32, MoveingBrick.MoveDir.RIGHT,96));
+        moveingBricks.add(new MoveingBrick(1502,2015,32,32, MoveingBrick.MoveDir.DOWN,64));
+        moveingBricks.add(new MoveingBrick(770,385,32,32, MoveingBrick.MoveDir.DOWN,96));
+        moveingBricks.add(new MoveingBrick(2782,1503,32,32, MoveingBrick.MoveDir.RIGHT,160));
+        moveingBricks.add(new MoveingBrick(3549,578,32,32, MoveingBrick.MoveDir.DOWN,64));
+        moveingBricks.add(new MoveingBrick(3168,160,32,32, MoveingBrick.MoveDir.RIGHT,64));
 
->>>>>>> origin/火焰修改+地圖修改
         goal = new Goal(150, 2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
         missionBoard = new MissionBoard(450, 52, 160, 69, state);
@@ -411,6 +419,8 @@ public class GameScene extends Scene {
         isPardon6 = false;
         isPardonBrokenBricks=false;
         isPardonBrokenBricks2=false;
+        isPardonMovingBrick=false;
+        isPardonMovingBrick2=false;
         totalTime++;
         st.update();
         if (state >= 5 && !fin) {
@@ -461,6 +471,31 @@ public class GameScene extends Scene {
         if(!isPardon2){
             for(int i = 0;i<st.getBasicBlock().size();i++){
                 if(goal.AngleisCollision(st.getBasicBlock().get(i))){
+                    break;
+                }
+            }
+        }
+        for(int i = 0;i<moveingBricks.size();i++){
+            if(spaceShip.isCollisionNotAngle(moveingBricks.get(i))){
+                isPardonMovingBrick = true;
+            }
+        }
+        if(!isPardonMovingBrick){
+            for(int i = 0;i<moveingBricks.size();i++){
+                if(spaceShip.AngleisCollision(moveingBricks.get(i))){
+                    break;
+                }
+            }
+        }
+        for(int i = 0;i<moveingBricks.size();i++){
+
+            if(goal.isCollisionNotAngle(moveingBricks.get(i))){
+                isPardonMovingBrick2 = true;
+            }
+        }
+        if(!isPardonMovingBrick2){
+            for(int i = 0;i<moveingBricks.size();i++){
+                if(goal.AngleisCollision(moveingBricks.get(i))){
                     break;
                 }
             }

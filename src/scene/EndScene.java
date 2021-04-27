@@ -30,7 +30,6 @@ public class EndScene extends Scene {
 
     @Override
     public void sceneBegin() {
-<<<<<<< HEAD
         String s = name;
         String t=String.valueOf(time);
         image = ImageController.getInstance().tryGet("/end.png");
@@ -47,10 +46,7 @@ public class EndScene extends Scene {
         isPress = false;
         img = ImageController.getInstance().tryGet("/shift.png");
         img2 = ImageController.getInstance().tryGet("/Shift2.png");
-=======
         AudioResourceController.getInstance().loop("/endSecne1.wav",20);
->>>>>>> origin/火焰修改+地圖修改
-
         editText = new EditText(470 + s.length() * 20, 571, "", name);
         editTextScore=new EditText(470 + s.length() * 20, 640, "", score);
     }
