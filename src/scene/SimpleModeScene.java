@@ -64,6 +64,8 @@ public class SimpleModeScene extends Scene {
     private boolean isPardon4;
     private boolean isPardon5;
     private boolean isPardon6;
+    private boolean isPardonBrokenBricks;
+    private boolean isPardonBrokenBricks2;
     private boolean isCollectAll;
     private ArrayList<RankControll> rankControlls;
     private String path;
@@ -75,7 +77,7 @@ public class SimpleModeScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        AudioResourceController.getInstance().loop("/playing.wav",20);
+        AudioResourceController.getInstance().loop("/playing.wav", 20);
         rankControlls = new ArrayList<>();
         path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
         System.out.println("path:" + path);
@@ -105,6 +107,8 @@ public class SimpleModeScene extends Scene {
         isPardon6 = false;
         isCollectAll = false;
         isDisplyMission = false;
+        isPardonBrokenBricks = false;
+        isPardonBrokenBricks2 = false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);  ///100,2400
         portal = new Portal(1850, 105, 96, 64);
@@ -125,7 +129,7 @@ public class SimpleModeScene extends Scene {
         energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
         energyBalls.add(new EnergyBall(random(1360, 1552), random(275, 350)));
-        energyBalls.add(new EnergyBall(random(560, 720), random(250, 400)));
+        energyBalls.add(new EnergyBall(random(450, 480), random(250, 300)));
         //右上
         energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
 
@@ -206,7 +210,7 @@ public class SimpleModeScene extends Scene {
                 XX = e.getX();
                 YY = e.getY();
                 setDegree(XX, YY);
-                System.out.println("x:"+XX+"y:"+YY);
+                System.out.println("x:" + XX + "y:" + YY);
             }
             if (state == CommandSolver.MouseState.RELEASED) {
                 spaceShip.changeCollisionState(GameObject.CollisionState.NORMAL);
@@ -218,7 +222,7 @@ public class SimpleModeScene extends Scene {
 //                    System.out.println("my:"+e.getY());
 //                    System.out.println("sx:"+spaceShip.painter().centerX());
 //                    System.out.println("sx:"+spaceShip.painter().centerY());
-                count=(int)Global.getHypotenuse(x,y)/10;
+                count = (int) Global.getHypotenuse(x, y) / 10;
                 Vector speed = new Vector(x, y);
                 Vector tmpSpeed = new Vector(0, 0);
                 speed.setLength(10);
@@ -305,7 +309,7 @@ public class SimpleModeScene extends Scene {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
-                    SceneController.getInstance().changeScene(new EndScene(name,totalTime/60));
+                    SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60));
                 }
             }
         };
@@ -367,6 +371,8 @@ public class SimpleModeScene extends Scene {
         isPardon4 = false;
         isPardon5 = false;
         isPardon6 = false;
+        isPardonBrokenBricks = false;
+        isPardonBrokenBricks2 = false;
         totalTime++;
         st.update();
 
@@ -377,11 +383,29 @@ public class SimpleModeScene extends Scene {
             if (!st.getBrokenBricks().get(i).IsBroken()) {
                 if (spaceShip.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
                     st.getBrokenBricks().get(i).collision();
-                    isPardon2 = true;
+                    isPardonBrokenBricks = true;
                 }
             }
         }
-        if (!isPardon2) {
+        if (!isPardonBrokenBricks) {
+            for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+                if (!st.getBrokenBricks().get(i).IsBroken()) {
+                    if (goal.AngleisCollision(st.getBrokenBricks().get(i))) {
+                        st.getBrokenBricks().get(i).collision();
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+            if (!st.getBrokenBricks().get(i).IsBroken()) {
+                if (goal.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
+                    st.getBrokenBricks().get(i).collision();
+                    isPardonBrokenBricks2 = true;
+                }
+            }
+        }
+        if (!isPardonBrokenBricks2) {
             for (int i = 0; i < st.getBrokenBricks().size(); i++) {
                 if (!st.getBrokenBricks().get(i).IsBroken()) {
                     if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
@@ -392,6 +416,18 @@ public class SimpleModeScene extends Scene {
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
+/////////////////
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
             if (spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))) {
                 isPardon = true;
@@ -532,7 +568,7 @@ public class SimpleModeScene extends Scene {
             goal.move();
             spaceShip.move();
             if (state == 5 && goal.isCollision(portal)) {
-                SceneController.getInstance().changeScene(new EndScene(name,totalTime/60));
+                SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60));
             }
         }
     }

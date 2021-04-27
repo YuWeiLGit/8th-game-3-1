@@ -76,7 +76,6 @@ public class BrokenBricks extends GameObject{
         public String path(){
             return path;
         }
-
     }
 
     public enum HitState {

@@ -107,13 +107,9 @@ public class SpaceShip extends GameObject {
         Graphics2D g2d = (Graphics2D) g;
         AffineTransform t = g2d.getTransform();
         g2d.rotate(Math.toRadians(degree), painter().centerX(), painter().centerY());
-//        if(!isMove) {
-            g2d.drawImage(img, painter().left(), painter().top(), null);
-//        }else {
-//            g2d.drawImage(img2, painter().left(), painter().top(), null);
-//        }
+        g2d.drawImage(img, painter().left(), painter().top(), null);
         g2d.setTransform(t);
-//        g.drawImage(img, painter().left(), painter().top(), null);
+
     }
 
     @Override

@@ -30,8 +30,8 @@ public class IntroScene extends Scene {
         back = ImageController.getInstance().tryGet("/vortex.png");
         DulImage = ImageController.getInstance().tryGet("/dul.png");
         DulImage2 = ImageController.getInstance().tryGet("/dul2.png");
-        campaign=ImageController.getInstance().tryGet("/campaign.png");
-        gladiator=ImageController.getInstance().tryGet("/gladiator.png");
+        campaign = ImageController.getInstance().tryGet("/campaign.png");
+        gladiator = ImageController.getInstance().tryGet("/gladiator.png");
         AudioResourceController.getInstance().loop("/intro.wav", 20);
         countSolo = 0;
         countDul = 0;
@@ -51,14 +51,14 @@ public class IntroScene extends Scene {
                 mx = e.getX();
                 my = e.getY();
             }
-            if(showSolo){
-                if(state== CommandSolver.MouseState.RELEASED){
-                    SceneController.getInstance().changeScene(new MissionScene());
+            if (showSolo) {
+                if (state == CommandSolver.MouseState.RELEASED) {
+                    SceneController.getInstance().changeScene(new SimpleMissionScene());
                 }
             }
-            if(showDul){
-                if(state== CommandSolver.MouseState.RELEASED){
-                    SceneController.getInstance().changeScene(new SimpleMissionScene());
+            if (showDul) {
+                if (state == CommandSolver.MouseState.RELEASED) {
+                    SceneController.getInstance().changeScene(new MissionScene());
                 }
             }
         };
@@ -71,32 +71,33 @@ public class IntroScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(back, 0, 0, null);
+        g.drawImage(back, -20, -100, null);
         g.drawImage(SoloImage, 50, 50, null);
         g.drawImage(SoloImage2, 50, 50, 476, 50 + 681
                 , 0 + countSolo, 50 + countSolo, 376 + countSolo, 631 + countSolo, null);
-        if(countDul>=100){
-        g.drawImage(DulImage, 550, 50, null);}
-        else if(countDul>=1&&countDul<100){
-        g.drawImage(DulImage2, 550, 50, null);}
-        if(countDul==0){
-            g.drawImage(DulImage, 550, 50, null);}
-        if(showSolo){
-            g.drawImage(campaign,10,800,null);
+        if (countDul >= 100) {
+            g.drawImage(DulImage, 550, 50, null);
+        } else if (countDul >= 1 && countDul < 100) {
+            g.drawImage(DulImage2, 550, 50, null);
         }
-       else if(showDul){
-            g.drawImage(gladiator,10,800,null);
+        if (countDul == 0) {
+            g.drawImage(DulImage, 550, 50, null);
         }
+//        if (showSolo) {
+//            g.drawImage(campaign, 10, 800, null);
+//        } else if (showDul) {
+//            g.drawImage(gladiator, 10, 800, null);
+//        }
 
     }
 
     @Override
     public void update() {
-        if(showDul){
-            showSolo=false;
+        if (showDul) {
+            showSolo = false;
         }
-        if(showSolo){
-            showDul=false;
+        if (showSolo) {
+            showDul = false;
         }
         if ((47 <= mx && mx <= 463 && my >= 45 && my <= 720)) {
             if (countSolo < 50)
@@ -104,10 +105,10 @@ public class IntroScene extends Scene {
             showSolo = true;
         } else if ((550 <= mx && mx <= 1004 && my >= 45 && my <= 720)) {
             showDul = true;
-            if (countDul > 200){
-                countDul=0;
+            if (countDul > 200) {
+                countDul = 0;
             }
-                countDul++;
+            countDul++;
 
         } else {
             showDul = false;

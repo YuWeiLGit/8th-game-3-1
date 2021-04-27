@@ -135,8 +135,6 @@ public class GameScene extends Scene {
         isPardonMovingBrick2=false;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);
-
-
         portal = new Portal(3750, 50, 96, 64);
         delay.loop();
         map = new Map();
@@ -153,7 +151,7 @@ public class GameScene extends Scene {
         //右下
         energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
-        energyBalls.add(new EnergyBall(random(560, 720), random(250, 400)));
+        energyBalls.add(new EnergyBall(random(450, 480), random(250, 400)));
         //右上
         energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
 
@@ -183,12 +181,12 @@ public class GameScene extends Scene {
         //移動障礙物
         moveingBricks = new ArrayList<>();
 
-        moveingBricks.add(new MoveingBrick(350,1760,32,32, MoveingBrick.MoveDir.RIGHT,96));
-        moveingBricks.add(new MoveingBrick(1502,2015,32,32, MoveingBrick.MoveDir.DOWN,64));
-        moveingBricks.add(new MoveingBrick(770,385,32,32, MoveingBrick.MoveDir.DOWN,96));
-        moveingBricks.add(new MoveingBrick(2782,1503,32,32, MoveingBrick.MoveDir.RIGHT,160));
-        moveingBricks.add(new MoveingBrick(3549,578,32,32, MoveingBrick.MoveDir.DOWN,64));
-        moveingBricks.add(new MoveingBrick(3168,160,32,32, MoveingBrick.MoveDir.RIGHT,64));
+        moveingBricks.add(new MoveingBrick(350,1760,33,32, MoveingBrick.MoveDir.RIGHT,96));
+        moveingBricks.add(new MoveingBrick(1502,2015,33,32, MoveingBrick.MoveDir.DOWN,64));
+        moveingBricks.add(new MoveingBrick(770,385,33,32, MoveingBrick.MoveDir.DOWN,96));
+        moveingBricks.add(new MoveingBrick(2782,1503,33,32, MoveingBrick.MoveDir.RIGHT,160));
+        moveingBricks.add(new MoveingBrick(3549,578,33,32, MoveingBrick.MoveDir.DOWN,64));
+        moveingBricks.add(new MoveingBrick(3168,160,33,32, MoveingBrick.MoveDir.RIGHT,64));
 
         goal = new Goal(150, 2400);
         energyBar = new EnergyBar(60, 30, 118, 51);
@@ -431,18 +429,35 @@ public class GameScene extends Scene {
         for(int i=0;i<moveingBricks.size();i++){
             moveingBricks.get(i).update();
         }
-
-        for(int i = 0;i<st.getBrokenBricks().size();i++){
-            if(!st.getBrokenBricks().get(i).IsBroken()) {
+        for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+            if (!st.getBrokenBricks().get(i).IsBroken()) {
                 if (spaceShip.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
                     st.getBrokenBricks().get(i).collision();
-                    isPardon6 = true;
+                    isPardonBrokenBricks = true;
                 }
             }
         }
-        if(!isPardon6){
-            for(int i = 0;i<st.getBrokenBricks().size();i++){
-                if(!st.getBrokenBricks().get(i).IsBroken()) {
+        if (!isPardonBrokenBricks) {
+            for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+                if (!st.getBrokenBricks().get(i).IsBroken()) {
+                    if (goal.AngleisCollision(st.getBrokenBricks().get(i))) {
+                        st.getBrokenBricks().get(i).collision();
+                        break;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+            if (!st.getBrokenBricks().get(i).IsBroken()) {
+                if (goal.isCollisionNotAngle(st.getBrokenBricks().get(i))) {
+                    st.getBrokenBricks().get(i).collision();
+                    isPardonBrokenBricks2 = true;
+                }
+            }
+        }
+        if (!isPardonBrokenBricks2) {
+            for (int i = 0; i < st.getBrokenBricks().size(); i++) {
+                if (!st.getBrokenBricks().get(i).IsBroken()) {
                     if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
                         st.getBrokenBricks().get(i).collision();
                         break;
@@ -451,6 +466,8 @@ public class GameScene extends Scene {
             }
         }
 
+
+        /////////
         for(int i = 0;i<st.getBasicBlock().size();i++){
             if(spaceShip.isCollisionNotAngle(st.getBasicBlock().get(i))){
                 isPardon = true;
