@@ -61,7 +61,7 @@ public class MissionScene extends Scene {
 
         editText = new EditText(350, 145, " enter your name", name);
         editText.setCursorColor(Color.white);
-        editText.isFocus();
+//        editText.isFocus();
         launch = ImageController.getInstance().tryGet("/launch3.png");
         launch2 = ImageController.getInstance().tryGet("/launch4.png");
         isLaunch = false;
@@ -112,7 +112,6 @@ public class MissionScene extends Scene {
                 if (commandCode == 4) {
                     isPress = true;
                 }
-
             }
 
             @Override
@@ -124,8 +123,8 @@ public class MissionScene extends Scene {
                         count = 0;
                     }
                 }
-                if (editText.getLength() != 0) {
-                    if (commandCode == 1) {
+                if (editText.getLength()!=0) {
+                    if (commandCode == 1){
                         SceneController.getInstance().changeScene(new GameScene(editText.getEditText()));
                     }
                 }

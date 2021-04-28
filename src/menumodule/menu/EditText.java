@@ -181,10 +181,9 @@ public class EditText extends Label {
     public void keyTyped(char c) {
         System.out.println("char1 " + (int) c);
         if (getIsFocus() && isEditable) {
-            if (c == KeyEvent.VK_ENTER) {
+            if (c == KeyEvent.VK_ENTER && editText==null) {
                 super.unFocus();
             }
-
             if (!isOverEditLimit() && isExcepion(c)) {
                 editText = editText + c;
                 System.out.println("char2 " + (int) c);

@@ -247,7 +247,7 @@ public class GameScene extends Scene {
 
                 double x = e.getX() + st.getCam().painter().left() - spaceShip.painter().centerX();
                 double y = e.getY() + st.getCam().painter().top() - spaceShip.painter().centerY();
-                count= (int) Global.getHypotenuse(x,y)/10;
+                count= (int) Global.getHypotenuse(x,y)/15;
 //                    System.out.println("mx:"+e.getX());
 //                    System.out.println("my:"+e.getY());
 //                    System.out.println("sx:"+spaceShip.painter().centerX());
