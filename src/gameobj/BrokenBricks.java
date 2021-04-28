@@ -25,6 +25,7 @@ public class BrokenBricks extends GameObject{
 
     public void collision() {
         this.count++;
+        System.out.println("!!!");
         if (count >= 2) {
             count = 2;
         System.out.println("數字多少"+count);
@@ -39,11 +40,11 @@ public class BrokenBricks extends GameObject{
 
     @Override
     public void paintComponent(Graphics g) {
-        if (this.hitState == HitState.NORMAL) {
-            g.drawImage(img, painter().left(), painter().top(), null);
-        } else if (this.hitState == HitState.FIRST) {
-            g.drawImage(img1, painter().left(), painter().top(), null);
-        } else g.drawImage(img2, painter().left(), painter().top(), null);
+//        if (this.hitState == HitState.NORMAL) {
+//            g.drawImage(img, painter().left(), painter().top(), null);
+//        } else if (this.hitState == HitState.FIRST) {
+//            g.drawImage(img1, painter().left(), painter().top(), null);
+//        } else g.drawImage(img2, painter().left(), painter().top(), null);
         if (count==0) {
             g.drawImage(img, painter().left(), painter().top(), null);
         } else if (count==1) {

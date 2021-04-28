@@ -79,9 +79,9 @@ public class SimpleModeScene extends Scene {
     public void sceneBegin() {
         AudioResourceController.getInstance().loop("/playing.wav", 20);
         rankControlls = new ArrayList<>();
-        path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        path = (HardModeRankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
         System.out.println("path:" + path);
-        path = path + "rank2.txt";
+        path = path + "rank1.txt";
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             String s;
@@ -309,7 +309,7 @@ public class SimpleModeScene extends Scene {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
-                    SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60));
+                    SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60,false));
                 }
             }
         };
@@ -390,7 +390,7 @@ public class SimpleModeScene extends Scene {
         if (!isPardonBrokenBricks) {
             for (int i = 0; i < st.getBrokenBricks().size(); i++) {
                 if (!st.getBrokenBricks().get(i).IsBroken()) {
-                    if (goal.AngleisCollision(st.getBrokenBricks().get(i))) {
+                    if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
                         st.getBrokenBricks().get(i).collision();
                         break;
                     }
@@ -408,24 +408,13 @@ public class SimpleModeScene extends Scene {
         if (!isPardonBrokenBricks2) {
             for (int i = 0; i < st.getBrokenBricks().size(); i++) {
                 if (!st.getBrokenBricks().get(i).IsBroken()) {
-                    if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
+                    if (goal.AngleisCollision(st.getBrokenBricks().get(i))) {
                         st.getBrokenBricks().get(i).collision();
                         break;
                     }
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 /////////////////
         for (int i = 0; i < st.getBasicBlock().size(); i++) {
@@ -568,7 +557,7 @@ public class SimpleModeScene extends Scene {
             goal.move();
             spaceShip.move();
             if (state == 5 && goal.isCollision(portal)) {
-                SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60));
+                SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60,false));
             }
         }
     }

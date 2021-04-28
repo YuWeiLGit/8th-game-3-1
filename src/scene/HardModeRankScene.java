@@ -2,6 +2,7 @@ package scene;
 
 import controllers.ImageController;
 import controllers.RankControll;
+import controllers.SceneController;
 import menumodule.menu.BackgroundType;
 import menumodule.menu.EditText;
 import menumodule.menu.Style;
@@ -11,7 +12,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class RankScene extends Scene {
+public class HardModeRankScene extends Scene {
     private ArrayList<RankControll> rankControlls;
     private Image image;
     private EditText editText;
@@ -19,7 +20,7 @@ public class RankScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        String path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        String path = (HardModeRankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
         path = path + "rank2.txt";
         image = ImageController.getInstance().tryGet("/rank2.png");
         rankControlls = new ArrayList<>();
@@ -83,8 +84,28 @@ public class RankScene extends Scene {
 
     @Override
     public CommandSolver.KeyListener keyListener() {
-        return null;
-    }
+        return new CommandSolver.KeyListener() {
+            @Override
+            public void keyPressed(int commandCode, long trigTime) {
+
+            }
+
+            @Override
+            public void keyReleased(int commandCode, long trigTime) {
+                if (commandCode == 1) {
+                    SceneController.getInstance().changeScene(new IntroScene());
+                }
+
+
+        };
+
+        @Override
+        public void keyTyped ( char c, long trigTime){
+
+        }
+    };
+
+}
 
     @Override
     public void paint(Graphics g) {

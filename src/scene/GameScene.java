@@ -1,13 +1,11 @@
 package scene;
 
-import camera.Camera;
 import camera.MapInformation;
 import controllers.AudioResourceController;
 import controllers.ImageController;
 import controllers.RankControll;
 import controllers.SceneController;
 import gameobj.*;
-import sun.awt.SunHints;
 import utils.CommandSolver;
 import utils.Delay;
 import utils.Global;
@@ -16,8 +14,6 @@ import utils.Vector;
 import java.io.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import static utils.Global.*;
 
@@ -88,7 +84,7 @@ public class GameScene extends Scene {
         fin = false;
         AudioResourceController.getInstance().loop("/playing.wav", 50);
         rankControlls = new ArrayList<>();
-        path = (RankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        path = (HardModeRankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
         System.out.println("path:"+path);
         path = path + "rank2.txt";
         try {
@@ -343,7 +339,7 @@ public class GameScene extends Scene {
                     spaceShip.back(savePointX, savePointY);
                     goal.back(savePointX + 40, savePointY);
                 } else if (commandCode == 1) {
-                    SceneController.getInstance().changeScene(new EndScene(name,totalTime/60));
+                    SceneController.getInstance().changeScene(new EndScene(name,totalTime/60,true));
                 }
             }
         };
@@ -440,7 +436,7 @@ public class GameScene extends Scene {
         if (!isPardonBrokenBricks) {
             for (int i = 0; i < st.getBrokenBricks().size(); i++) {
                 if (!st.getBrokenBricks().get(i).IsBroken()) {
-                    if (goal.AngleisCollision(st.getBrokenBricks().get(i))) {
+                    if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
                         st.getBrokenBricks().get(i).collision();
                         break;
                     }
@@ -458,7 +454,7 @@ public class GameScene extends Scene {
         if (!isPardonBrokenBricks2) {
             for (int i = 0; i < st.getBrokenBricks().size(); i++) {
                 if (!st.getBrokenBricks().get(i).IsBroken()) {
-                    if (spaceShip.AngleisCollision(st.getBrokenBricks().get(i))) {
+                    if (goal.AngleisCollision(st.getBrokenBricks().get(i))) {
                         st.getBrokenBricks().get(i).collision();
                         break;
                     }
@@ -698,7 +694,7 @@ public class GameScene extends Scene {
             goal.move();
             spaceShip.move();
             if (state == 5 && goal.isCollision(portal)) {
-                SceneController.getInstance().changeScene(new EndScene(name,totalTime/60));
+                SceneController.getInstance().changeScene(new EndScene(name,totalTime/60,true));
             }
         }
     }

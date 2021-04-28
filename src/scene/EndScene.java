@@ -8,10 +8,7 @@ import menumodule.menu.EditText;
 import menumodule.menu.Style;
 import utils.CommandSolver;
 
-import javax.jws.soap.SOAPMessageHandlers;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class EndScene extends Scene {
     private Image image;
@@ -22,10 +19,11 @@ public class EndScene extends Scene {
     private Image img2;
     private boolean isPress;
     private int time;
-
-    public EndScene(String name,int s) {
+    private boolean mode;
+    public EndScene(String name,int s,boolean mode) {
         this.name = name;
         this.time=s;
+        this.mode=mode;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class EndScene extends Scene {
         isPress = false;
         img = ImageController.getInstance().tryGet("/shift.png");
         img2 = ImageController.getInstance().tryGet("/Shift2.png");
-        AudioResourceController.getInstance().loop("/endSecne1.wav",20);
+        AudioResourceController.getInstance().loop("/endScene1.wav",20);
         editText = new EditText(470 + s.length() * 20, 571, "", name);
         editTextScore=new EditText(470 + s.length() * 20, 640, "", score);
     }
@@ -74,7 +72,9 @@ public class EndScene extends Scene {
             @Override
             public void keyReleased(int commandCode, long trigTime) {
                 if (commandCode == 1) {
-                    SceneController.getInstance().changeScene(new RankScene());
+                    if(mode){
+                    SceneController.getInstance().changeScene(new HardModeRankScene());}
+                    else SceneController.getInstance().changeScene(new EasyModeRank());
                 }
                 if (commandCode == 4) {
                     isPress = false;
