@@ -93,7 +93,10 @@ public class SpaceShip extends GameObject {
             speed.negX();
         } else if (collisionState == GameObject.CollisionState.LEFT) {
             speed.absX();
+        }else if (collisionState == CollisionState.CIRCLE) {
+            speed.reverse();
         }
+
         super.changeCollisionState(collisionState);
     }
 

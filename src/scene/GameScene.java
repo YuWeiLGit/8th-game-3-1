@@ -147,7 +147,7 @@ public class GameScene extends Scene {
         //右下
         energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
-        energyBalls.add(new EnergyBall(random(450, 480), random(250, 400)));
+        energyBalls.add(new EnergyBall(random(450, 480),300));
         //右上
         energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
 
