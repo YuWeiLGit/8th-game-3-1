@@ -21,7 +21,7 @@ public class FirstScene extends Scene {
 
     @Override
     public void sceneBegin() {
-        back0 = ImageController.getInstance().tryGet("/vortex.png");
+        back0 = ImageController.getInstance().tryGet("/back111.png");
         back = ImageController.getInstance().tryGet("/start0.png");
         back1 = ImageController.getInstance().tryGet("/start5.png");
         title = ImageController.getInstance().tryGet("/title.png");

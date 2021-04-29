@@ -61,7 +61,7 @@ public class MissionScene extends Scene {
 
         editText = new EditText(350, 145, " enter your name", name);
         editText.setCursorColor(Color.white);
-//        editText.isFocus();
+       editText.isFocus();
         launch = ImageController.getInstance().tryGet("/launch3.png");
         launch2 = ImageController.getInstance().tryGet("/launch4.png");
         isLaunch = false;
