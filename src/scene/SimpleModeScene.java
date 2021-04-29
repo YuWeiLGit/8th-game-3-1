@@ -38,6 +38,7 @@ public class SimpleModeScene extends Scene {
     public int dy;
     int state;///能量bar
     private int count;//按壓時間
+    private int count2;
     private boolean willMove;
     private Portal portal;//出口
     private Portal portalMission;//給任務用
@@ -49,7 +50,7 @@ public class SimpleModeScene extends Scene {
     private ArrayList<BarrierV> barriersV;
     private ArrayList<InBar> inBars;
     private MoveBlock moveBlock;//推箱子用
-
+    private int hitDis;
     private int savePointX;
     private int savePointY;
     private int totalTime;
@@ -109,6 +110,7 @@ public class SimpleModeScene extends Scene {
         isDisplyMission = false;
         isPardonBrokenBricks = false;
         isPardonBrokenBricks2 = false;
+        hitDis=5;
         delay = new Delay(30);
         spaceShip = new SpaceShip(100, 2400);  ///100,2400
         portal = new Portal(1850, 105, 96, 64);
@@ -124,14 +126,14 @@ public class SimpleModeScene extends Scene {
         //能量球
         energyBalls = new ArrayList<>();
         //中間
-        energyBalls.add(new EnergyBall(random(1750, 1800), random(780, 848)));
-        //右下
-        energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
+        energyBalls.add(new EnergyBall(random(1750, 1800), random(800, 848)));
+//        //右下
+//        energyBalls.add(new EnergyBall(random(2544, 2800), random(1520, 2032)));
         //左上
         energyBalls.add(new EnergyBall(random(1360, 1552), random(275, 350)));
         energyBalls.add(new EnergyBall(random(450, 480),  300));
-        //右上
-        energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
+//        //右上
+//        energyBalls.add(new EnergyBall(random(3065, 3304), random(496, 432)));
 
         //障礙物
         barriersV = new ArrayList<>();
@@ -175,6 +177,7 @@ public class SimpleModeScene extends Scene {
         clockNums.add(new ClockNum(660, 40, 0, 0, 633, 25, ClockNum.Hand.MinuteHand));
         clockNums.add(new ClockNum(660, 40, 0, 0, 599, 25, ClockNum.Hand.HourHand));
         degree = 0;
+        count2=0;
         dx = 0;
         dy = 0;
     }
@@ -223,6 +226,7 @@ public class SimpleModeScene extends Scene {
 //                    System.out.println("sx:"+spaceShip.painter().centerX());
 //                    System.out.println("sx:"+spaceShip.painter().centerY());
                 count = (int) Global.getHypotenuse(x, y) / 10;
+                count2=count;
                 Vector speed = new Vector(x, y);
                 Vector tmpSpeed = new Vector(0, 0);
                 speed.setLength(10);
@@ -297,10 +301,7 @@ public class SimpleModeScene extends Scene {
             @Override
             public void keyReleased(int commandCode, long trigTime) {
 //                if (commandCode == 2) {
-//                    for (int i = 0; i < inBars.size(); i++) {
-//                        inBars.get(i).setShow(false);
-//                    }
-////                    state = 0;
+//                    count=count+10;
 //                }
                 if (commandCode == 4) {
                     isDisplyMission = false;
@@ -487,7 +488,9 @@ public class SimpleModeScene extends Scene {
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersV.get(i))) {
+                    count=count+hitDis;
                     isPardon3 = true;
+
                 }
             }
         }
@@ -495,6 +498,7 @@ public class SimpleModeScene extends Scene {
             for (int i = 0; i < barriersV.size(); i++) {
                 if (barriersV.get(i).isBarrier()) {
                     if (spaceShip.AngleisCollision(barriersV.get(i))) {
+                        count=count+hitDis;
                         break;
                     }
                 }
@@ -503,6 +507,7 @@ public class SimpleModeScene extends Scene {
         for (int i = 0; i < barriersH.size(); i++) {
             if (barriersH.get(i).isBarrier()) {
                 if (spaceShip.isCollisionNotAngle(barriersH.get(i))) {
+                    count=count+hitDis;
                     isPardon4 = true;
                 }
             }
@@ -511,6 +516,7 @@ public class SimpleModeScene extends Scene {
             for (int i = 0; i < barriersH.size(); i++) {
                 if (barriersH.get(i).isBarrier()) {
                     if (spaceShip.AngleisCollision(barriersH.get(i))) {
+                        count=count+hitDis;
                         break;
                     }
                 }
@@ -519,6 +525,7 @@ public class SimpleModeScene extends Scene {
         for (int i = 0; i < barriersV.size(); i++) {
             if (barriersV.get(i).isBarrier()) {
                 if (goal.isCollisionNotAngle(barriersV.get(i))) {
+                    count2=count2+hitDis;
                     isPardon5 = true;
                 }
             }
@@ -527,6 +534,7 @@ public class SimpleModeScene extends Scene {
             for (int i = 0; i < barriersV.size(); i++) {
                 if (barriersV.get(i).isBarrier()) {
                     if (goal.AngleisCollision(barriersV.get(i))) {
+                        count2=count2+hitDis;
                         break;
                     }
                 }
@@ -535,6 +543,7 @@ public class SimpleModeScene extends Scene {
         for (int i = 0; i < barriersH.size(); i++) {
             if (barriersH.get(i).isBarrier()) {
                 if (goal.isCollisionNotAngle(barriersH.get(i))) {
+                    count2=count2+hitDis;
                     isPardon6 = true;
                 }
             }
@@ -543,6 +552,7 @@ public class SimpleModeScene extends Scene {
             for (int i = 0; i < barriersH.size(); i++) {
                 if (barriersH.get(i).isBarrier()) {
                     if (goal.AngleisCollision(barriersH.get(i))) {
+                        count2=count2+hitDis;
                         break;
                     }
                 }
@@ -552,10 +562,18 @@ public class SimpleModeScene extends Scene {
             count = 0;
             spaceShip.setIsMove(false);
         }
+        if (count2 < 0) {
+            count2 = 0;
+        }
         count--;
+        count2--;
         if (count > 0) {
-            goal.move();
+
             spaceShip.move();
+
+        }
+        if (count2 > 0) {
+            goal.move();
             if (state == 5 && goal.isCollision(portal)) {
                 SceneController.getInstance().changeScene(new EndScene(name, totalTime / 60,false));
             }
