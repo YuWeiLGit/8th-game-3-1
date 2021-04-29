@@ -1,5 +1,6 @@
 package scene;
 
+import controllers.AudioResourceController;
 import controllers.ImageController;
 import controllers.RankControll;
 import controllers.SceneController;
@@ -24,6 +25,7 @@ public class EasyModeRank extends Scene{
     @Override
     public void sceneBegin() {
         String path = (HardModeRankScene.class).getProtectionDomain().getCodeSource().getLocation().getFile();
+        AudioResourceController.getInstance().loop("/rank.wav",20);
         path = path + "rank1.txt";
         image = ImageController.getInstance().tryGet("/rank2.png");
         rankControlls = new ArrayList<>();
@@ -77,7 +79,7 @@ public class EasyModeRank extends Scene{
 
     @Override
     public void sceneEnd() {
-
+        AudioResourceController.getInstance().stop("/rank.wav");
     }
 
     @Override

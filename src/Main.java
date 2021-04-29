@@ -38,6 +38,7 @@ public class Main {
                         .add(KeyEvent.VK_W, 2)
                         .add(KeyEvent.VK_S, 3)
                         .add(KeyEvent.VK_SHIFT,4)
+                        .add(KeyEvent.VK_ESCAPE,5)
                         .next().keyCleanMode().trackChar().subscribe(sceneController)
         ).paint(sceneController).update(sceneController).gen();
 

@@ -51,7 +51,7 @@ public class EndScene extends Scene {
 
     @Override
     public void sceneEnd() {
-
+        AudioResourceController.getInstance().stop("/endScene1.wav");
     }
 
     @Override
